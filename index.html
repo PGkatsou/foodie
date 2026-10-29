@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f1e7">
+  <title>Tablepop | Make a meal of it</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,40,1;9..144,600,40,1;9..144,700,40,1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f1e7;
+      --ink: #20251f;
+      --green: #c9ef77;
+      --tomato: #f04e36;
+      --blue: #3158d8;
+      --pink: #f6abc3;
+      --yellow: #ffd454;
+      --line: rgba(32, 37, 31, .19);
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "DM Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    .topbar { height: 70px; padding: 0 5.4vw; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; letter-spacing: 0; }
+    .brand-mark { width: 31px; height: 31px; display: grid; place-items: center; background: var(--tomato); color: white; border-radius: 50%; font-family: var(--serif); font-size: 19px; transform: rotate(-9deg); }
+    .top-note { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; }
+    .top-note span { width: 8px; height: 8px; border-radius: 50%; background: #64a944; }
+    main { max-width: 1440px; margin: auto; padding: 46px 5.4vw 80px; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1fr) 325px; align-items: end; gap: 32px; margin-bottom: 35px; }
+    .eyebrow { margin: 0 0 9px; color: var(--tomato); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 770px; font-family: var(--serif); font-size: clamp(43px, 6vw, 76px); font-weight: 600; line-height: .98; letter-spacing: 0; }
+    h1 em { color: var(--blue); font-weight: 500; }
+    .intro-side { display: flex; align-items: center; gap: 13px; padding: 13px 15px; background: var(--yellow); border: 1px solid var(--ink); border-radius: 3px; transform: rotate(1deg); }
+    .sun-icon { width: 38px; height: 38px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid var(--ink); border-radius: 50%; font-size: 21px; }
+    .intro-side p { margin: 0; font-size: 12px; font-weight: 700; line-height: 1.4; }
+    .workspace { display: grid; grid-template-columns: 308px minmax(0, 1fr); align-items: start; gap: 34px; }
+    .planner { position: sticky; top: 18px; overflow: hidden; background: var(--green); border: 1px solid var(--ink); border-radius: 4px; }
+    .planner-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 19px 15px; border-bottom: 1px solid var(--line); }
+    .planner-head h2 { margin: 0; font-family: var(--serif); font-size: 25px; font-weight: 600; }
+    .step-count { font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .planner-fields { display: grid; gap: 17px; padding: 19px; }
+    .field label, .field-label { display: block; margin-bottom: 7px; font-size: 11px; font-weight: 800; }
+    .field input, .field select { width: 100%; height: 43px; padding: 0 11px; background: var(--paper); border: 1px solid var(--ink); border-radius: 2px; color: var(--ink); outline-offset: 3px; }
+    .money-input { position: relative; }
+    .money-input span { position: absolute; top: 12px; left: 12px; z-index: 1; font-weight: 700; }
+    .money-input input { padding-left: 29px; }
+    .people-row { display: flex; align-items: center; justify-content: space-between; gap: 9px; }
+    .people-row input { width: 105px; text-align: center; font-weight: 700; }
+    .people-controls { display: flex; gap: 6px; }
+    .stepper { width: 35px; height: 35px; display: grid; place-items: center; background: transparent; border: 1px solid var(--ink); border-radius: 50%; cursor: pointer; font-size: 18px; }
+    .course-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+    .course-option { min-height: 38px; background: transparent; border: 1px solid var(--ink); border-radius: 2px; cursor: pointer; font-size: 12px; font-weight: 700; }
+    .course-option[aria-pressed="true"] { background: var(--ink); color: white; }
+    .submit-button { width: 100%; min-height: 47px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: var(--tomato); border: 1px solid var(--ink); border-radius: 2px; color: white; cursor: pointer; font-weight: 800; }
+    .submit-button:hover { background: #d93b28; }
+    .submit-button span:last-child { font-size: 20px; }
+    .planner-foot { padding: 11px 19px 14px; border-top: 1px solid var(--line); font-size: 10px; font-weight: 600; }
+    .results { min-width: 0; }
+    .results-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 2px 0 17px; }
+    .results-heading h2 { margin: 0; font-family: var(--serif); font-size: 32px; font-weight: 600; line-height: 1; }
+    .results-heading p { margin: 7px 0 0; color: #555950; font-size: 12px; }
+    .match-count { flex: 0 0 auto; padding: 7px 10px; background: var(--pink); border: 1px solid var(--ink); border-radius: 2px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .menu-list { display: grid; gap: 13px; }
+    .menu-card { display: grid; grid-template-columns: 170px minmax(0, 1fr); min-height: 186px; background: #fffdf8; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease; }
+    .menu-card:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+    .menu-photo { position: relative; min-height: 186px; background: #e8dfce; }
+    .menu-photo img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
+    .menu-number { position: absolute; left: 10px; top: 10px; width: 30px; height: 30px; display: grid; place-items: center; background: var(--yellow); border: 1px solid var(--ink); border-radius: 50%; font-family: var(--serif); font-size: 16px; }
+    .menu-info { min-width: 0; display: flex; flex-direction: column; padding: 15px 17px 13px; }
+    .menu-kicker { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--tomato); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    .menu-kicker .fit { color: #4b7925; }
+    .menu-info h3 { margin: 6px 0 4px; font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.1; }
+    .dish-list { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; color: #4e534b; font-size: 10px; }
+    .dish-list span::before { content: "+"; margin-right: 4px; color: var(--tomato); font-weight: 800; }
+    .menu-bottom { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 12px; }
+    .price { font-family: var(--serif); font-size: 23px; font-weight: 600; line-height: 1; }
+    .price small { font-family: var(--sans); font-size: 10px; font-weight: 600; }
+    .detail-button { min-height: 35px; padding: 0 11px; background: var(--blue); border: 1px solid var(--ink); border-radius: 2px; color: white; cursor: pointer; font-size: 10px; font-weight: 800; }
+    .detail-button:hover { background: #2346bc; }
+    .empty-state { padding: 38px 26px; background: var(--yellow); border: 1px solid var(--ink); text-align: center; }
+    .empty-state .empty-mark { font-size: 38px; }
+    .empty-state h3 { margin: 8px 0; font-family: var(--serif); font-size: 29px; }
+    .empty-state p { margin: 0; font-size: 12px; line-height: 1.5; }
+    .detail-view { display: none; }
+    .detail-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 1px 0 15px; }
+    .back-button { padding: 8px 0; background: none; border: 0; cursor: pointer; font-size: 11px; font-weight: 800; }
+    .back-button span { margin-right: 6px; font-size: 16px; }
+    .detail-title { margin: 0; font-family: var(--serif); font-size: 34px; font-weight: 600; }
+    .detail-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; }
+    .summary-chip { padding: 7px 10px; background: var(--yellow); border: 1px solid var(--ink); border-radius: 2px; font-size: 10px; font-weight: 800; }
+    .recipe-list { display: grid; gap: 13px; }
+    .recipe { overflow: hidden; background: #fffdf8; border: 1px solid var(--ink); border-radius: 3px; }
+    .recipe-head { display: grid; grid-template-columns: 130px 1fr; min-height: 112px; border-bottom: 1px solid var(--line); }
+    .recipe-head img { width: 100%; height: 100%; min-height: 112px; object-fit: cover; }
+    .recipe-title { align-self: center; padding: 13px 17px; }
+    .recipe-title .course-label { color: var(--tomato); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    .recipe-title h3 { margin: 4px 0; font-family: var(--serif); font-size: 22px; font-weight: 600; }
+    .recipe-title p { margin: 0; color: #5c6058; font-size: 10px; }
+    .recipe-content { display: grid; grid-template-columns: minmax(145px, .75fr) 1.25fr; gap: 20px; padding: 15px 17px 17px; }
+    .recipe-content h4 { margin: 0 0 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .ingredients { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .ingredients li { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 5px; border-bottom: 1px dashed var(--line); font-size: 10px; }
+    .ingredients li span:last-child { flex: 0 0 auto; color: #62675f; font-weight: 700; }
+    .method { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+    .method li { position: relative; padding-left: 24px; color: #41463f; font-size: 10px; line-height: 1.5; counter-increment: step; }
+    .method li::before { content: counter(step); position: absolute; left: 0; top: -1px; width: 17px; height: 17px; display: grid; place-items: center; background: var(--green); border: 1px solid var(--ink); border-radius: 50%; color: var(--ink); font-size: 9px; font-weight: 800; }
+    .shopping-bar { position: sticky; bottom: 12px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 17px; padding: 12px 14px; background: var(--blue); border: 1px solid var(--ink); border-radius: 3px; color: white; box-shadow: 3px 3px 0 var(--ink); }
+    .shopping-bar p { margin: 0; font-size: 11px; font-weight: 700; }
+    .shopping-bar button { min-height: 35px; padding: 0 12px; background: var(--yellow); border: 1px solid var(--ink); border-radius: 2px; cursor: pointer; color: var(--ink); font-size: 10px; font-weight: 800; }
+    .shopping-bar button[aria-pressed="true"] { background: var(--green); }
+    .ticker { overflow: hidden; margin-top: 43px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--pink); }
+    .ticker-track { width: max-content; display: flex; gap: 22px; padding: 10px 0; animation: scroll 27s linear infinite; font-family: var(--serif); font-size: 17px; }
+    .ticker-track span:nth-child(odd) { color: var(--blue); }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 900px) {
+      main { padding-right: 4vw; padding-left: 4vw; }
+      .topbar { padding-right: 4vw; padding-left: 4vw; }
+      .intro { grid-template-columns: 1fr 240px; }
+      .workspace { grid-template-columns: 270px minmax(0, 1fr); gap: 20px; }
+      .menu-card { grid-template-columns: 130px minmax(0, 1fr); }
+      .menu-photo { min-height: 190px; }
+    }
+    @media (max-width: 680px) {
+      .topbar { height: 60px; }
+      .top-note { font-size: 10px; }
+      main { padding-top: 29px; }
+      .intro { grid-template-columns: 1fr; gap: 17px; margin-bottom: 24px; }
+      h1 { font-size: 51px; }
+      .intro-side { max-width: 320px; }
+      .workspace { grid-template-columns: 1fr; gap: 27px; }
+      .planner { position: static; }
+      .planner-fields { grid-template-columns: 1fr 1fr; gap: 15px; }
+      .field-courses, .submit-button { grid-column: 1 / -1; }
+      .planner-foot { padding-top: 9px; }
+      .results-heading h2 { font-size: 28px; }
+      .menu-card { grid-template-columns: 116px minmax(0, 1fr); min-height: 185px; }
+      .menu-photo { min-height: 185px; }
+      .menu-info { padding: 12px; }
+      .menu-info h3 { font-size: 20px; }
+      .dish-list { gap: 4px 7px; font-size: 9px; }
+      .price { font-size: 20px; }
+      .detail-button { padding: 0 8px; }
+      .recipe-content { grid-template-columns: 1fr; gap: 17px; }
+      .recipe-head { grid-template-columns: 98px 1fr; }
+      .detail-title { font-size: 29px; }
+    }
+    @media (max-width: 390px) {
+      .menu-card { grid-template-columns: 92px minmax(0, 1fr); }
+      .menu-info { padding: 10px; }
+      .menu-kicker { font-size: 8px; }
+      .price small { font-size: 9px; }
+      .course-option { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">t</span> tablepop</div>
+    <div class="top-note"><span aria-hidden="true"></span> Good food, good company</div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Your dinner party, sorted</p>
+        <h1 id="page-title">Make a meal<br>of <em>it.</em></h1>
+      </div>
+      <div class="intro-side"><span class="sun-icon" aria-hidden="true">✳</span><p>A little planning.<br>A lot of passing plates.</p></div>
+    </section>
+
+    <section class="workspace" aria-label="Menu planner">
+      <form class="planner" id="planner-form">
+        <div class="planner-head"><h2>The dinner deets</h2><span class="step-count">01 / 01</span></div>
+        <div class="planner-fields">
+          <div class="field">
+            <label for="budget">Your budget</label>
+            <div class="money-input"><span aria-hidden="true">€</span><input id="budget" name="budget" type="number" min="10" max="2000" step="5" value="100" required></div>
+          </div>
+          <div class="field">
+            <span class="field-label" id="guests-label">Hungry people</span>
+            <div class="people-row"><input id="guests" name="guests" type="number" min="1" max="20" value="4" aria-labelledby="guests-label" required><div class="people-controls"><button class="stepper" type="button" data-step="-1" aria-label="One fewer guest">−</button><button class="stepper" type="button" data-step="1" aria-label="One more guest">+</button></div></div>
+          </div>
+          <div class="field">
+            <label for="occasion">What's the occasion?</label>
+            <input id="occasion" name="occasion" type="text" value="Family dinner" placeholder="e.g. family reunion, birthday, date night" required>
+          </div>
+          <div class="field field-courses">
+            <span class="field-label" id="courses-label">How many courses?</span>
+            <div class="course-options" role="group" aria-labelledby="courses-label">
+              <button class="course-option" type="button" data-courses="1" aria-pressed="false">1</button><button class="course-option" type="button" data-courses="2" aria-pressed="false">2</button><button class="course-option" type="button" data-courses="3" aria-pressed="false">3</button><button class="course-option" type="button" data-courses="4" aria-pressed="true">4</button>
+            </div>
+          </div>
+          <button class="submit-button" type="submit"><span>Find my menus</span><span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="planner-foot">Prices are ingredient estimates in EUR.</div>
+      </form>
+
+      <section class="results" aria-live="polite" aria-label="Recommended menus">
+        <div id="recommendations-view">
+          <div class="results-heading"><div><h2>On the menu</h2><p id="results-subtitle">Three ways to gather round.</p></div><span class="match-count" id="match-count">3 good ideas</span></div>
+          <div class="menu-list" id="menu-list"></div>
+        </div>
+        <div class="detail-view" id="detail-view"></div>
+      </section>
+    </section>
+  </main>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Pass the pasta</span> ✳ <span>Save room for dessert</span> ✳ <span>Seconds, please</span> ✳ <span>Pass the pasta</span> ✳ <span>Save room for dessert</span> ✳ <span>Seconds, please</span> ✳</div></div>
+
+  <script>
+    const recipes = {
+      tomatoToast: {
+        name: "Tomato & ricotta toast", course: "First things first", cost: 2.6,
+        image: "photo-1547592180-85f173990554",
+        ingredients: [[4, "slices", "sourdough"], [250, "g", "ripe tomatoes"], [150, "g", "ricotta"], [1, "tbsp", "olive oil"], [8, "leaves", "fresh basil"]],
+        method: ["Toast the sourdough until crisp and golden at the edges.", "Roughly chop the tomatoes and toss with olive oil, salt and black pepper.", "Spread ricotta onto each slice, pile on the tomatoes and finish with torn basil."]
+      },
+      carrotSoup: {
+        name: "Carrot & ginger soup", course: "A little something", cost: 2.9,
+        image: "photo-1547592180-85f173990554",
+        ingredients: [[600, "g", "carrots"], [1, "", "onion"], [2, "cm", "fresh ginger"], [750, "ml", "vegetable stock"], [100, "ml", "coconut milk"]],
+        method: ["Chop the carrots and onion; grate the ginger.", "Soften the onion in a splash of oil. Add carrots, ginger and stock, then simmer for 20 minutes.", "Blend until silky. Swirl through coconut milk and season to taste."]
+      },
+      lemonChicken: {
+        name: "Lemon roast chicken", course: "The main event", cost: 7.8,
+        image: "photo-1555939594-58d7cb561ad1",
+        ingredients: [[800, "g", "chicken thighs"], [1, "", "lemon"], [3, "cloves", "garlic"], [2, "tbsp", "olive oil"], [4, "sprigs", "rosemary"]],
+        method: ["Heat the oven to 200°C. Pat the chicken dry and arrange in a roasting dish.", "Rub with olive oil, crushed garlic, lemon zest and chopped rosemary. Add lemon wedges.", "Roast for 35–40 minutes, until golden and cooked through. Rest for 5 minutes before serving."]
+      },
+      mushroomPasta: {
+        name: "Creamy wild mushroom pasta", course: "The main event", cost: 6.4,
+        image: "photo-1476224203421-9ac39bcb3327",
+        ingredients: [[350, "g", "tagliatelle"], [300, "g", "mixed mushrooms"], [150, "ml", "single cream"], [40, "g", "parmesan"], [2, "cloves", "garlic"]],
+        method: ["Cook the tagliatelle in salted water until just al dente; save a mug of pasta water.", "Fry sliced mushrooms in a hot pan until deeply golden. Add garlic and cook for a minute.", "Stir in the cream and parmesan. Toss with pasta, loosening with pasta water, and season generously."]
+      },
+      roastSquash: {
+        name: "Roast squash & crispy chickpeas", course: "The main event", cost: 5.2,
+        image: "photo-1490645935967-10de6ba17061",
+        ingredients: [[1, "kg", "butternut squash"], [400, "g", "chickpeas"], [2, "tbsp", "olive oil"], [1, "tsp", "smoked paprika"], [150, "g", "Greek yoghurt"]],
+        method: ["Heat the oven to 210°C. Cut the squash into wedges and drain the chickpeas.", "Toss both with olive oil, smoked paprika, salt and pepper. Roast for 30–35 minutes.", "Serve over a swoosh of yoghurt with the crispy chickpeas on top."]
+      },
+      greenSalad: {
+        name: "Herby green salad", course: "Something on the side", cost: 2.1,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[150, "g", "mixed leaves"], [1, "", "cucumber"], [1, "bunch", "fresh herbs"], [1, "tbsp", "lemon juice"], [2, "tbsp", "olive oil"]],
+        method: ["Wash and dry the leaves. Slice the cucumber into ribbons.", "Whisk lemon juice with olive oil, salt and pepper.", "Toss everything together with plenty of roughly chopped herbs just before serving."]
+      },
+      potatoes: {
+        name: "Crispy rosemary potatoes", course: "Something on the side", cost: 2.4,
+        image: "photo-1518977676601-b53f82aba655",
+        ingredients: [[800, "g", "baby potatoes"], [2, "tbsp", "olive oil"], [3, "sprigs", "rosemary"], [2, "cloves", "garlic"]],
+        method: ["Heat the oven to 210°C. Halve any larger potatoes.", "Toss with olive oil, crushed garlic, chopped rosemary, salt and pepper.", "Roast cut-side down for 35 minutes, turning once, until deeply golden and crisp."]
+      },
+      oliveCake: {
+        name: "Lemon olive oil cake", course: "A sweet finish", cost: 2.7,
+        image: "photo-1488477181946-6428a0291777",
+        ingredients: [[180, "g", "plain flour"], [150, "g", "caster sugar"], [2, "", "eggs"], [100, "ml", "olive oil"], [1, "", "lemon"]],
+        method: ["Heat the oven to 180°C. Line a 20 cm cake tin with baking paper.", "Whisk the eggs and sugar until pale. Whisk in olive oil, lemon zest and juice.", "Fold in the flour and a pinch of salt. Bake for 30–35 minutes, then cool before slicing."]
+      },
+      berryCups: {
+        name: "Summer berries & cream", course: "A sweet finish", cost: 3.2,
+        image: "photo-1464305795204-6f5bbfc7fb81",
+        ingredients: [[400, "g", "mixed berries"], [250, "ml", "double cream"], [2, "tbsp", "honey"], [4, "", "shortbread biscuits"]],
+        method: ["Set aside a handful of berries. Crush the rest lightly with the honey.", "Whip the cream to soft peaks.", "Layer the berries, cream and crumbled shortbread in glasses. Top with the reserved berries."]
+      },
+      chocolateMousse: {
+        name: "Little chocolate pots", course: "A sweet finish", cost: 3.6,
+        image: "photo-1563805042-7684c019e1cb",
+        ingredients: [[150, "g", "dark chocolate"], [3, "", "eggs"], [150, "ml", "double cream"], [1, "tbsp", "caster sugar"]],
+        method: ["Melt the chocolate gently over a pan of simmering water; leave to cool slightly.", "Separate the eggs. Whisk yolks into the chocolate, then fold in softly whipped cream.", "Whisk egg whites to soft peaks with sugar. Fold through, spoon into cups and chill for 3 hours."]
+      }
+    };
+
+    const menus = [
+      { name: "The Sunday best", mood: "Comfort food, dressed up", image: "photo-1547592180-85f173990554", occasions: ["family", "holiday", "birthday"], recipes: ["tomatoToast", "lemonChicken", "potatoes", "oliveCake"] },
+      { name: "A little trattoria", mood: "Laid-back Italian-ish", image: "photo-1476224203421-9ac39bcb3327", occasions: ["date", "friends", "family"], recipes: ["carrotSoup", "mushroomPasta", "greenSalad", "berryCups"] },
+      { name: "The veggie plot", mood: "Plant-powered and punchy", image: "photo-1490645935967-10de6ba17061", occasions: ["friends", "family", "holiday"], recipes: ["tomatoToast", "roastSquash", "greenSalad", "chocolateMousse"] },
+      { name: "Birthday, but make it dinner", mood: "A little extra, very shareable", image: "photo-1565299624946-b28f40a0ae38", occasions: ["birthday", "friends", "date"], recipes: ["carrotSoup", "mushroomPasta", "potatoes", "chocolateMousse"] },
+      { name: "The long lunch", mood: "Slow afternoon, full table", image: "photo-1555939594-58d7cb561ad1", occasions: ["holiday", "family", "date"], recipes: ["tomatoToast", "lemonChicken", "greenSalad", "berryCups"] }
+    ];
+
+    const coursePlans = { 1: [1], 2: [0, 1], 3: [0, 1, 3], 4: [0, 1, 2, 3] };
+    const occasionKeywords = {
+      family: ["family", "relatives", "reunion"],
+      date: ["date", "romantic", "anniversary", "valentine"],
+      birthday: ["birthday", "celebration"],
+      friends: ["friend", "mates", "potluck", "get together", "game night", "party"],
+      holiday: ["holiday", "christmas", "thanksgiving", "easter", "festive", "new year"]
+    };
+    const form = document.querySelector("#planner-form");
+    const guestInput = document.querySelector("#guests");
+    const courseButtons = [...document.querySelectorAll(".course-option")];
+    const list = document.querySelector("#menu-list");
+    const recommendationsView = document.querySelector("#recommendations-view");
+    const detailView = document.querySelector("#detail-view");
+    let selectedCourses = 4;
+    let currentMenus = [];
+
+    function photoUrl(id, width = 560) {
+      return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
+    }
+
+    function formatMoney(value) {
+      return new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+    }
+
+    function scaledAmount(quantity, guests) {
+      const amount = quantity * guests / 4;
+      if (amount === 0) return "to taste";
+      const rounded = amount >= 10 ? Math.round(amount / 5) * 5 : amount >= 2 ? Math.round(amount * 2) / 2 : Math.round(amount * 4) / 4;
+      return `${Number.isInteger(rounded) ? rounded : rounded.toFixed(2).replace(/0$/, "")}`;
+    }
+
+    function menuRecipes(menu, count) {
+      return coursePlans[count].map((index) => menu.recipes[index]);
+    }
+
+    function menuCost(menu, count, guests) {
+      return menuRecipes(menu, count).reduce((sum, id) => sum + recipes[id].cost, 0) * guests;
+    }
+
+    function inferOccasionSignals(occasion) {
+      const words = ` ${occasion.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()} `;
+      return Object.entries(occasionKeywords)
+        .filter(([, keywords]) => keywords.some((keyword) => words.includes(` ${keyword} `)))
+        .map(([signal]) => signal);
+    }
+
+    function renderMenus() {
+      const budget = Number(document.querySelector("#budget").value);
+      const guests = Number(guestInput.value);
+      const occasion = document.querySelector("#occasion").value.trim();
+      const occasionSignals = inferOccasionSignals(occasion);
+      const matching = menus
+        .map((menu) => ({
+          ...menu,
+          occasionFit: occasionSignals.filter((signal) => menu.occasions.includes(signal)).length,
+          total: menuCost(menu, selectedCourses, guests)
+        }))
+        .filter((menu) => occasionSignals.length === 0 || menu.occasionFit > 0)
+        .filter((menu) => menu.total <= budget)
+        .sort((a, b) => b.occasionFit - a.occasionFit || a.total - b.total)
+        .slice(0, 3);
+      currentMenus = matching;
+      const occasionNote = occasionSignals.length ? ` for ${occasion}` : ` for your ${occasion}`;
+      document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"}${occasionNote} · ${guests} people · ${formatMoney(budget)} to spend.`;
+      document.querySelector("#match-count").textContent = `${matching.length} ${matching.length === 1 ? "good idea" : "good ideas"}`;
+      if (!matching.length) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>Let's stretch that budget.</h3><p>Try adding a little more to the pot, or trim a course or two.</p></div>`;
+        return;
+      }
+      list.innerHTML = matching.map((menu, index) => {
+        const dishes = menuRecipes(menu, selectedCourses).map((id) => recipes[id].name);
+        const perPerson = menu.total / guests;
+        return `<article class="menu-card">
+          <div class="menu-photo"><img src="${photoUrl(menu.image)}" alt="A taste of ${menu.name}" loading="lazy"><span class="menu-number">0${index + 1}</span></div>
+          <div class="menu-info"><div class="menu-kicker"><span>${menu.mood}</span><span class="fit">Fits the budget ✓</span></div>
+            <h3>${menu.name}</h3><div class="dish-list">${dishes.map((dish) => `<span>${dish}</span>`).join("")}</div>
+            <div class="menu-bottom"><div class="price">${formatMoney(menu.total)} <small>total · ${formatMoney(perPerson)} / person</small></div><button class="detail-button" type="button" data-menu="${index}">Make this menu ↗</button></div>
+          </div>
+        </article>`;
+      }).join("");
+    }
+
+    function renderDetail(menu) {
+      const guests = Number(guestInput.value);
+      const chosenRecipes = menuRecipes(menu, selectedCourses);
+      const total = menuCost(menu, selectedCourses, guests);
+      detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>All menu ideas</button></div>
+        <h2 class="detail-title">${menu.name}</h2>
+        <div class="detail-summary"><span class="summary-chip">${guests} hungry people</span><span class="summary-chip">${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"}</span><span class="summary-chip">${formatMoney(total)} estimated total</span></div>
+        <div class="recipe-list">${chosenRecipes.map((id) => {
+          const recipe = recipes[id];
+          return `<article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 360)}" alt="${recipe.name}" loading="lazy"><div class="recipe-title"><span class="course-label">${recipe.course}</span><h3>${recipe.name}</h3><p>About ${formatMoney(recipe.cost)} per person</p></div></div>
+            <div class="recipe-content"><section><h4>What you'll need</h4><ul class="ingredients">${recipe.ingredients.map(([quantity, unit, name]) => `<li><span>${name}</span><span>${scaledAmount(quantity, guests)} ${unit}</span></li>`).join("")}</ul></section>
+            <section><h4>Let's make it</h4><ol class="method">${recipe.method.map((step) => `<li>${step}</li>`).join("")}</ol></section></div></article>`;
+        }).join("")}</div>
+        <div class="shopping-bar"><p>Shopping list · ${chosenRecipes.reduce((sum, id) => sum + recipes[id].ingredients.length, 0)} ingredients</p><button type="button" id="shopping-button" aria-pressed="false">Copy shopping list</button></div>`;
+      recommendationsView.style.display = "none";
+      detailView.style.display = "block";
+      detailView.querySelector(".back-button").addEventListener("click", showRecommendations);
+      detailView.querySelector("#shopping-button").addEventListener("click", copyShoppingList);
+      window.scrollTo({ top: document.querySelector(".results").getBoundingClientRect().top + window.scrollY - 18, behavior: "smooth" });
+    }
+
+    function showRecommendations() {
+      detailView.style.display = "none";
+      recommendationsView.style.display = "block";
+    }
+
+    async function copyShoppingList(event) {
+      const guests = Number(guestInput.value);
+      const menu = currentMenus.find((item) => item.name === document.querySelector(".detail-title").textContent);
+      if (!menu) return;
+      const items = menuRecipes(menu, selectedCourses).flatMap((id) => recipes[id].ingredients.map(([quantity, unit, name]) => `${scaledAmount(quantity, guests)} ${unit} ${name}`.trim()));
+      try {
+        await navigator.clipboard.writeText(items.join("\n"));
+        event.currentTarget.textContent = "Copied to clipboard ✓";
+        event.currentTarget.setAttribute("aria-pressed", "true");
+      } catch {
+        event.currentTarget.textContent = "Clipboard unavailable";
+      }
+    }
+
+    courseButtons.forEach((button) => button.addEventListener("click", () => {
+      selectedCourses = Number(button.dataset.courses);
+      courseButtons.forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
+    }));
+
+    document.querySelectorAll(".stepper").forEach((button) => button.addEventListener("click", () => {
+      const next = Number(guestInput.value) + Number(button.dataset.step);
+      guestInput.value = Math.max(1, Math.min(20, next));
+    }));
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      showRecommendations();
+      renderMenus();
+      document.querySelector("#recommendations-view").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    list.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-menu]");
+      if (button) renderDetail(currentMenus[Number(button.dataset.menu)]);
+    });
+
+    renderMenus();
+  </script>
+</body>
+</html>
