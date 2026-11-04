@@ -46,13 +46,10 @@
     .splash-tagline { margin: 0; font-size: 13px; font-weight: 700; }
     .top-note { display: flex; align-items: center; gap: 9px; color: #667068; font-size: 11px; font-weight: 600; }
     main { max-width: 1600px; margin: auto; padding: 29px 4vw 60px; }
-    .intro { display: grid; grid-template-columns: minmax(0, 1fr) 280px; align-items: center; gap: 24px; margin-bottom: 24px; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 24px; margin-bottom: 24px; }
     .eyebrow { margin: 0 0 6px; color: #b95d3d; font-size: 10px; font-weight: 800; text-transform: uppercase; }
     h1 { margin: 0; max-width: 770px; font-family: var(--sans); font-size: 29px; font-weight: 700; line-height: 1.15; letter-spacing: 0; }
     h1 em { color: var(--tomato); font-style: normal; font-weight: 700; }
-    .intro-side { display: flex; align-items: center; gap: 11px; padding: 11px 13px; background: #fff; border: 0; border-radius: 0; }
-    .sun-icon { width: 34px; height: 34px; display: grid; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--tomato); font-size: 19px; }
-    .intro-side p { margin: 0; color: #555f58; font-size: 10px; font-weight: 600; line-height: 1.45; }
     .workspace { display: grid; grid-template-columns: 285px minmax(0, 1fr); align-items: start; gap: 22px; }
     .planner { position: sticky; top: 18px; overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 3px 12px rgba(32, 45, 37, .035); }
     .planner-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 13px; border-bottom: 1px solid var(--line); }
@@ -159,7 +156,6 @@
       main { padding-top: 29px; }
       .intro { grid-template-columns: 1fr; gap: 17px; margin-bottom: 24px; }
       h1 { font-size: 26px; }
-      .intro-side { max-width: 320px; }
       .workspace { grid-template-columns: 1fr; gap: 27px; }
       .planner { position: static; }
       .planner-fields { grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -231,7 +227,6 @@
         <p class="eyebrow">Your dinner party, sorted</p>
         <h1 id="page-title">Make a meal<br>of <em>it.</em></h1>
       </div>
-      <div class="intro-side"><span class="sun-icon" aria-hidden="true">✳</span><p></p></div>
     </section>
 
     <section class="workspace" aria-label="Menu planner">
