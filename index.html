@@ -29,7 +29,31 @@
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    body { position: relative; margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    .background-art { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    #app-content { position: relative; z-index: 1; }
+    .produce-definitions { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .produce-mark { position: absolute; width: 100px; height: 100px; opacity: .4; }
+    .produce-mark--01 { top: 2%; left: 5%; transform: rotate(-14deg); }
+    .produce-mark--02 { top: 3%; left: 34%; transform: rotate(9deg); }
+    .produce-mark--03 { top: 1%; left: 65%; transform: rotate(-18deg); }
+    .produce-mark--04 { top: 4%; right: 4%; transform: rotate(12deg); }
+    .produce-mark--05 { top: 19%; left: 2%; transform: rotate(13deg); }
+    .produce-mark--06 { top: 20%; left: 31%; transform: rotate(-8deg); }
+    .produce-mark--07 { top: 18%; left: 62%; transform: rotate(17deg); }
+    .produce-mark--08 { top: 21%; right: 2%; transform: rotate(-11deg); }
+    .produce-mark--09 { top: 38%; left: 5%; transform: rotate(-10deg); }
+    .produce-mark--10 { top: 39%; left: 35%; transform: rotate(12deg); }
+    .produce-mark--11 { top: 37%; left: 66%; transform: rotate(-16deg); }
+    .produce-mark--12 { top: 40%; right: 4%; transform: rotate(9deg); }
+    .produce-mark--13 { top: 57%; left: 2%; transform: rotate(11deg); }
+    .produce-mark--14 { top: 58%; left: 32%; transform: rotate(-13deg); }
+    .produce-mark--15 { top: 56%; left: 63%; transform: rotate(8deg); }
+    .produce-mark--16 { top: 59%; right: 2%; transform: rotate(-17deg); }
+    .produce-mark--17 { top: 76%; left: 5%; transform: rotate(-12deg); }
+    .produce-mark--18 { top: 77%; left: 35%; transform: rotate(15deg); }
+    .produce-mark--19 { top: 75%; left: 66%; transform: rotate(-9deg); }
+    .produce-mark--20 { top: 78%; right: 4%; transform: rotate(13deg); }
     button, input, select { font: inherit; }
     button { color: inherit; }
     .topbar { height: 68px; padding: 0 4vw; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid var(--line); }
@@ -46,9 +70,9 @@
     .splash-tagline { margin: 0; font-size: 13px; font-weight: 700; }
     .top-note { display: flex; align-items: center; gap: 9px; color: #667068; font-size: 11px; font-weight: 600; }
     main { max-width: 1600px; margin: auto; padding: 29px 4vw 60px; }
-    .intro { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 24px; margin-bottom: 24px; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; justify-items: center; gap: 24px; margin-bottom: 24px; text-align: center; }
     .eyebrow { margin: 0 0 6px; color: #b95d3d; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    h1 { margin: 0; max-width: 770px; font-family: var(--sans); font-size: 29px; font-weight: 700; line-height: 1.15; letter-spacing: 0; }
+    h1 { margin: 0; max-width: none; font-family: var(--sans); font-size: 29px; font-weight: 700; line-height: 1.15; letter-spacing: 0; white-space: nowrap; }
     h1 em { color: var(--tomato); font-style: normal; font-weight: 700; }
     .workspace { display: grid; grid-template-columns: 285px minmax(0, 1fr); align-items: start; gap: 22px; }
     .planner { position: sticky; top: 18px; overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 3px 12px rgba(32, 45, 37, .035); }
@@ -112,6 +136,21 @@
     .detail-title { margin: 0; font-family: var(--serif); font-size: 34px; font-weight: 600; }
     .detail-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; }
     .summary-chip { padding: 7px 10px; background: var(--yellow); border: 1px solid var(--ink); border-radius: 2px; font-size: 10px; font-weight: 800; }
+    .export-list-button { min-height: 38px; padding: 0 13px; background: var(--blue); border: 0; border-radius: 5px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 700; }
+    .recipe-grocery-tools { margin-top: 15px; padding-top: 13px; border-top: 1px solid var(--line); }
+    .recipe-grocery-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 15px; }
+    .recipe-grocery-heading h5 { margin: 0; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .shopping-list-count { color: #707971; font-size: 10px; font-weight: 700; }
+    .shopping-list-items { margin: 6px 0 12px; padding: 0; list-style: none; }
+    .shopping-list-items li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
+    .shopping-list-items li span:last-child { flex: 0 0 auto; color: #62675f; font-weight: 700; }
+    .shopping-list-empty { color: #707971; font-size: 11px !important; }
+    .save-list-choice { display: flex; align-items: flex-start; gap: 9px; margin-top: 12px; font-size: 12px; font-weight: 700; line-height: 1.4; cursor: pointer; }
+    .save-list-choice input { width: 18px; height: 18px; flex: 0 0 auto; margin: 0; accent-color: var(--brand-teal); }
+    .save-list-choice input:disabled { cursor: not-allowed; }
+    .saved-list-status { min-height: 16px; margin: 6px 0 0 27px; color: #538052; font-size: 10px; }
+    .export-list-button { width: 100%; margin-top: 4px; background: var(--tomato); }
+    .export-list-button:disabled { background: #aeb7af; cursor: not-allowed; }
     .recipe-list { display: grid; gap: 13px; }
     .recipe { overflow: hidden; background: #fffdf8; border: 1px solid var(--ink); border-radius: 3px; }
     .recipe-head { display: grid; grid-template-columns: 130px 1fr; min-height: 112px; border-bottom: 1px solid var(--line); }
@@ -123,39 +162,40 @@
     .recipe-content { display: grid; grid-template-columns: minmax(145px, .75fr) 1.25fr; gap: 20px; padding: 15px 17px 17px; }
     .recipe-content h4 { margin: 0 0 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
     .ingredients { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-    .ingredients li { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 7px; border-bottom: 1px dashed var(--line); font-size: 13px; line-height: 1.4; }
+    .ingredients li { padding-bottom: 7px; border-bottom: 1px dashed var(--line); font-size: 13px; line-height: 1.4; }
+    .recipe-ingredient { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: baseline; gap: 9px; cursor: pointer; }
+    .recipe-ingredient input { width: 16px; height: 16px; margin: 1px 0 0; accent-color: var(--brand-teal); }
+    .recipe-ingredient input:checked + span { color: #788078; }
     .ingredients li span:last-child { flex: 0 0 auto; color: #62675f; font-weight: 700; }
     .method { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
     .method li { position: relative; padding-left: 30px; color: #41463f; font-size: 14px; line-height: 1.6; counter-increment: step; }
     .method li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 21px; height: 21px; display: grid; place-items: center; background: var(--green); border: 1px solid var(--ink); border-radius: 50%; color: var(--ink); font-size: 11px; font-weight: 800; }
-    .shopping-bar { position: sticky; bottom: 12px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 17px; padding: 12px 14px; background: var(--blue); border: 1px solid var(--ink); border-radius: 3px; color: white; box-shadow: 3px 3px 0 var(--ink); }
-    .shopping-bar p { margin: 0; font-size: 11px; font-weight: 700; }
-    .shopping-bar button { min-height: 35px; padding: 0 12px; background: var(--yellow); border: 1px solid var(--ink); border-radius: 2px; cursor: pointer; color: var(--ink); font-size: 10px; font-weight: 800; }
-    .shopping-bar button[aria-pressed="true"] { background: var(--green); }
-    .ticker { overflow: hidden; margin-top: 43px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--pink); }
-    .ticker-track { width: max-content; display: flex; gap: 22px; padding: 10px 0; animation: scroll 27s linear infinite; font-family: var(--serif); font-size: 17px; }
-    .ticker-track span:nth-child(odd) { color: var(--blue); }
-    @keyframes scroll { to { transform: translateX(-50%); } }
     @keyframes splash-pop { from { opacity: 0; transform: scale(.72) rotate(-12deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
     @keyframes splash-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
     @media (max-width: 900px) {
       main { padding-right: 4vw; padding-left: 4vw; }
       .topbar { padding-right: 4vw; padding-left: 4vw; }
-      .intro { grid-template-columns: 1fr 240px; }
+      .intro { grid-template-columns: minmax(0, 1fr); }
       .workspace { grid-template-columns: 260px minmax(0, 1fr); gap: 18px; }
       .menu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .menu-photo { height: 138px; }
     }
     @media (max-width: 680px) {
+      .produce-mark { width: 68px; height: 68px; opacity: .34; }
+      .produce-mark--03, .produce-mark--04, .produce-mark--07, .produce-mark--08, .produce-mark--11, .produce-mark--12, .produce-mark--15, .produce-mark--16, .produce-mark--19, .produce-mark--20 { display: none; }
+      .produce-mark--01, .produce-mark--09, .produce-mark--17 { left: 3%; }
+      .produce-mark--02, .produce-mark--10, .produce-mark--18 { left: 76%; }
+      .produce-mark--05, .produce-mark--13 { left: 3%; }
+      .produce-mark--06, .produce-mark--14 { left: 76%; }
       .topbar { height: 74px; }
       .brand { gap: 7px; }
       .brand-mark { width: 50px; height: 50px; }
       .brand-name { font-size: 29px; }
       .top-note { font-size: 10px; }
       main { padding-top: 29px; }
-      .intro { grid-template-columns: 1fr; gap: 17px; margin-bottom: 24px; }
-      h1 { font-size: 26px; }
+      .intro { grid-template-columns: minmax(0, 1fr); gap: 17px; margin-bottom: 24px; }
+      h1 { font-size: 24px; }
       .workspace { grid-template-columns: 1fr; gap: 27px; }
       .planner { position: static; }
       .planner-fields { grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -203,6 +243,35 @@
       <p class="splash-tagline">Good food, good company</p>
     </div>
   </div>
+  <div class="background-art" aria-hidden="true">
+    <svg class="produce-definitions" aria-hidden="true">
+      <symbol id="produce-lemon" viewBox="0 0 120 100"><path d="M10 51c12-23 29-36 50-36s38 13 50 36c-12 23-29 36-50 36S22 74 10 51Z" fill="#f3d577" stroke="#b95d3d" stroke-width="3"/><path d="M60 16c-7-10-18-12-25-7 5 9 14 12 25 7Zm2 0c6-11 17-14 25-8-5 9-14 12-25 8Z" fill="#67a849" stroke="#287c70" stroke-width="2"/><path d="M31 49c7-8 13-11 19-12" fill="none" stroke="#fffaf1" stroke-width="4" stroke-linecap="round"/></symbol>
+      <symbol id="produce-tomato" viewBox="0 0 120 100"><path d="M60 28c-13-13-35-10-44 7-13 24 3 52 44 55 41-3 57-31 44-55-9-17-31-20-44-7Z" fill="#e96f46" stroke="#b95331" stroke-width="3"/><path d="M60 31 51 18l3 15-17-8 11 14-18 1 19 6-7 14 15-11 15 11-7-14 19-6-18-1 11-14-17 8 3-15Z" fill="#67a849" stroke="#287c70" stroke-width="2" stroke-linejoin="round"/><path d="M31 51c1-7 5-12 10-15" fill="none" stroke="#fff0e8" stroke-width="4" stroke-linecap="round"/></symbol>
+      <symbol id="produce-cucumber" viewBox="0 0 120 100"><path d="M14 66c-5-8-4-20 4-27l60-31c10-5 23-2 28 8 5 9 2 21-8 26L39 75c-10 5-20 1-25-9Z" fill="#67a849" stroke="#287c70" stroke-width="3"/><path d="m36 52 6 7m12-17 6 7m12-17 6 7m12-17 5 6" stroke="#d5e7ad" stroke-width="3" stroke-linecap="round"/><circle cx="28" cy="62" r="2" fill="#3158d8"/><circle cx="50" cy="48" r="2" fill="#3158d8"/><circle cx="70" cy="36" r="2" fill="#3158d8"/><circle cx="91" cy="24" r="2" fill="#3158d8"/></symbol>
+      <symbol id="produce-carrot" viewBox="0 0 120 110"><path d="M49 32c13-7 29-2 36 10L58 96c-2 6-8 6-10 0L26 48c4-8 12-14 23-16Z" fill="#f28b3c" stroke="#b95d3d" stroke-width="3"/><path d="M49 35C39 23 40 12 47 7c9 7 10 17 4 28Zm8-2C56 18 64 7 73 9c2 11-4 20-14 25Zm-14 4C29 32 23 22 28 14c12 2 19 10 18 23Z" fill="#67a849" stroke="#287c70" stroke-width="2" stroke-linejoin="round"/><path d="m39 55 8 5m5 10 8 5" stroke="#d87832" stroke-width="2.5" stroke-linecap="round"/></symbol>
+      <symbol id="produce-pepper" viewBox="0 0 120 110"><path d="M54 26c-7-12-2-20 7-21 8 5 8 13 3 22 15-9 31-1 34 15 5 28-11 55-36 62-25-7-41-34-36-62 3-16 19-24 28-16Z" fill="#e96f46" stroke="#b95331" stroke-width="3"/><path d="M60 28c-2-11 4-18 14-18m-13 19c-10-11-18-12-26-7" fill="none" stroke="#287c70" stroke-width="4" stroke-linecap="round"/><path d="M46 43c-4 12-3 27 2 37" fill="none" stroke="#fff0e8" stroke-width="3" stroke-linecap="round"/></symbol>
+    </svg>
+    <svg class="produce-mark produce-mark--01" viewBox="0 0 120 100"><use href="#produce-lemon"/></svg>
+    <svg class="produce-mark produce-mark--02" viewBox="0 0 120 100"><use href="#produce-tomato"/></svg>
+    <svg class="produce-mark produce-mark--03" viewBox="0 0 120 100"><use href="#produce-cucumber"/></svg>
+    <svg class="produce-mark produce-mark--04" viewBox="0 0 120 110"><use href="#produce-carrot"/></svg>
+    <svg class="produce-mark produce-mark--05" viewBox="0 0 120 100"><use href="#produce-pepper"/></svg>
+    <svg class="produce-mark produce-mark--06" viewBox="0 0 120 100"><use href="#produce-lemon"/></svg>
+    <svg class="produce-mark produce-mark--07" viewBox="0 0 120 100"><use href="#produce-tomato"/></svg>
+    <svg class="produce-mark produce-mark--08" viewBox="0 0 120 100"><use href="#produce-cucumber"/></svg>
+    <svg class="produce-mark produce-mark--09" viewBox="0 0 120 100"><use href="#produce-carrot"/></svg>
+    <svg class="produce-mark produce-mark--10" viewBox="0 0 120 110"><use href="#produce-pepper"/></svg>
+    <svg class="produce-mark produce-mark--11" viewBox="0 0 120 100"><use href="#produce-lemon"/></svg>
+    <svg class="produce-mark produce-mark--12" viewBox="0 0 120 100"><use href="#produce-tomato"/></svg>
+    <svg class="produce-mark produce-mark--13" viewBox="0 0 120 100"><use href="#produce-cucumber"/></svg>
+    <svg class="produce-mark produce-mark--14" viewBox="0 0 120 100"><use href="#produce-carrot"/></svg>
+    <svg class="produce-mark produce-mark--15" viewBox="0 0 120 110"><use href="#produce-pepper"/></svg>
+    <svg class="produce-mark produce-mark--16" viewBox="0 0 120 100"><use href="#produce-lemon"/></svg>
+    <svg class="produce-mark produce-mark--17" viewBox="0 0 120 100"><use href="#produce-tomato"/></svg>
+    <svg class="produce-mark produce-mark--18" viewBox="0 0 120 100"><use href="#produce-cucumber"/></svg>
+    <svg class="produce-mark produce-mark--19" viewBox="0 0 120 100"><use href="#produce-carrot"/></svg>
+    <svg class="produce-mark produce-mark--20" viewBox="0 0 120 110"><use href="#produce-pepper"/></svg>
+  </div>
   <div id="app-content" inert>
   <header class="topbar">
     <div class="brand">
@@ -225,7 +294,7 @@
     <section class="intro" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">Your dinner party, sorted</p>
-        <h1 id="page-title">Make a meal<br>of <em>it.</em></h1>
+        <h1 id="page-title">Make a meal of <em>it.</em></h1>
       </div>
     </section>
 
@@ -245,6 +314,20 @@
             <label for="occasion">What's the occasion?</label>
             <input id="occasion" name="occasion" type="text" value="Family dinner" placeholder="e.g. family reunion, birthday, date night" required>
             <p class="occasion-error" id="occasion-error" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="cuisine">Cuisine</label>
+            <select id="cuisine" name="cuisine">
+              <option value="">Any cuisine</option>
+              <option value="Greek">Greek</option>
+              <option value="Italian">Italian</option>
+              <option value="Asian">Asian</option>
+              <option value="American">American</option>
+              <option value="Mediterranean">Mediterranean</option>
+              <option value="Mexican">Mexican</option>
+              <option value="Indian">Indian</option>
+              <option value="Street food">Street food</option>
+            </select>
           </div>
           <div class="field field-courses">
             <span class="field-label" id="courses-label">How many courses?</span>
@@ -266,9 +349,9 @@
       </section>
     </section>
   </main>
-  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Pass the pasta</span> ✳ <span>Save room for dessert</span> ✳ <span>Seconds, please</span> ✳ <span>Pass the pasta</span> ✳ <span>Save room for dessert</span> ✳ <span>Seconds, please</span> ✳</div></div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const recipes = {
       tomatoToast: {
@@ -372,29 +455,196 @@
         image: "photo-1509440159596-0249088772ff",
         ingredients: [[500, "g", "mixed mushrooms"], [1, "sheet", "puff pastry"], [2, "cloves", "garlic"], [1, "bunch", "thyme"], [1, "", "egg"]],
         method: ["Thaw puff pastry in the fridge according to its package directions. Finely chop mushrooms. Heat a wide pan over medium-high heat, add a little oil, and cook mushrooms for 8–12 minutes, stirring, until their liquid has evaporated and the mixture is dry. Stir in minced garlic and chopped thyme for the final minute; season and cool completely on a plate.", "Heat the oven to 200°C conventional (180°C fan). Lay the cold pastry on a lightly floured surface. Spoon the cooled mushroom mixture down the centre, leaving a 3 cm border. Fold pastry over, seal the seam and ends firmly, then place seam-side down on a lined tray. Cut two small steam vents on top and brush with beaten egg.", "Bake on the centre rack for 30–35 minutes, until puffed and evenly deep golden. If the pastry browns too quickly, loosely cover with foil for the final minutes.", "Rest on the tray for 10 minutes so the filling sets, then slice with a serrated knife. Check the centre is piping hot before serving."]
+      },
+      sesameNoodles: {
+        name: "Sesame vegetable noodles", course: "The main event", cost: 5.4,
+        image: "photo-1512003867696-6d5ce6835040",
+        ingredients: [[300, "g", "wheat noodles"], [250, "g", "mixed vegetables"], [2, "tbsp", "soy sauce"], [1, "tbsp", "sesame oil"], [1, "tbsp", "sesame seeds"]],
+        method: ["Cook noodles according to the packet instructions. Drain, reserving a small cup of cooking water.", "Slice the vegetables into similar-sized pieces. Stir-fry in a hot pan with a little neutral oil for 4–5 minutes until just tender.", "Mix soy sauce and sesame oil, then add to the pan with the noodles. Toss over heat, loosening with a splash of noodle water if needed.", "Serve hot with sesame seeds. Check the soy sauce seasoning before adding salt."]
+      },
+      blackBeanTacos: {
+        name: "Black bean and avocado tacos", course: "The main event", cost: 5.1,
+        image: "photo-1551507933-7c61c77e9c06",
+        ingredients: [[400, "g", "black beans"], [8, "small", "corn tortillas"], [1, "tsp", "ground cumin"], [1, "", "ripe avocado"], [1, "", "lime"]],
+        method: ["Drain and rinse the beans. Warm them in a pan with cumin, a splash of water and a pinch of salt, lightly mashing some beans as they heat.", "Warm the tortillas in a dry pan for about 30 seconds per side, keeping them covered in a clean towel.", "Slice the avocado and squeeze lime over it. Taste the beans and adjust the seasoning.", "Fill each tortilla with warm beans and avocado. Serve with lime wedges and any fresh salsa you have to hand."]
+      },
+      chickpeaCurry: {
+        name: "Tomato chickpea curry", course: "The main event", cost: 4.8,
+        image: "photo-1585937421612-70a008356fbe",
+        ingredients: [[400, "g", "chickpeas"], [400, "g", "chopped tomatoes"], [1, "", "onion"], [2, "tsp", "curry powder"], [200, "ml", "coconut milk"]],
+        method: ["Dice the onion. Cook it in a little oil over medium heat for 6–8 minutes until soft, stirring occasionally.", "Add the curry powder and stir for 30 seconds. Add the tomatoes and chickpeas, then simmer gently for 15 minutes.", "Stir in the coconut milk and simmer for 5 minutes more. Add a splash of water if the curry gets thicker than you like.", "Taste and season. Serve hot with rice or flatbread."]
+      },
+      falafelPitas: {
+        name: "Falafel pita pockets", course: "The main event", cost: 5.6,
+        image: "photo-1529006557810-274b9b2fc783",
+        ingredients: [[400, "g", "chickpeas"], [4, "", "pita breads"], [1, "bunch", "fresh parsley"], [1, "tsp", "ground cumin"], [150, "g", "plain yoghurt"]],
+        method: ["Drain and dry the chickpeas very well. Pulse with parsley, cumin, a small minced garlic clove and a pinch of salt until the mixture holds together but is not smooth.", "Shape into 12 small patties. Pan-fry in a thin layer of oil over medium heat for 3–4 minutes per side until browned and hot through.", "Warm the pitas and mix the yoghurt with lemon juice, salt and pepper.", "Fill each pita with falafel and yoghurt sauce. Add salad leaves or sliced cucumber if available and serve straight away."]
+      },
+      classicBurger: {
+        name: "Classic cheeseburgers", course: "The main event", cost: 7.2,
+        image: "photo-1568901346375-23c9450c58cd",
+        ingredients: [[500, "g", "beef mince"], [4, "", "burger buns"], [4, "slices", "cheddar"], [1, "", "tomato"], [4, "leaves", "lettuce"]],
+        method: ["Divide the mince into four patties, handling it gently. Season both sides with salt and pepper just before cooking.", "Heat a heavy pan over medium-high heat. Cook patties for 4–5 minutes per side, until browned and cooked through; use a thermometer to check the centre reaches 71°C.", "Top each patty with cheddar for the final minute and cover the pan briefly to melt. Toast the cut sides of the buns.", "Layer lettuce, sliced tomato and the hot patties into the buns. Serve immediately."]
+      },
+      greekChicken: {
+        name: "Greek lemon-oregano chicken", course: "The main event", cost: 7.4,
+        image: "photo-1532634896-26909d0d4b8f",
+        ingredients: [[700, "g", "chicken thighs"], [150, "g", "Greek yoghurt"], [1, "", "lemon"], [2, "tsp", "dried oregano"], [2, "cloves", "garlic"]],
+        method: ["Mix yoghurt, lemon zest and juice, oregano, crushed garlic, salt and pepper. Coat the chicken and chill for at least 20 minutes.", "Heat the oven to 210°C conventional (190°C fan). Arrange chicken in a single layer in a roasting dish.", "Roast for 30–40 minutes, until browned and a thermometer in the thickest piece reads 74°C.", "Rest for 5 minutes and spoon over the pan juices before serving."]
+      },
+      gingerChickenRice: {
+        name: "Ginger chicken rice bowls", course: "The main event", cost: 6.8,
+        image: "photo-1512058564366-18510be2db19",
+        ingredients: [[600, "g", "chicken thighs"], [250, "g", "rice"], [2, "tbsp", "soy sauce"], [2, "tbsp", "fresh ginger"], [2, "", "spring onions"]],
+        method: ["Cook the rice according to the packet instructions. Grate the ginger and slice the spring onions.", "Cut chicken into bite-size pieces. Cook in a hot oiled pan for 6–8 minutes, turning until browned and cooked through.", "Add ginger and soy sauce with a splash of water. Stir for 1 minute until glossy; check the chicken reaches 74°C.", "Serve over rice and finish with spring onions."]
+      },
+      crispyTofuRice: {
+        name: "Crispy tofu and rice bowls", course: "The main event", cost: 5.9,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[400, "g", "firm tofu"], [250, "g", "rice"], [2, "tbsp", "soy sauce"], [1, "tbsp", "sesame oil"], [250, "g", "mixed vegetables"]],
+        method: ["Cook the rice according to the packet instructions. Press the tofu dry and cut into 2 cm cubes.", "Dust tofu lightly with cornflour. Pan-fry in a little oil, turning until crisp and golden on all sides.", "Stir-fry the vegetables until just tender. Add soy sauce and sesame oil, then toss through the tofu.", "Serve over rice while hot."]
+      },
+      chickenFajitas: {
+        name: "Sizzling chicken fajitas", course: "The main event", cost: 6.9,
+        image: "photo-1534352956036-cd81e27dd615",
+        ingredients: [[600, "g", "chicken breast"], [8, "small", "flour tortillas"], [2, "", "bell peppers"], [1, "", "red onion"], [2, "tsp", "fajita seasoning"]],
+        method: ["Slice the chicken and vegetables into thin strips. Toss chicken with fajita seasoning.", "Heat a large pan until hot. Cook the chicken in batches for 5–7 minutes until browned and cooked through; check it reaches 74°C.", "Add peppers and onion and stir-fry for 4–5 minutes until tender-crisp.", "Warm the tortillas and serve with the sizzling filling."]
+      },
+      sweetCornEnchiladas: {
+        name: "Black bean and sweetcorn enchiladas", course: "The main event", cost: 5.8,
+        image: "photo-1551507933-7c61c77e9c06",
+        ingredients: [[400, "g", "black beans"], [200, "g", "sweetcorn"], [8, "", "corn tortillas"], [400, "g", "tomato passata"], [150, "g", "grated cheddar"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Drain the beans and mix with sweetcorn and half the cheese.", "Spoon the filling into tortillas, roll them up and place seam-side down in a baking dish.", "Pour over passata, scatter with the remaining cheese and bake for 20–25 minutes until bubbling and hot through.", "Rest for 5 minutes before serving."]
+      },
+      redLentilDal: {
+        name: "Red lentil dal", course: "The main event", cost: 4.7,
+        image: "photo-1585937421612-70a008356fbe",
+        ingredients: [[250, "g", "red lentils"], [1, "", "onion"], [400, "g", "chopped tomatoes"], [1, "tsp", "ground turmeric"], [400, "ml", "vegetable stock"]],
+        method: ["Rinse the lentils until the water runs mostly clear. Finely dice the onion.", "Soften onion in a little oil for 5 minutes. Stir in turmeric and cumin for 30 seconds.", "Add lentils, tomatoes and stock. Simmer gently for 20–25 minutes, stirring often, until the lentils are soft.", "Season to taste and serve hot with rice or flatbread."]
+      },
+      butterChicken: {
+        name: "Butter chicken", course: "The main event", cost: 6.8,
+        image: "photo-1603894584373-5ac82b2ae398",
+        ingredients: [[600, "g", "chicken thighs"], [150, "g", "plain yoghurt"], [400, "g", "tomato passata"], [2, "tsp", "garam masala"], [100, "ml", "single cream"]],
+        method: ["Cut the chicken into bite-size pieces. Mix with yoghurt, half the garam masala and a pinch of salt; leave to marinate for 20 minutes.", "Brown the chicken in batches in a hot pan with a little oil, then set aside. It does not need to be cooked through yet.", "Melt a knob of butter in the pan. Stir in the remaining garam masala, add passata and simmer gently for 10 minutes.", "Return the chicken to the pan and simmer until cooked through and a thermometer reads 74°C. Stir in the cream and serve hot."]
+      },
+      greekSpinachPie: {
+        name: "Greek spinach and feta pie", course: "The main event", cost: 5.9,
+        image: "photo-1490645935967-10de6ba17061",
+        ingredients: [[500, "g", "spinach"], [200, "g", "feta"], [6, "sheets", "filo pastry"], [2, "", "eggs"], [1, "bunch", "fresh dill"]],
+        method: ["Heat the oven to 190°C conventional (170°C fan). Cook spinach in a pan until wilted, then squeeze out as much liquid as possible and let it cool.", "Mix spinach with crumbled feta, eggs, chopped dill and black pepper.", "Brush a baking dish with oil. Layer in half the filo, brushing each sheet lightly with oil, then spread the filling evenly over it.", "Top with the remaining filo, brush with oil and score the top. Bake for 35–40 minutes until crisp and golden. Rest for 10 minutes before slicing."]
+      },
+      ovenChickenPotatoes: {
+        name: "Greek lemon chicken and potatoes", course: "The main event", cost: 7.6,
+        image: "photo-1532634896-26909d0d4b8f",
+        ingredients: [[700, "g", "chicken thighs"], [800, "g", "potatoes"], [1, "", "lemon"], [2, "tsp", "dried oregano"], [250, "ml", "chicken stock"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Cut potatoes into wedges and arrange with chicken in a roasting dish.", "Whisk stock with lemon juice, olive oil, oregano, crushed garlic, salt and pepper. Pour over the chicken and potatoes.", "Roast for 45–55 minutes, turning the potatoes once, until tender and golden and the chicken reaches 74°C in the thickest part.", "Rest for 5 minutes and spoon the lemony pan juices over everything before serving."]
+      },
+      bolognese: {
+        name: "Slow-simmered beef Bolognese", course: "The main event", cost: 7.2,
+        image: "photo-1476224203421-9ac39bcb3327",
+        ingredients: [[400, "g", "beef mince"], [350, "g", "tagliatelle"], [400, "g", "chopped tomatoes"], [1, "", "onion"], [1, "", "carrot"]],
+        method: ["Finely dice the onion and carrot. Cook in a little olive oil over medium heat for 6–8 minutes until soft.", "Add the beef and cook, breaking it up, until browned. Stir in chopped tomatoes, a splash of water, salt and pepper.", "Simmer gently for at least 25 minutes, stirring now and then, until thick and rich.", "Cook tagliatelle according to the packet instructions. Toss with the sauce and serve with grated parmesan if you like."]
+      },
+      margheritaPizza: {
+        name: "Margherita pizza", course: "The main event", cost: 5.8,
+        image: "photo-1565299624946-b28f40a0ae38",
+        ingredients: [[2, "", "pizza bases"], [150, "g", "tomato passata"], [200, "g", "mozzarella"], [1, "bunch", "fresh basil"], [1, "tbsp", "olive oil"]],
+        method: ["Heat the oven to its highest setting, ideally 240°C or above, and preheat a tray or pizza stone.", "Spread a thin layer of passata over each base, leaving a small border. Tear mozzarella over the top and drizzle lightly with olive oil.", "Bake one pizza at a time for 8–12 minutes, until the crust is browned and the cheese is bubbling.", "Scatter with fresh basil and let stand for 2 minutes before slicing."]
+      },
+      tiramisu: {
+        name: "Classic tiramisu", course: "A sweet finish", cost: 3.4,
+        image: "photo-1488477181946-6428a0291777",
+        ingredients: [[250, "g", "mascarpone"], [150, "g", "ladyfingers"], [180, "ml", "espresso"], [2, "", "pasteurized eggs"], [2, "tbsp", "cocoa powder"]],
+        method: ["Brew espresso and leave it to cool completely. Separate the pasteurized eggs, keeping the whites and yolks in clean bowls.", "Whisk yolks with sugar until pale, then beat in mascarpone until smooth. Whisk whites to soft peaks and fold gently into the mascarpone mixture.", "Dip each ladyfinger quickly into the cooled espresso and arrange a layer in a dish. Spread over half the mascarpone mixture and repeat the layers.", "Cover and chill for at least 4 hours. Dust with cocoa just before serving and keep refrigerated."]
+      },
+      salmonSushiRolls: {
+        name: "Smoked salmon sushi rolls", course: "The main event", cost: 7.1,
+        image: "photo-1519708227418-c8fd9a32b7a2",
+        ingredients: [[250, "g", "sushi rice"], [3, "sheets", "nori"], [120, "g", "smoked salmon"], [1, "", "avocado"], [1, "", "cucumber"]],
+        method: ["Rinse and cook the sushi rice according to the packet instructions. Season with rice vinegar and a little sugar, then cool until just warm.", "Place a nori sheet on a clean mat or board. With damp fingers, spread a thin layer of rice over it, leaving a 2 cm strip clear at the far edge.", "Arrange smoked salmon, avocado and cucumber in a line across the rice. Roll firmly away from you, using the clear strip to seal the edge with a little water.", "Slice each roll with a damp sharp knife and serve straight away."]
+      },
+      misoRamen: {
+        name: "Miso ramen with mushrooms", course: "The main event", cost: 6.6,
+        image: "photo-1512003867696-6d5ce6835040",
+        ingredients: [[300, "g", "ramen noodles"], [1, "l", "vegetable stock"], [2, "tbsp", "white miso"], [200, "g", "mushrooms"], [2, "", "eggs"]],
+        method: ["Boil the eggs for 9–10 minutes until firm, then cool, peel and halve. Slice the mushrooms.", "Simmer mushrooms in the stock for 5 minutes. Remove the pan from the heat and whisk in miso until dissolved.", "Cook ramen noodles separately according to the packet instructions, then drain.", "Divide noodles between bowls, pour over the hot broth and mushrooms, and top with egg halves and sliced spring onion."]
+      },
+      paneerTikka: {
+        name: "Paneer tikka and peppers", course: "The main event", cost: 6.5,
+        image: "photo-1567188040759-fb8a883dc6d8",
+        ingredients: [[400, "g", "paneer"], [150, "g", "plain yoghurt"], [2, "", "bell peppers"], [2, "tsp", "tikka masala"], [1, "", "lemon"]],
+        method: ["Cut paneer and peppers into bite-size pieces. Mix yoghurt, tikka masala, lemon juice and a pinch of salt.", "Coat paneer and peppers in the yoghurt mixture and leave for 15 minutes while the oven heats to 220°C conventional (200°C fan).", "Thread onto skewers or spread on a lined tray. Roast for 15–18 minutes, turning once, until the edges are lightly charred and hot through.", "Serve straight away with rice or flatbread."]
+      },
+      sausageRagu: {
+        name: "Italian sausage tomato ragu", course: "The main event", cost: 7.1,
+        image: "photo-1476224203421-9ac39bcb3327",
+        ingredients: [[400, "g", "Italian sausages"], [350, "g", "rigatoni"], [400, "g", "chopped tomatoes"], [1, "", "onion"], [30, "g", "parmesan"]],
+        method: ["Remove sausage meat from its casings. Brown in a wide pan, breaking it into small pieces as it cooks.", "Add finely diced onion and cook for 5 minutes. Stir in tomatoes and simmer gently for 20 minutes.", "Cook rigatoni in salted boiling water until just al dente. Reserve a cup of pasta water before draining.", "Toss pasta with the ragu, loosening with pasta water if needed. Finish with grated parmesan."]
+      },
+      tomatoGnocchi: {
+        name: "Baked tomato and mozzarella gnocchi", course: "The main event", cost: 6.2,
+        image: "photo-1481931098730-318b6f776db0",
+        ingredients: [[500, "g", "potato gnocchi"], [400, "g", "tomato passata"], [150, "g", "mozzarella"], [30, "g", "parmesan"], [1, "bunch", "fresh basil"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Warm passata in an oven-safe pan with salt and black pepper.", "Stir in the gnocchi and simmer for 2 minutes. Tear mozzarella over the top and scatter with parmesan.", "Bake for 15–20 minutes until bubbling and golden in spots.", "Finish with torn basil and let stand for 5 minutes before serving."]
+      },
+      bbqChickenSandwiches: {
+        name: "Barbecue chicken sandwiches", course: "The main event", cost: 7.3,
+        image: "photo-1529193591184-b1d58069ecdd",
+        ingredients: [[600, "g", "chicken thighs"], [4, "", "soft rolls"], [150, "ml", "barbecue sauce"], [200, "g", "coleslaw"], [1, "tbsp", "olive oil"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Rub chicken with oil, salt and pepper and place in a roasting dish.", "Roast for 25–30 minutes, until cooked through and a thermometer reads 74°C. Brush with barbecue sauce for the final 5 minutes.", "Rest for 5 minutes, then shred the chicken with two forks and toss with the pan juices.", "Pile into warm rolls and top with coleslaw."]
+      },
+      hummusPlate: {
+        name: "Hummus and crunchy vegetables", course: "First things first", cost: 2.1,
+        image: "photo-1541519227354-08fa5d50c44d",
+        ingredients: [[400, "g", "chickpeas"], [2, "tbsp", "tahini"], [1, "", "lemon"], [1, "", "cucumber"], [2, "", "carrots"]],
+        method: ["Drain the chickpeas, reserving a little of the liquid. Blend with tahini, lemon juice, a small garlic clove and a pinch of salt.", "Add reserved chickpea liquid a spoonful at a time until the hummus is smooth and spoonable.", "Cut cucumber and carrots into sticks. Taste the hummus and adjust with more lemon or salt.", "Spoon into a serving bowl and serve with the vegetables."]
+      },
+      lemonHerbCouscous: {
+        name: "Lemon and herb couscous", course: "Something on the side", cost: 1.6,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[250, "g", "couscous"], [250, "ml", "vegetable stock"], [1, "", "lemon"], [1, "bunch", "fresh parsley"], [2, "tbsp", "olive oil"]],
+        method: ["Put couscous in a heatproof bowl. Bring stock to a boil, pour over, cover and leave for 5 minutes.", "Fluff the couscous with a fork, breaking up any clumps.", "Stir through olive oil, lemon zest and juice, and finely chopped parsley.", "Taste, season with salt and pepper, and serve warm or at room temperature."]
       }
     };
 
     const menus = [
-      { name: "The Sunday best", mood: "Comfort food, dressed up", image: "photo-1547592180-85f173990554", occasions: ["family", "holiday", "birthday"], recipes: ["tomatoToast", "lemonChicken", "potatoes", "oliveCake"] },
-      { name: "A little trattoria", mood: "Laid-back Italian-ish", image: "photo-1476224203421-9ac39bcb3327", occasions: ["date", "friends", "family"], recipes: ["carrotSoup", "mushroomPasta", "greenSalad", "berryCups"] },
-      { name: "The veggie plot", mood: "Plant-powered and punchy", image: "photo-1490645935967-10de6ba17061", occasions: ["friends", "family", "holiday"], recipes: ["tomatoToast", "roastSquash", "greenSalad", "chocolateMousse"] },
-      { name: "Birthday, but make it dinner", mood: "A little extra, very shareable", image: "photo-1565299624946-b28f40a0ae38", occasions: ["birthday", "friends", "date"], recipes: ["carrotSoup", "mushroomPasta", "potatoes", "chocolateMousse"] },
-      { name: "The long lunch", mood: "Slow afternoon, full table", image: "photo-1555939594-58d7cb561ad1", occasions: ["holiday", "family", "date"], recipes: ["tomatoToast", "lemonChicken", "greenSalad", "berryCups"] },
+        { name: "Sesame supper", mood: "A colourful Asian-inspired table", image: "photo-1512003867696-6d5ce6835040", occasions: ["family", "friends", "date"], cuisines: ["Asian"], recipes: ["tomatoToast", "salmonSushiRolls", "greenSalad", "berryCups"] },
+        { name: "Taco night", mood: "A lively Mexican-inspired spread", image: "photo-1551507933-7c61c77e9c06", occasions: ["family", "friends", "birthday"], cuisines: ["Mexican"], recipes: ["tomatoToast", "blackBeanTacos", "greenSalad", "berryCups"] },
+        { name: "The curry table", mood: "Warm spices for sharing", image: "photo-1585937421612-70a008356fbe", occasions: ["family", "friends", "holiday"], cuisines: ["Indian"], recipes: ["tomatoToast", "chickpeaCurry", "greenSalad", "berryCups"] },
+        { name: "Pita and falafel", mood: "Fresh, casual street-food favourites", image: "photo-1529006557810-274b9b2fc783", occasions: ["family", "friends", "brunch"], cuisines: ["Street food"], recipes: ["tomatoToast", "falafelPitas", "greenSalad", "berryCups"] },
+        { name: "Burger night", mood: "A classic American-style cookout", image: "photo-1568901346375-23c9450c58cd", occasions: ["family", "friends", "birthday"], cuisines: ["American"], recipes: ["tomatoToast", "classicBurger", "greenSalad", "berryCups"] },
+        { name: "The backyard barbecue", mood: "Saucy chicken and easygoing sides", image: "photo-1529193591184-b1d58069ecdd", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["American"], recipes: ["carrotSoup", "bbqChickenSandwiches", "potatoes", "chocolateMousse"] },
+        { name: "American steakhouse supper", mood: "A hearty steak dinner for a full table", image: "photo-1546833999-b9f581a1996d", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["American"], recipes: ["hummusPlate", "steakFrites", "lemonHerbCouscous", "oliveCake"] },
+        { name: "Noodles for everyone", mood: "A relaxed Asian-inspired supper", image: "photo-1512058564366-18510be2db19", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Asian"], recipes: ["carrotSoup", "misoRamen", "potatoes", "chocolateMousse"] },
+        { name: "The sesame supper club", mood: "Bright vegetables and savoury sesame", image: "photo-1512621776951-a57141f2eefd", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Asian"], recipes: ["hummusPlate", "crispyTofuRice", "lemonHerbCouscous", "oliveCake"] },
+        { name: "The taco table", mood: "Build-your-own tacos for the whole table", image: "photo-1534352956036-cd81e27dd615", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Mexican"], recipes: ["carrotSoup", "chickenFajitas", "potatoes", "chocolateMousse"] },
+        { name: "A little fiesta", mood: "Lime, beans and plenty to share", image: "photo-1498837167922-ddd27525d352", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Mexican"], recipes: ["hummusPlate", "sweetCornEnchiladas", "lemonHerbCouscous", "oliveCake"] },
+        { name: "Butter chicken supper", mood: "A mellow tomato curry for sharing", image: "photo-1603894584373-5ac82b2ae398", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Indian"], recipes: ["carrotSoup", "butterChicken", "potatoes", "chocolateMousse"] },
+        { name: "The spiced supper", mood: "A generous curry with something sweet", image: "photo-1490645935967-10de6ba17061", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Indian"], recipes: ["hummusPlate", "paneerTikka", "lemonHerbCouscous", "oliveCake"] },
+        { name: "Falafel for the table", mood: "Warm pitas and fresh, simple sides", image: "photo-1414235077428-338989a2e8c0", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Street food"], recipes: ["carrotSoup", "blackBeanTacos", "potatoes", "chocolateMousse"] },
+        { name: "The pita party", mood: "Casual pockets made for passing around", image: "photo-1555939594-58d7cb561ad1", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Street food"], recipes: ["hummusPlate", "classicBurger", "lemonHerbCouscous", "oliveCake"] },
+        { name: "Greek-style Sunday", mood: "Lemon chicken and potatoes, oven-roasted", image: "photo-1532634896-26909d0d4b8f", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Greek"], recipes: ["tomatoToast", "ovenChickenPotatoes", "greenSalad", "berryCups"] },
+        { name: "A Greek-inspired spread", mood: "Spinach pie and bright, generous sides", image: "photo-1547592180-85f173990554", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Greek"], recipes: ["carrotSoup", "greekSpinachPie", "potatoes", "chocolateMousse"] },
+      { name: "The Sunday best", mood: "Comfort food, dressed up", image: "photo-1547592180-85f173990554", occasions: ["family", "holiday", "birthday"], cuisines: ["Mediterranean"], recipes: ["tomatoToast", "lemonChicken", "greenSalad", "berryCups"] },
+      { name: "A little trattoria", mood: "Laid-back Italian-ish", image: "photo-1476224203421-9ac39bcb3327", occasions: ["date", "friends", "family"], cuisines: ["Italian"], recipes: ["tomatoToast", "mushroomPasta", "greenSalad", "berryCups"] },
+      { name: "The veggie plot", mood: "Plant-powered and punchy", image: "photo-1490645935967-10de6ba17061", occasions: ["friends", "family", "holiday"], cuisines: ["Greek", "Mediterranean"], recipes: ["hummusPlate", "roastSquash", "lemonHerbCouscous", "oliveCake"] },
+      { name: "Birthday, but make it dinner", mood: "Bolognese and a little celebration", image: "photo-1565299624946-b28f40a0ae38", occasions: ["birthday", "friends", "date", "family"], cuisines: ["Italian"], recipes: ["carrotSoup", "bolognese", "potatoes", "tiramisu"] },
+      { name: "The long lunch", mood: "Slow afternoon, full table", image: "photo-1555939594-58d7cb561ad1", occasions: ["holiday", "family", "date"], cuisines: ["Mediterranean"], recipes: ["carrotSoup", "greekChicken", "potatoes", "chocolateMousse"] },
       { name: "The family-style table", mood: "A generous Sunday spread", image: "photo-1504674900247-0877df9cc836", occasions: ["family"], recipes: ["carrotSoup", "lemonChicken", "roastSquash", "berryCups"] },
-      { name: "Gathered around the table", mood: "Comforting favourites to pass around", image: "photo-1414235077428-338989a2e8c0", occasions: ["family"], recipes: ["tomatoToast", "mushroomPasta", "potatoes", "chocolateMousse"] },
-      { name: "A candlelit supper", mood: "A relaxed little occasion", image: "photo-1547592180-85f173990554", occasions: ["date"], recipes: ["carrotSoup", "roastSalmon", "greenSalad", "oliveCake"] },
+      { name: "Gathered around the table", mood: "Comforting favourites to pass around", image: "photo-1414235077428-338989a2e8c0", occasions: ["family"], cuisines: ["Italian"], recipes: ["hummusPlate", "margheritaPizza", "lemonHerbCouscous", "oliveCake"] },
+      { name: "A candlelit supper", mood: "A relaxed little occasion", image: "photo-1519708227418-c8fd9a32b7a2", occasions: ["date"], cuisines: ["Mediterranean"], recipes: ["carrotSoup", "roastSalmon", "greenSalad", "oliveCake"] },
       { name: "The little bistro", mood: "A polished night for two", image: "photo-1517248135467-4c7edcad34c4", occasions: ["date"], recipes: ["tomatoToast", "steakFrites", "potatoes", "berryCups"] },
       { name: "Dinner by candlelight", mood: "Slow, thoughtful and delicious", image: "photo-1504674900247-0877df9cc836", occasions: ["date"], recipes: ["carrotSoup", "mushroomWellington", "greenSalad", "chocolateMousse"] },
-      { name: "Make a wish", mood: "A birthday feast with a little sparkle", image: "photo-1504674900247-0877df9cc836", occasions: ["birthday"], recipes: ["tomatoToast", "steakFrites", "greenSalad", "berryCups"] },
-      { name: "The birthday gathering", mood: "A generous table for the occasion", image: "photo-1517248135467-4c7edcad34c4", occasions: ["birthday"], recipes: ["carrotSoup", "roastSalmon", "potatoes", "oliveCake"] },
+      { name: "Make a wish", mood: "A birthday feast with a little sparkle", image: "photo-1504674900247-0877df9cc836", occasions: ["birthday"], recipes: ["tomatoToast", "roastSalmon", "greenSalad", "oliveCake"] },
+      { name: "The birthday gathering", mood: "A generous table for the occasion", image: "photo-1517248135467-4c7edcad34c4", occasions: ["birthday"], recipes: ["carrotSoup", "roastSalmon", "potatoes", "chocolateMousse"] },
       { name: "A little celebration", mood: "Four courses, zero ordinary moments", image: "photo-1498837167922-ddd27525d352", occasions: ["birthday"], recipes: ["tomatoToast", "mushroomWellington", "roastSquash", "chocolateMousse"] },
-      { name: "Candles and cake", mood: "A cosy birthday dinner", image: "photo-1555939594-58d7cb561ad1", occasions: ["birthday"], recipes: ["carrotSoup", "mushroomPasta", "greenSalad", "oliveCake"] },
-      { name: "The friends-around feast", mood: "Easygoing plates for good company", image: "photo-1414235077428-338989a2e8c0", occasions: ["friends"], recipes: ["tomatoToast", "roastSalmon", "potatoes", "berryCups"] },
+      { name: "Candles and cake", mood: "A cosy birthday dinner", image: "photo-1555939594-58d7cb561ad1", occasions: ["birthday"], recipes: ["carrotSoup", "tomatoGnocchi", "greenSalad", "oliveCake"] },
+      { name: "The friends-around feast", mood: "Easygoing plates for good company", image: "photo-1414235077428-338989a2e8c0", occasions: ["friends"], recipes: ["carrotSoup", "roastSalmon", "greenSalad", "berryCups"] },
       { name: "A proper potluck", mood: "Big flavours, no fuss", image: "photo-1555939594-58d7cb561ad1", occasions: ["friends"], recipes: ["carrotSoup", "roastSquash", "greenSalad", "chocolateMousse"] },
       { name: "The kitchen-party menu", mood: "Made for lively conversation", image: "photo-1504674900247-0877df9cc836", occasions: ["friends"], recipes: ["tomatoToast", "mushroomWellington", "potatoes", "oliveCake"] },
       { name: "A festive Sunday", mood: "A little tradition, a lot of flavour", image: "photo-1476224203421-9ac39bcb3327", occasions: ["holiday"], recipes: ["carrotSoup", "roastSalmon", "roastSquash", "berryCups"] },
-      { name: "The holiday table", mood: "A celebratory spread for everyone", image: "photo-1517248135467-4c7edcad34c4", occasions: ["holiday"], recipes: ["tomatoToast", "steakFrites", "greenSalad", "chocolateMousse"] },
+      { name: "The holiday table", mood: "A celebratory spread for everyone", image: "photo-1517248135467-4c7edcad34c4", occasions: ["holiday"], recipes: ["carrotSoup", "steakFrites", "greenSalad", "chocolateMousse"] },
       { name: "Season of sharing", mood: "Cosy, colourful and made to share", image: "photo-1504674900247-0877df9cc836", occasions: ["holiday"], recipes: ["carrotSoup", "mushroomWellington", "potatoes", "oliveCake"] },
       { name: "Avocado & eggs", mood: "A bright, easy brunch", image: "photo-1525351484163-7529414344d8", occasions: ["brunch"], recipes: ["tomatoToast", "avocadoToast", "greenSalad", "berryCups"] },
       { name: "Shakshuka for the table", mood: "Spiced, sunny and shareable", image: "photo-1590412200988-a436970781fa", occasions: ["brunch"], recipes: ["carrotSoup", "shakshuka", "potatoes", "oliveCake"] },
@@ -433,6 +683,45 @@
     let previousMenuNames = [];
     let previousMenuImages = [];
     let previousRequestKey = "";
+    const ingredientStorageKey = "tablepop.checkedIngredients";
+    const savedShoppingListsStorageKey = "tablepop.savedShoppingLists";
+    const checkedIngredients = new Set(loadCheckedIngredients());
+    const savedShoppingLists = new Map(loadSavedShoppingLists().map((list) => [list.key, list]));
+    let currentShoppingListKey = "";
+
+    function loadCheckedIngredients() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(ingredientStorageKey) || "[]");
+        return Array.isArray(saved) ? saved.filter((key) => typeof key === "string") : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCheckedIngredients() {
+      try {
+        localStorage.setItem(ingredientStorageKey, JSON.stringify([...checkedIngredients]));
+      } catch {
+        return;
+      }
+    }
+
+    function loadSavedShoppingLists() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(savedShoppingListsStorageKey) || "[]");
+        return Array.isArray(saved) ? saved.filter((list) => list && typeof list.key === "string" && typeof list.recipeId === "string" && Array.isArray(list.items)) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveSavedShoppingLists() {
+      try {
+        localStorage.setItem(savedShoppingListsStorageKey, JSON.stringify([...savedShoppingLists.values()]));
+      } catch {
+        return;
+      }
+    }
 
     function photoUrl(id, width = 560) {
       return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
@@ -451,6 +740,11 @@
 
     function menuRecipes(menu, count) {
       return coursePlans[count].map((index) => menu.recipes[index]);
+    }
+
+    function ingredientCheckKey(menu, recipeId, guests, name, unit) {
+      const ingredientKey = `${name.trim().toLowerCase()}|${unit.trim().toLowerCase()}`;
+      return JSON.stringify([menu.name, recipeId, selectedCourses, guests, ingredientKey]);
     }
 
     function menuCost(menu, count, guests) {
@@ -490,11 +784,50 @@
       return result;
     }
 
+    function selectVariedMenus(candidates, limit) {
+      const target = Math.min(limit, candidates.length);
+      const tieBreakers = new Map(candidates.map((menu) => [menu, Math.random()]));
+      const dishes = new Map(candidates.map((menu) => [menu, menuRecipes(menu, selectedCourses)]));
+      let bestScore = -Infinity;
+      let bestMenus = [];
+
+      function choose(startIndex, chosen) {
+        if (chosen.length === target) {
+          let dishOverlap = 0;
+          let imageOverlap = 0;
+          chosen.forEach((menu, index) => {
+            chosen.slice(index + 1).forEach((other) => {
+              dishOverlap += dishes.get(menu).filter((id) => dishes.get(other).includes(id)).length;
+              imageOverlap += menu.image === other.image ? 1 : 0;
+            });
+          });
+          const preference = chosen.reduce((score, menu) => {
+            const freshness = (previousMenuNames.includes(menu.name) ? 0 : 2) + (previousMenuImages.includes(menu.image) ? 0 : 1);
+            return score + menu.occasionFit * 10 + freshness + tieBreakers.get(menu) / 100;
+          }, 0);
+          const score = -dishOverlap * 1000 - imageOverlap * 20 + preference;
+          if (score > bestScore) {
+            bestScore = score;
+            bestMenus = [...chosen];
+          }
+          return;
+        }
+
+        for (let index = startIndex; index <= candidates.length - (target - chosen.length); index += 1) {
+          choose(index + 1, [...chosen, candidates[index]]);
+        }
+      }
+
+      choose(0, []);
+      return bestMenus;
+    }
+
     function renderMenus() {
       const budget = Number(document.querySelector("#budget").value);
       const guests = Number(guestInput.value);
       const occasion = document.querySelector("#occasion").value.trim();
-      const requestKey = JSON.stringify([budget, guests, selectedCourses, occasion.toLowerCase()]);
+      const cuisine = document.querySelector("#cuisine").value;
+      const requestKey = JSON.stringify([budget, guests, selectedCourses, occasion.toLowerCase(), cuisine]);
       if (requestKey !== previousRequestKey) {
         previousMenuNames = [];
         previousMenuImages = [];
@@ -508,19 +841,20 @@
           total: menuCost(menu, selectedCourses, guests)
         }))
         .filter((menu) => occasionSignals.length === 0 || menu.occasionFit > 0)
+        .filter((menu) => !cuisine || menu.cuisines?.includes(cuisine))
         .filter((menu) => menu.total <= budget);
-      const byOccasionFit = (first, second) => second.occasionFit - first.occasionFit;
-      const unseen = shuffled(matching.filter((menu) => !previousMenuNames.includes(menu.name) && !previousMenuImages.includes(menu.image))).sort(byOccasionFit);
-      const repeated = shuffled(matching.filter((menu) => previousMenuNames.includes(menu.name) || previousMenuImages.includes(menu.image))).sort(byOccasionFit);
-      const selected = [...unseen.slice(0, 3), ...repeated.slice(0, Math.max(0, 3 - unseen.length))];
+      const selected = selectVariedMenus(shuffled(matching), 3);
       currentMenus = selected;
       previousMenuNames = selected.map((menu) => menu.name);
       previousMenuImages = selected.map((menu) => menu.image);
       const occasionNote = occasionSignals.length ? ` for ${occasion}` : ` for your ${occasion}`;
-      document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"}${occasionNote} · ${guests} people · ${formatMoney(budget)} to spend.`;
+      const cuisineNote = cuisine ? ` · ${cuisine}` : "";
+      document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"}${occasionNote}${cuisineNote} · ${guests} people · ${formatMoney(budget)} to spend.`;
       document.querySelector("#match-count").textContent = `${selected.length} ${selected.length === 1 ? "good idea" : "good ideas"}`;
       if (!selected.length) {
-        list.innerHTML = `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>Let's stretch that budget.</h3><p>Try adding a little more to the pot, or trim a course or two.</p></div>`;
+        list.innerHTML = cuisine
+          ? `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>No ${cuisine} menus yet.</h3><p>Try another cuisine, or choose any cuisine to see all available menus.</p></div>`
+          : `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>Let's stretch that budget.</h3><p>Try adding a little more to the pot, or trim a course or two.</p></div>`;
         return;
       }
       list.innerHTML = selected.map((menu, index) => {
@@ -552,17 +886,120 @@
       window.scrollTo({ top: document.querySelector(".results").getBoundingClientRect().top + window.scrollY - 18, behavior: "smooth" });
     }
 
+    function createSavedShoppingList(recipeId, recipe, items) {
+      return {
+        key: currentShoppingListKey,
+        recipeId,
+        recipeName: recipe.name,
+        menuName: currentMenu.name,
+        courses: selectedCourses,
+        guests: Number(guestInput.value),
+        savedAt: new Date().toISOString(),
+        items: items.map(({ name, amount }) => ({ name, amount }))
+      };
+    }
+
+    function updateRecipeShoppingList(recipeId, recipe, ingredientItems) {
+      const selectedItems = ingredientItems.filter((item) => checkedIngredients.has(item.checkKey));
+      const savedList = savedShoppingLists.get(currentShoppingListKey);
+      if (savedList) {
+        if (selectedItems.length) savedShoppingLists.set(currentShoppingListKey, createSavedShoppingList(recipeId, recipe, selectedItems));
+        else savedShoppingLists.delete(currentShoppingListKey);
+        saveSavedShoppingLists();
+      }
+      const saveChoice = detailView.querySelector("#save-recipe-list");
+      const listIsSaved = savedShoppingLists.has(currentShoppingListKey);
+      saveChoice.checked = listIsSaved;
+      saveChoice.disabled = !selectedItems.length && !listIsSaved;
+      detailView.querySelector("#recipe-list-status").textContent = listIsSaved
+        ? `${selectedItems.length} checked ${selectedItems.length === 1 ? "ingredient" : "ingredients"} saved for this dish.`
+        : "Select ingredients in this dish, then save them here.";
+      detailView.querySelector("#recipe-grocery-count").textContent = `${selectedItems.length} ${selectedItems.length === 1 ? "item" : "items"}`;
+      detailView.querySelector("#recipe-grocery-items").innerHTML = selectedItems.length
+        ? selectedItems.map((item) => `<li><span>${item.name}</span><span>${item.amount}</span></li>`).join("")
+        : `<li class="shopping-list-empty">No ingredients selected.</li>`;
+      detailView.querySelector("#export-recipe-list").disabled = !listIsSaved || !selectedItems.length;
+    }
+
+    function exportShoppingList() {
+      const savedList = savedShoppingLists.get(currentShoppingListKey);
+      if (!savedList || !savedList.items.length) return;
+      const PdfDocument = window.jspdf?.jsPDF;
+      if (!PdfDocument) {
+        detailView.querySelector("#recipe-list-status").textContent = "PDF export is unavailable. Check your internet connection and try again.";
+        return;
+      }
+
+      const pdf = new PdfDocument();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 16;
+      const cleanText = (value) => String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x20-\x7e]/g, "");
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(18);
+      pdf.text("Tablepop Shopping List", margin, 20);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(11);
+      pdf.text(cleanText(savedList.recipeName), margin, 29);
+      pdf.setFontSize(10);
+      pdf.text(cleanText(`${savedList.menuName} | ${savedList.courses} courses | ${savedList.guests} people`), margin, 37);
+
+      let cursorY = 49;
+      savedList.items.forEach((item, index) => {
+        const lines = pdf.splitTextToSize(`${index + 1}. ${cleanText(item.name)} - ${cleanText(item.amount)}`, pageWidth - margin * 2);
+        const rowHeight = lines.length * 6;
+        if (cursorY + rowHeight > pageHeight - margin) {
+          pdf.addPage();
+          cursorY = margin;
+        }
+        pdf.text(lines, margin, cursorY);
+        cursorY += rowHeight + 4;
+      });
+
+      const filename = cleanText(savedList.recipeName).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "tablepop";
+      pdf.save(`${filename}-shopping-list.pdf`);
+    }
+
     function renderRecipe(recipeId) {
       const recipe = recipes[recipeId];
       const guests = Number(guestInput.value);
       if (!currentMenu || !recipe) return;
+      currentShoppingListKey = JSON.stringify([currentMenu.name, recipeId, selectedCourses, guests]);
+      const ingredientItems = recipe.ingredients.map(([quantity, unit, name]) => ({
+        name,
+        unit,
+        amount: `${scaledAmount(quantity, guests)} ${unit}`.trim(),
+        checkKey: ingredientCheckKey(currentMenu, recipeId, guests, name, unit)
+      }));
       detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Menu dishes</button></div>
         <article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 720)}" alt="${recipe.name}" loading="lazy"><div class="recipe-title"><span class="course-label">${recipe.course}</span><h3>${recipe.name}</h3><p>${formatMoney(recipe.cost)} per person · ${guests} servings</p></div></div>
-          <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${recipe.ingredients.map(([quantity, unit, name]) => `<li><span>${name}</span><span>${scaledAmount(quantity, guests)} ${unit}</span></li>`).join("")}</ul></section>
-          <section><h4>Step-by-step</h4><ol class="method">${recipe.method.map((step) => `<li>${step}</li>`).join("")}</ol></section></div></article>
-        <div class="shopping-bar"><p>Full menu · ${menuRecipes(currentMenu, selectedCourses).reduce((sum, id) => sum + recipes[id].ingredients.length, 0)} ingredients</p><button type="button" id="shopping-button" aria-pressed="false">Copy menu list</button></div>`;
+          <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${ingredientItems.map((item, index) => `<li><label class="recipe-ingredient"><input type="checkbox" data-recipe-ingredient="${index}" aria-label="Select ${item.name} for ${recipe.name} grocery list" ${checkedIngredients.has(item.checkKey) ? "checked" : ""}><span>${item.name}</span><span>${item.amount}</span></label></li>`).join("")}</ul>
+            <div class="recipe-grocery-tools"><label class="save-list-choice"><input id="save-recipe-list" type="checkbox" ${savedShoppingLists.has(currentShoppingListKey) ? "checked" : ""}><span>Save checked ingredients from this dish</span></label><p class="saved-list-status" id="recipe-list-status" role="status"></p>
+              <div class="recipe-grocery-heading"><h5>Grocery list</h5><span class="shopping-list-count" id="recipe-grocery-count"></span></div><ul class="shopping-list-items" id="recipe-grocery-items" aria-live="polite"></ul><button class="export-list-button" id="export-recipe-list" type="button">Export list</button>
+            </div>
+          </section>
+          <section><h4>Step-by-step</h4><ol class="method">${recipe.method.map((step) => `<li>${step}</li>`).join("")}</ol></section></div></article>`;
       detailView.querySelector(".back-button").addEventListener("click", () => renderMenuDishes(currentMenu));
-      detailView.querySelector("#shopping-button").addEventListener("click", copyShoppingList);
+      detailView.querySelectorAll("[data-recipe-ingredient]").forEach((checkbox) => checkbox.addEventListener("change", () => {
+        const item = ingredientItems[Number(checkbox.dataset.recipeIngredient)];
+        if (!item) return;
+        if (checkbox.checked) checkedIngredients.add(item.checkKey);
+        else checkedIngredients.delete(item.checkKey);
+        saveCheckedIngredients();
+        updateRecipeShoppingList(recipeId, recipe, ingredientItems);
+      }));
+      detailView.querySelector("#save-recipe-list").addEventListener("change", (event) => {
+        if (event.currentTarget.checked) {
+          const selectedItems = ingredientItems.filter((item) => checkedIngredients.has(item.checkKey));
+          savedShoppingLists.set(currentShoppingListKey, createSavedShoppingList(recipeId, recipe, selectedItems));
+        } else {
+          savedShoppingLists.delete(currentShoppingListKey);
+        }
+        saveSavedShoppingLists();
+        updateRecipeShoppingList(recipeId, recipe, ingredientItems);
+      });
+      detailView.querySelector("#export-recipe-list").addEventListener("click", exportShoppingList);
+      updateRecipeShoppingList(recipeId, recipe, ingredientItems);
       window.scrollTo({ top: document.querySelector(".results").getBoundingClientRect().top + window.scrollY - 18, behavior: "smooth" });
     }
 
@@ -570,20 +1007,6 @@
       detailView.style.display = "none";
       recommendationsView.style.display = "block";
       currentMenu = null;
-    }
-
-    async function copyShoppingList(event) {
-      const guests = Number(guestInput.value);
-      const menu = currentMenu;
-      if (!menu) return;
-      const items = menuRecipes(menu, selectedCourses).flatMap((id) => recipes[id].ingredients.map(([quantity, unit, name]) => `${scaledAmount(quantity, guests)} ${unit} ${name}`.trim()));
-      try {
-        await navigator.clipboard.writeText(items.join("\n"));
-        event.currentTarget.textContent = "Copied to clipboard ✓";
-        event.currentTarget.setAttribute("aria-pressed", "true");
-      } catch {
-        event.currentTarget.textContent = "Clipboard unavailable";
-      }
     }
 
     courseButtons.forEach((button) => button.addEventListener("click", () => {
