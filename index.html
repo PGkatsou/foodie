@@ -54,7 +54,7 @@
     .produce-mark--18 { top: 77%; left: 35%; transform: rotate(15deg); }
     .produce-mark--19 { top: 75%; left: 66%; transform: rotate(-9deg); }
     .produce-mark--20 { top: 78%; right: 4%; transform: rotate(13deg); }
-    button, input, select { font: inherit; }
+    button, input, select, textarea { font: inherit; }
     button { color: inherit; }
 
     .topbar { height: 72px; padding: 0 4vw; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid var(--line); }
@@ -81,6 +81,7 @@
     .planner-fields { display: grid; gap: 15px; padding: 16px; }
     .field label, .field-label { display: block; margin-bottom: 7px; font-size: 10px; font-weight: 700; }
     .field input, .field select { width: 100%; height: 39px; padding: 0 10px; background: #fbfcfa; border: 1px solid #dfe5df; border-radius: 5px; color: var(--ink); outline-color: var(--tomato); }
+    .field textarea { width: 100%; min-height: 76px; padding: 10px; background: #fbfcfa; border: 1px solid #dfe5df; border-radius: 5px; color: var(--ink); outline-color: var(--tomato); resize: vertical; line-height: 1.4; }
     .occasion-error { margin: 7px 0 0; color: #a42c1e; font-size: 11px; font-weight: 700; line-height: 1.4; }
     .money-input { position: relative; }
     .money-input span { position: absolute; top: 10px; left: 11px; z-index: 1; color: #717a73; font-weight: 700; }
@@ -158,6 +159,7 @@
     .recipe-title .course-label { color: var(--tomato); font-size: 9px; font-weight: 800; text-transform: uppercase; }
     .recipe-title h3 { margin: 4px 0; font-family: var(--serif); font-size: 22px; font-weight: 600; }
     .recipe-title p { margin: 0; color: #5c6058; font-size: 10px; }
+    .recipe-source { display: block; margin-top: 5px; color: var(--blue); font-size: 10px; font-weight: 700; }
     .recipe-content { display: grid; grid-template-columns: minmax(145px, .75fr) 1.25fr; gap: 20px; padding: 15px 17px 17px; }
     .recipe-content h4 { margin: 0 0 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
     .ingredients { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -192,7 +194,7 @@
       .workspace { grid-template-columns: 1fr; gap: 27px; }
       .planner { position: static; }
       .planner-fields { grid-template-columns: 1fr 1fr; gap: 15px; }
-      .field-courses, .submit-button { grid-column: 1 / -1; }
+      .field-courses, .field-requests, .submit-button { grid-column: 1 / -1; }
       .planner-foot { padding-top: 9px; }
       .results-heading h2 { font-size: 28px; }
       .menu-list { grid-template-columns: 1fr; }
@@ -477,6 +479,7 @@
               <option value="Italian">Italian</option>
               <option value="Asian">Asian</option>
               <option value="American">American</option>
+              <option value="European">European</option>
               <option value="Mediterranean">Mediterranean</option>
               <option value="Mexican">Mexican</option>
               <option value="Indian">Indian</option>
@@ -488,6 +491,10 @@
             <div class="course-options" role="group" aria-labelledby="courses-label">
               <button class="course-option" type="button" data-courses="1" aria-pressed="false">1</button><button class="course-option" type="button" data-courses="2" aria-pressed="false">2</button><button class="course-option" type="button" data-courses="3" aria-pressed="false">3</button><button class="course-option" type="button" data-courses="4" aria-pressed="true">4</button>
             </div>
+          </div>
+          <div class="field field-requests">
+            <label for="recipe-request">Any recipe requests?</label>
+            <textarea id="recipe-request" name="recipeRequest" rows="3" placeholder="e.g. burger recipes, or recipes with apple"></textarea>
           </div>
           <button class="submit-button" type="submit"><span>Find my menus</span><span aria-hidden="true">↗</span></button>
         </div>
@@ -759,6 +766,75 @@
         image: "photo-1512621776951-a57141f2eefd",
         ingredients: [[250, "g", "couscous"], [250, "ml", "vegetable stock"], [1, "", "lemon"], [1, "bunch", "fresh parsley"], [2, "tbsp", "olive oil"]],
         method: ["Put couscous in a heatproof bowl. Bring stock to a boil, pour over, cover and leave for 5 minutes.", "Fluff the couscous with a fork, breaking up any clumps.", "Stir through olive oil, lemon zest and juice, and finely chopped parsley.", "Taste, season with salt and pepper, and serve warm or at room temperature."]
+      },
+      appleCrumble: {
+        name: "Warm apple crumble", course: "A sweet finish", cost: 2.8,
+        image: "photo-1560806887-1e4cd0b6cbd6",
+        ingredients: [[4, "", "apples"], [80, "g", "plain flour"], [60, "g", "rolled oats"], [70, "g", "cold butter"], [60, "g", "brown sugar"], [1, "tsp", "ground cinnamon"]],
+        method: ["Heat the oven to 190°C conventional (170°C fan). Peel, core and slice the apples, then toss with half the brown sugar and the cinnamon in a baking dish.", "Rub the flour and cold butter together with your fingertips until the mixture looks like coarse crumbs. Stir in the oats and remaining sugar.", "Scatter the crumble evenly over the apples without pressing it down. Bake for 30–35 minutes until golden and bubbling at the edges.", "Rest for 10 minutes before serving. Check the apple is tender with a knife; bake a little longer if needed."]
+      },
+      beefStroganoff: {
+        name: "Beef stroganoff", course: "The main event", cost: 8.9,
+        image: "photo-1600891964599-f61ba0e24092",
+        source: "https://www.bbcgoodfood.com/recipes/beef-stroganoff",
+        ingredients: [[500, "g", "lean beef strips"], [250, "g", "chestnut mushrooms"], [1, "", "onion"], [300, "ml", "beef stock"], [150, "ml", "soured cream"], [1, "tbsp", "Dijon mustard"], [300, "g", "egg noodles"]],
+        method: ["Cook the egg noodles in salted water according to the packet, then drain and keep warm.", "Brown the beef quickly in a hot pan with a little oil, working in batches so it sears rather than steams. Transfer to a plate.", "Soften sliced onion and mushrooms in the pan. Stir in mustard and stock, then simmer until the mushrooms are tender and the sauce has reduced slightly.", "Lower the heat and stir in soured cream. Return the beef and its juices just long enough to heat through, then serve over the noodles."]
+      },
+      veggieChilli: {
+        name: "Smoky three-bean chilli", course: "The main event", cost: 4.9,
+        image: "photo-1512621776951-a57141f2eefd",
+        source: "https://www.bbcgoodfood.com/recipes/veggie-chilli",
+        ingredients: [[1, "", "onion"], [1, "", "red pepper"], [400, "g", "kidney beans"], [400, "g", "black beans"], [400, "g", "chopped tomatoes"], [1, "tsp", "smoked paprika"], [1, "tsp", "ground cumin"], [150, "g", "sweetcorn"]],
+        method: ["Dice the onion and pepper. Cook in a little oil over medium heat until softened, about 6 minutes.", "Stir in smoked paprika and cumin for 30 seconds. Add tomatoes, drained beans and a splash of water, then bring to a gentle simmer.", "Cook uncovered for 20–25 minutes, stirring now and then, until thick and glossy. Add a little water if it becomes too thick.", "Fold in the sweetcorn for the last 5 minutes. Taste, season and serve hot with rice or warm tortillas."]
+      },
+      bakedSalmonFennel: {
+        name: "Roast salmon with fennel and tomatoes", course: "The main event", cost: 9.2,
+        image: "photo-1519708227418-c8fd9a32b7a2",
+        source: "https://www.bbcgoodfood.com/recipes/7745/baked-salmon-with-fennel-and-tomatoes",
+        ingredients: [[4, "", "salmon fillets"], [1, "", "fennel bulb"], [250, "g", "cherry tomatoes"], [1, "", "lemon"], [2, "tbsp", "olive oil"], [1, "tsp", "fennel seeds"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Thinly slice the fennel and halve the cherry tomatoes.", "Toss the vegetables with olive oil, crushed fennel seeds, lemon zest, salt and black pepper in a roasting dish. Roast for 15 minutes until starting to soften.", "Nestle the salmon among the vegetables and squeeze over half the lemon. Roast for 12–15 minutes, until the fish is opaque and flakes easily or reaches 63°C at the thickest point.", "Finish with the remaining lemon juice and serve straight from the dish with the pan juices."]
+      },
+      roastedPepperCrostini: {
+        name: "Roasted pepper crostini", course: "First things first", cost: 1.8,
+        image: "photo-1541519227354-08fa5d50c44d",
+        ingredients: [[1, "", "red pepper"], [4, "slices", "sourdough"], [80, "g", "goat cheese"], [1, "tbsp", "olive oil"]],
+        method: ["Roast the pepper at 220°C until blistered, turning once. Cover briefly, then rub away the skin and slice the flesh.", "Toast the sourdough and brush lightly with olive oil.", "Spread with goat cheese, top with pepper strips and finish with black pepper."]
+      },
+      cucumberDillCups: {
+        name: "Cucumber and dill cups", course: "First things first", cost: 1.6,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[1, "", "cucumber"], [150, "g", "Greek yoghurt"], [1, "tbsp", "fresh dill"], [1, "tsp", "lemon juice"]],
+        method: ["Cut the cucumber into thick rounds and scoop a shallow well from each centre.", "Stir chopped dill and lemon juice into the yoghurt; season with salt and pepper.", "Spoon the yoghurt into the cucumber rounds and chill until ready to serve."]
+      },
+      onionThymeTartlets: {
+        name: "Onion and thyme tartlets", course: "First things first", cost: 2.2,
+        image: "photo-1476124369491-e7addf5db371",
+        ingredients: [[1, "sheet", "ready-rolled puff pastry"], [2, "", "onions"], [1, "tbsp", "olive oil"], [1, "tsp", "fresh thyme"], [50, "g", "crumbled feta"]],
+        method: ["Heat the oven to 200°C conventional (180°C fan). Slowly cook sliced onions in olive oil until soft and golden, then stir in thyme.", "Cut the pastry into six squares and score a small border around each. Spoon onion into the centre and scatter over feta.", "Bake for 15–18 minutes until puffed and deeply golden. Cool for a few minutes before serving."]
+      },
+      garlicGreenBeans: {
+        name: "Lemony garlic green beans", course: "Something on the side", cost: 1.7,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[400, "g", "green beans"], [1, "clove", "garlic"], [1, "tbsp", "olive oil"], [1, "tsp", "lemon zest"]],
+        method: ["Trim the beans and boil in salted water for 3–4 minutes until bright green and just tender. Drain well.", "Warm olive oil in a pan and briefly cook the finely chopped garlic without letting it brown.", "Toss in the beans, lemon zest and a squeeze of lemon. Season and serve warm."]
+      },
+      spicedCauliflower: {
+        name: "Cumin-roasted cauliflower", course: "Something on the side", cost: 1.9,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[1, "", "cauliflower"], [1, "tsp", "ground cumin"], [1, "tsp", "smoked paprika"], [2, "tbsp", "olive oil"]],
+        method: ["Heat the oven to 220°C conventional (200°C fan). Cut cauliflower into small florets.", "Toss with olive oil, cumin, paprika, salt and black pepper, then spread on a tray with space between pieces.", "Roast for 25–30 minutes, turning once, until browned at the edges and tender through the centre."]
+      },
+      honeyRoastCarrots: {
+        name: "Honey and thyme carrots", course: "Something on the side", cost: 1.5,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[500, "g", "carrots"], [1, "tbsp", "honey"], [1, "tbsp", "olive oil"], [1, "tsp", "fresh thyme"]],
+        method: ["Heat the oven to 210°C conventional (190°C fan). Peel the carrots and cut them into even batons.", "Toss with olive oil, honey, thyme, salt and black pepper. Arrange in one layer on a roasting tray.", "Roast for 25–30 minutes, turning once, until tender and caramelized at the edges."]
+      },
+      poachedPears: {
+        name: "Cinnamon-poached pears", course: "A sweet finish", cost: 2.5,
+        image: "photo-1512621776951-a57141f2eefd",
+        ingredients: [[4, "", "ripe pears"], [500, "ml", "water"], [80, "g", "caster sugar"], [1, "", "cinnamon stick"], [1, "", "lemon"]],
+        method: ["Peel the pears, leaving the stems on. Warm water, sugar, cinnamon and a strip of lemon zest in a saucepan until the sugar dissolves.", "Add the pears and simmer gently for 20–25 minutes, turning occasionally, until a knife slips in easily.", "Lift out the pears and simmer the syrup until lightly thickened. Spoon it over the fruit and serve warm or chilled."]
       }
     };
 
@@ -786,6 +862,10 @@
       { name: "Birthday, but make it dinner", mood: "Bolognese and a little celebration", image: "photo-1565299624946-b28f40a0ae38", occasions: ["birthday", "friends", "date", "family"], cuisines: ["Italian"], recipes: ["carrotSoup", "bolognese", "potatoes", "tiramisu"] },
       { name: "The long lunch", mood: "Slow afternoon, full table", image: "photo-1555939594-58d7cb561ad1", occasions: ["holiday", "family", "date"], cuisines: ["Mediterranean"], recipes: ["carrotSoup", "greekChicken", "potatoes", "chocolateMousse"] },
       { name: "The family-style table", mood: "A generous Sunday spread", image: "photo-1504674900247-0877df9cc836", occasions: ["family"], recipes: ["carrotSoup", "lemonChicken", "roastSquash", "berryCups"] },
+      { name: "Apple orchard supper", mood: "A cosy family table with a warm finish", image: "photo-1560806887-1e4cd0b6cbd6", occasions: ["family", "holiday"], cuisines: ["Mediterranean"], recipes: ["carrotSoup", "lemonChicken", "roastSquash", "appleCrumble"] },
+      { name: "Stroganoff and Tell", mood: "A little Eastern European comfort", image: "photo-1600891964599-f61ba0e24092", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["European"], featured: true, recipes: ["roastedPepperCrostini", "beefStroganoff", "garlicGreenBeans", "tiramisu"] },
+      { name: "Chili Con Carnival", mood: "A smoky, plant-powered fiesta", image: "photo-1512621776951-a57141f2eefd", occasions: ["family", "friends", "birthday", "holiday"], cuisines: ["Mexican"], featured: true, recipes: ["cucumberDillCups", "veggieChilli", "spicedCauliflower", "appleCrumble"] },
+      { name: "Fennel Attraction", mood: "Bright Mediterranean flavours, straight from the oven", image: "photo-1519708227418-c8fd9a32b7a2", occasions: ["family", "friends", "date", "birthday", "holiday"], cuisines: ["Mediterranean"], featured: true, recipes: ["onionThymeTartlets", "bakedSalmonFennel", "honeyRoastCarrots", "poachedPears"] },
       { name: "Gathered around the table", mood: "Comforting favourites to pass around", image: "photo-1414235077428-338989a2e8c0", occasions: ["family"], cuisines: ["Italian"], recipes: ["hummusPlate", "margheritaPizza", "lemonHerbCouscous", "oliveCake"] },
       { name: "A candlelit supper", mood: "A relaxed little occasion", image: "photo-1519708227418-c8fd9a32b7a2", occasions: ["date"], cuisines: ["Mediterranean"], recipes: ["carrotSoup", "roastSalmon", "greenSalad", "oliveCake"] },
       { name: "The little bistro", mood: "A polished night for two", image: "photo-1517248135467-4c7edcad34c4", occasions: ["date"], recipes: ["tomatoToast", "steakFrites", "potatoes", "berryCups"] },
@@ -896,6 +976,20 @@
       return coursePlans[count].map((index) => menu.recipes[index]);
     }
 
+    function menuMatchesRequest(menu, request) {
+      const ignoredWords = new Set(["a", "an", "and", "for", "include", "includes", "including", "me", "of", "please", "recipe", "recipes", "that", "the", "with", "would"]);
+      const terms = request.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter((word) => word && !ignoredWords.has(word)).map((word) => {
+        if (word.endsWith("ies") && word.length > 4) return `${word.slice(0, -3)}y`;
+        return word.endsWith("s") && word.length > 3 && !word.endsWith("ss") ? word.slice(0, -1) : word;
+      });
+      if (!terms.length) return true;
+      const searchable = menuRecipes(menu, selectedCourses).map((id) => {
+        const recipe = recipes[id];
+        return [recipe.name, ...recipe.ingredients.map((ingredient) => ingredient[2])].join(" ");
+      }).join(" ").toLowerCase();
+      return terms.every((term) => searchable.includes(term));
+    }
+
     function ingredientCheckKey(menu, recipeId, guests, name, unit) {
       const ingredientKey = `${name.trim().toLowerCase()}|${unit.trim().toLowerCase()}`;
       return JSON.stringify([menu.name, recipeId, selectedCourses, guests, ingredientKey]);
@@ -940,39 +1034,34 @@
 
     function selectVariedMenus(candidates, limit) {
       const target = Math.min(limit, candidates.length);
-      const tieBreakers = new Map(candidates.map((menu) => [menu, Math.random()]));
       const dishes = new Map(candidates.map((menu) => [menu, menuRecipes(menu, selectedCourses)]));
-      let bestScore = -Infinity;
       let bestMenus = [];
+      let bestScore = -Infinity;
 
-      function choose(startIndex, chosen) {
-        if (chosen.length === target) {
-          let dishOverlap = 0;
-          let imageOverlap = 0;
-          chosen.forEach((menu, index) => {
-            chosen.slice(index + 1).forEach((other) => {
-              dishOverlap += dishes.get(menu).filter((id) => dishes.get(other).includes(id)).length;
-              imageOverlap += menu.image === other.image ? 1 : 0;
-            });
-          });
-          const preference = chosen.reduce((score, menu) => {
-            const freshness = (previousMenuNames.includes(menu.name) ? 0 : 2) + (previousMenuImages.includes(menu.image) ? 0 : 1);
-            return score + menu.occasionFit * 10 + freshness + tieBreakers.get(menu) / 100;
-          }, 0);
-          const score = -dishOverlap * 1000 - imageOverlap * 20 + preference;
-          if (score > bestScore) {
-            bestScore = score;
-            bestMenus = [...chosen];
-          }
-          return;
+      for (let attempt = 0; attempt < 64; attempt += 1) {
+        const tieBreakers = new Map(candidates.map((menu) => [menu, Math.random()]));
+        const chosen = [];
+        const usedDishes = new Set();
+        const orderedMenus = shuffled(candidates).sort((left, right) => Number(right.featured) - Number(left.featured));
+        for (const menu of orderedMenus) {
+          const menuDishes = dishes.get(menu);
+          if (menuDishes.some((dish) => usedDishes.has(dish))) continue;
+          chosen.push(menu);
+          menuDishes.forEach((dish) => usedDishes.add(dish));
+          if (chosen.length === target) break;
         }
 
-        for (let index = startIndex; index <= candidates.length - (target - chosen.length); index += 1) {
-          choose(index + 1, [...chosen, candidates[index]]);
+        const score = chosen.reduce((total, menu) => {
+          const freshness = (previousMenuNames.includes(menu.name) ? 0 : 2) + (previousMenuImages.includes(menu.image) ? 0 : 1);
+          return total + menu.occasionFit * 10 + freshness + tieBreakers.get(menu) / 100;
+        }, 0);
+        if (chosen.length > bestMenus.length || (chosen.length === bestMenus.length && score > bestScore)) {
+          bestMenus = chosen;
+          bestScore = score;
         }
+        if (bestMenus.length === target) break;
       }
 
-      choose(0, []);
       return bestMenus;
     }
 
@@ -981,7 +1070,8 @@
       const guests = Number(guestInput.value);
       const occasion = document.querySelector("#occasion").value.trim();
       const cuisine = document.querySelector("#cuisine").value;
-      const requestKey = JSON.stringify([budget, guests, selectedCourses, occasion.toLowerCase(), cuisine]);
+      const recipeRequest = document.querySelector("#recipe-request").value.trim();
+      const requestKey = JSON.stringify([budget, guests, selectedCourses, occasion.toLowerCase(), cuisine, recipeRequest.toLowerCase()]);
       if (requestKey !== previousRequestKey) {
         previousMenuNames = [];
         previousMenuImages = [];
@@ -996,8 +1086,9 @@
         }))
         .filter((menu) => occasionSignals.length === 0 || menu.occasionFit > 0)
         .filter((menu) => !cuisine || menu.cuisines?.includes(cuisine))
+        .filter((menu) => menuMatchesRequest(menu, recipeRequest))
         .filter((menu) => menu.total <= budget);
-      const selected = selectVariedMenus(shuffled(matching), 3);
+      const selected = selectVariedMenus(matching, 6);
       currentMenus = selected;
       previousMenuNames = selected.map((menu) => menu.name);
       previousMenuImages = selected.map((menu) => menu.image);
@@ -1006,7 +1097,9 @@
       document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"}${occasionNote}${cuisineNote} · ${guests} people · ${formatMoney(budget)} to spend.`;
       document.querySelector("#match-count").textContent = `${selected.length} ${selected.length === 1 ? "good idea" : "good ideas"}`;
       if (!selected.length) {
-        list.innerHTML = cuisine
+        list.innerHTML = recipeRequest
+          ? `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>No matching recipes yet.</h3><p>Try another dish or ingredient, or clear your request.</p></div>`
+          : cuisine
           ? `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>No ${cuisine} menus yet.</h3><p>Try another cuisine, or choose any cuisine to see all available menus.</p></div>`
           : `<div class="empty-state"><div class="empty-mark" aria-hidden="true">↗</div><h3>Let's stretch that budget.</h3><p>Try adding a little more to the pot, or trim a course or two.</p></div>`;
         return;
@@ -1126,7 +1219,7 @@
         checkKey: ingredientCheckKey(currentMenu, recipeId, guests, name, unit)
       }));
       detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Menu dishes</button></div>
-        <article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 720)}" alt="${recipe.name}" loading="lazy"><div class="recipe-title"><span class="course-label">${recipe.course}</span><h3>${recipe.name}</h3><p>${formatMoney(recipe.cost)} per person · ${guests} servings</p></div></div>
+        <article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 720)}" alt="${recipe.name}" loading="lazy"><div class="recipe-title"><span class="course-label">${recipe.course}</span><h3>${recipe.name}</h3><p>${formatMoney(recipe.cost)} per person · ${guests} servings</p>${recipe.source ? `<a class="recipe-source" href="${recipe.source}" target="_blank" rel="noopener noreferrer">BBC Good Food recipe ↗</a>` : ""}</div></div>
           <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${ingredientItems.map((item, index) => `<li><label class="recipe-ingredient"><input type="checkbox" data-recipe-ingredient="${index}" aria-label="Select ${item.name} for ${recipe.name} grocery list" ${checkedIngredients.has(item.checkKey) ? "checked" : ""}><span>${item.name}</span><span>${item.amount}</span></label></li>`).join("")}</ul>
             <div class="recipe-grocery-tools"><label class="save-list-choice"><input id="save-recipe-list" type="checkbox" ${savedShoppingLists.has(currentShoppingListKey) ? "checked" : ""}><span>Save checked ingredients from this dish</span></label><p class="saved-list-status" id="recipe-list-status" role="status"></p>
               <div class="recipe-grocery-heading"><h5>Grocery list</h5><span class="shopping-list-count" id="recipe-grocery-count"></span></div><ul class="shopping-list-items" id="recipe-grocery-items" aria-live="polite"></ul><button class="export-list-button" id="export-recipe-list" type="button">Export list</button>
