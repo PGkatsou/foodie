@@ -378,6 +378,21 @@
     return new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(amount);
   }
 
+  function generateEfoodCheckoutUrl(missingIngredients = []) {
+    const items = Array.isArray(missingIngredients)
+      ? missingIngredients
+          .filter((value) => typeof value === "string")
+          .map((value) => value.trim())
+          .filter(Boolean)
+      : [];
+
+    const cleanItems = [...new Set(items.map((item) => item.replace(/\s+/g, " ").trim()))];
+    if (!cleanItems.length) return "https://www.e-food.gr/";
+
+    const query = cleanItems.join(" ");
+    return `https://www.e-food.gr/?s=${encodeURIComponent(query)}`;
+  }
+
   function buildMenu(recipes, ids, intent, score, index = 0) {
     const selected = ids.map((id) => {
       const recipe = recipes[id];
@@ -481,7 +496,8 @@
     summarizeCatalog,
     scaleQuantity,
     formatIngredient,
-    formatMoney
+    formatMoney,
+    generateEfoodCheckoutUrl
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.TablepopPlanner = api;

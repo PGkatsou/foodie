@@ -87,3 +87,12 @@ test("rejects an AI menu that violates the user's hard dietary constraint", () =
   assert.equal(validation.valid, false);
   assert.ok(validation.problems.some((problem) => /contains meat/i.test(problem)));
 });
+
+test("builds a URL for ordered missing ingredients on efood Market", () => {
+  const url = planner.generateEfoodCheckoutUrl(["sourdough", "ripe tomatoes", "ricotta"]);
+  assert.match(url, /^https:\/\/www\.efood\.com\//i);
+  assert.match(url, /sourdough/i);
+  assert.match(url, /ripe\+tomatoes/i);
+  assert.match(url, /ricotta/i);
+  assert.match(url, /q=|query=|search=/i);
+});

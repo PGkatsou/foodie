@@ -93,7 +93,14 @@
       border-radius: 24px;
       box-shadow: 0 12px 30px rgba(23, 31, 30, 0.05);
     }
-    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
     .brand-mark { width: 54px; height: 58px; flex: 0 0 auto; }
     .brand-name { display: flex; align-items: baseline; gap: 2px; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.06em; }
     .brand-name span:first-child { color: var(--ink); }
@@ -109,6 +116,167 @@
     .header-nav a { transition: color 180ms ease; }
     .header-nav a:hover { color: var(--ink); }
     .header-actions { display: flex; align-items: center; gap: 12px; }
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(28,36,31,0.08);
+      background: rgba(255,255,255,0.84);
+      color: var(--ink);
+      font-size: 0.74rem;
+      font-weight: 800;
+      box-shadow: 0 8px 16px rgba(27,34,29,0.04);
+      cursor: pointer;
+    }
+    .profile-badge .profile-avatar {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #3aa69e);
+      color: white;
+      font-size: 0.64rem;
+      font-weight: 800;
+    }
+    .profile-badge.is-guest {
+      background: rgba(242,103,69,0.08);
+      border-color: rgba(242,103,69,0.14);
+      color: var(--coral-strong);
+    }
+    .language-picker { position: relative; flex: 0 0 auto; }
+    .language-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 58px;
+      min-height: 40px;
+      padding: 0;
+      border: 1px solid rgba(28,36,31,0.1);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .language-flag { display: inline-flex; align-items: center; width: 24px; height: 16px; }
+    .language-flag svg { display: block; width: 24px; height: 16px; border-radius: 1px; box-shadow: 0 0 0 1px rgba(28,36,31,0.12); }
+    .language-flag svg[hidden] { display: none; }
+    .language-chevron { font-family: var(--sans); font-size: 0.8rem; line-height: 1; }
+    .language-toggle:hover { transform: translateY(-1px); background: white; }
+    .language-toggle:focus-visible { outline: 3px solid rgba(16,140,126,0.4); outline-offset: 2px; }
+    .language-menu {
+      position: absolute;
+      top: calc(100% + 13px);
+      right: 0;
+      z-index: 20;
+      width: 264px;
+      padding: 20px 22px 16px;
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(28,36,31,0.08);
+      border-radius: 4px;
+      box-shadow: 0 10px 24px rgba(27,34,29,0.16);
+    }
+    .language-menu[hidden] { display: none; }
+    .language-menu-title {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .language-choice {
+      display: block;
+      width: 100%;
+      padding: 8px 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .language-choice[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+    .language-choice:hover { color: var(--coral-strong); }
+    .account-panel {
+      position: fixed;
+      top: 112px;
+      right: max(16px, calc((100vw - 1280px) / 2));
+      z-index: 15;
+      display: none;
+      width: min(390px, calc(100vw - 32px));
+      max-height: min(70vh, 620px);
+      overflow: auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.97);
+      border: 1px solid rgba(28,36,31,0.1);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    .account-panel.visible { display: block; }
+    .account-panel-head, .favorites-heading, .favorite-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .account-panel-head { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .account-panel h2, .account-panel h3 { margin: 0; }
+    .account-panel h2 { font-family: var(--serif); font-size: 1.5rem; }
+    .account-panel h3 { font-size: 0.95rem; }
+    .account-panel-user { margin: 4px 0 0; color: var(--muted); font-size: 0.76rem; }
+    .account-panel-close, .favorite-remove {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+    }
+    .account-panel-actions { display: flex; align-items: center; gap: 8px; }
+    .logout-button {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgba(242,103,69,0.22);
+      border-radius: 999px;
+      background: rgba(242,103,69,0.08);
+      color: var(--coral-strong);
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .logout-button:hover { background: rgba(242,103,69,0.14); }
+    .logout-button[hidden] { display: none; }
+    .favorites-heading { margin: 18px 0 10px; }
+    .favorites-list { display: grid; gap: 8px; }
+    .favorite-row { padding: 10px 0; border-top: 1px solid var(--line); }
+    .favorite-row-copy { min-width: 0; }
+    .favorite-row strong { display: block; overflow-wrap: anywhere; font-size: 0.82rem; }
+    .favorite-row small { display: block; margin-top: 3px; color: var(--muted); font-size: 0.68rem; }
+    .favorites-empty { margin: 0; padding: 14px 0 4px; color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+    .guest-favorites-prompt { display: grid; justify-items: start; gap: 10px; }
+    .guest-account-cta {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--teal), #1e9b8d);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .guest-account-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(16,140,126,0.2); }
     .nav-cta {
       display: inline-flex;
       align-items: center;
@@ -127,6 +295,113 @@
       transition: transform 180ms ease, box-shadow 180ms ease;
     }
     .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(242,103,69,0.34); }
+
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(16, 24, 21, 0.24);
+      backdrop-filter: blur(12px);
+      pointer-events: auto;
+    }
+    .auth-screen.visible { display: flex; }
+    .auth-card {
+      position: relative;
+      z-index: 51;
+      width: min(720px, 100%);
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(28,36,31,0.08);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      pointer-events: auto;
+    }
+    .auth-screen h2 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+      font-weight: 800;
+      font-family: var(--serif);
+    }
+    .auth-screen p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .auth-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .auth-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      border: 1px solid rgba(28,36,31,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+      font-weight: 800;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .auth-action.primary {
+      background: linear-gradient(135deg, var(--coral), #ff885f);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 12px 26px rgba(242,103,69,0.2);
+    }
+    .auth-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(32,31,29,0.06);
+    }
+    .auth-form {
+      display: none;
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .auth-form.visible { display: block; }
+    .auth-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .field {
+      display: grid;
+      gap: 8px;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .field input {
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid rgba(28,36,31,0.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+    }
+    .auth-submit {
+      margin-top: 18px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--teal), #1e9b8d);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      pointer-events: auto;
+    }
 
     .splash { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: linear-gradient(135deg, #f57a5f 0%, #ef5d41 100%); color: #fffaf1; opacity: 1; transition: opacity .25s ease; }
     .splash.is-leaving { opacity: 0; pointer-events: none; }
@@ -212,23 +487,85 @@
     .primary-button:hover { transform: translateY(-1px); }
     .workspace {
       display: grid;
-      grid-template-columns: 330px minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
       gap: 22px;
       margin-top: 18px;
     }
     .planner {
-      position: sticky;
-      top: 108px;
-      overflow: hidden;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 42;
+      width: min(390px, calc(100vw - 24px));
+      overflow-x: hidden;
+      overflow-y: auto;
       background: rgba(255,255,255,0.82);
       border: 1px solid rgba(28,36,31,0.06);
-      border-radius: 28px;
+      border-radius: 0 24px 24px 0;
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(14px);
-      scroll-margin-top: 108px;
+      transform: translateX(-105%);
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 240ms ease, visibility 240ms ease;
+    }
+    .planner.is-open {
+      transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .planner-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 41;
+      display: none;
+      padding: 0;
+      border: 0;
+      background: rgba(20,27,24,0.34);
+      cursor: pointer;
+    }
+    .planner-backdrop.visible { display: block; }
+    .planner-open-button {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--coral), #ff865a);
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(242,103,69,0.3);
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+    .planner-open-button:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(242,103,69,0.34); }
+    .planner-open-button[hidden] { display: none; }
+    .planner-open-icon { font-size: 1.1rem; line-height: 1; }
+    .planner-close {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(28,36,31,0.12);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      font-size: 1.15rem;
+      cursor: pointer;
     }
     .planner-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -442,6 +779,32 @@
       height: 210px;
       background: linear-gradient(135deg, #eadfcf, #dfe9df);
     }
+    .favorite-toggle {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid rgba(28,36,31,0.12);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.94);
+      color: var(--coral-strong);
+      box-shadow: 0 8px 18px rgba(28,36,31,0.14);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+    .favorite-toggle:hover { transform: scale(1.08); }
+    .favorite-toggle.is-favorite { background: var(--coral-strong); color: #fff; }
+    .favorite-toggle:focus-visible, .favorite-remove:focus-visible, .account-panel-close:focus-visible {
+      outline: 3px solid rgba(16,140,126,0.45);
+      outline-offset: 2px;
+    }
     .menu-photo img {
       position: absolute;
       inset: 0;
@@ -506,10 +869,20 @@
     .menu-course-ingredients { margin-top: 5px; }
     .menu-course-ingredients summary { color: var(--teal); font-size: 0.65rem; font-weight: 800; cursor: pointer; }
     .menu-course-ingredients ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 8px; margin: 7px 0 0; padding-left: 14px; color: var(--muted); font-size: 0.61rem; line-height: 1.4; }
-    .menu-budget { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 8px; }
-    .menu-budget div { min-width: 0; padding: 9px 8px; border-radius: 12px; background: rgba(16,140,126,0.07); }
-    .menu-budget strong { display: block; font-size: 0.82rem; white-space: nowrap; }
-    .menu-budget span { display: block; margin-top: 2px; color: var(--muted); font-size: 0.56rem; line-height: 1.3; }
+    .menu-summary-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .menu-summary-stats div {
+      min-width: 0;
+      padding: 9px 8px;
+      border-radius: 12px;
+      background: rgba(16,140,126,0.07);
+    }
+    .menu-summary-stats strong { display: block; font-size: 0.82rem; white-space: nowrap; }
+    .menu-summary-stats span { display: block; margin-top: 2px; color: var(--muted); font-size: 0.56rem; line-height: 1.3; }
     .menu-bottom {
       display: flex;
       align-items: end;
@@ -541,6 +914,7 @@
       font-size: 0.72rem;
       font-weight: 800;
       cursor: pointer;
+      pointer-events: auto;
       transition: transform 180ms ease, box-shadow 180ms ease;
     }
     .detail-button:hover {
@@ -570,17 +944,36 @@
     .empty-state p + p { margin-top: 8px; }
 
     .detail-view { display: none; }
-    .detail-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 1px 0 16px; }
+    .detail-top {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 1px 0 16px;
+    }
     .back-button {
-      border: 0;
-      background: transparent;
-      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(29, 35, 31, 0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,248,243,0.92));
+      padding: 10px 14px;
+      border-radius: 14px;
       color: var(--ink);
       font-size: 0.8rem;
       font-weight: 800;
+      letter-spacing: 0.01em;
       cursor: pointer;
+      box-shadow: 0 8px 22px rgba(34, 41, 36, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
-    .back-button span { margin-right: 8px; }
+    .back-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(216, 45, 127, 0.22);
+      box-shadow: 0 12px 24px rgba(34, 41, 36, 0.12);
+    }
+    .back-button span { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(216, 45, 127, 0.08); color: var(--coral); font-size: 0.9rem; }
     .detail-title {
       margin: 0 0 10px;
       font-family: var(--serif);
@@ -593,8 +986,8 @@
       gap: 14px;
     }
     .dish-choice {
+      position: relative;
       min-width: 0;
-      padding: 0;
       background: rgba(255,255,255,0.82);
       border: 1px solid rgba(28,36,31,0.08);
       border-radius: 20px;
@@ -608,6 +1001,7 @@
       transform: translateY(-2px);
       box-shadow: 0 14px 24px rgba(22, 29, 26, 0.08);
     }
+    .dish-photo { position: relative; }
     .dish-choice img {
       display: block;
       width: 100%;
@@ -615,14 +1009,23 @@
       object-fit: cover;
       background: #e9e0d3;
     }
-    .dish-choice span {
+    .dish-open {
       display: block;
+      width: 100%;
       padding: 12px 14px 14px;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+    .dish-open span {
+      display: block;
       font-family: var(--serif);
       font-size: 1.05rem;
       line-height: 1.2;
     }
-    .dish-choice small { display: block; margin-top: 6px; color: var(--muted); font-family: var(--sans); font-size: 0.66rem; font-weight: 700; }
+    .dish-open small { display: block; margin-top: 6px; color: var(--muted); font-family: var(--sans); font-size: 0.66rem; font-weight: 700; }
     .recipe-allergen-note { margin: 8px 0 0 !important; color: var(--muted) !important; font-size: 0.7rem !important; line-height: 1.5; }
     .recipe {
       background: rgba(255,255,255,0.8);
@@ -787,18 +1190,25 @@
       font-weight: 800;
     }
     .shopping-list-empty { color: var(--muted); }
-    .export-list-button {
+    .efood-order-button {
       width: 100%;
-      min-height: 42px;
+      min-height: 44px;
       border: 0;
       border-radius: 14px;
-      background: linear-gradient(135deg, var(--coral), #ff885b);
+      background: linear-gradient(135deg, #ff5da2, #d82d7f);
+      box-shadow: 0 10px 20px rgba(216, 45, 127, 0.22);
       color: #fff;
       font-weight: 800;
       cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
-    .export-list-button:disabled {
+    .efood-order-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 22px rgba(216, 45, 127, 0.24);
+    }
+    .efood-order-button:disabled {
       background: rgba(131,140,136,0.25);
+      box-shadow: none;
       cursor: not-allowed;
     }
     .method {
@@ -841,7 +1251,7 @@
       .topbar { width: min(100%, calc(100% - 20px)); }
       .header-nav { display: none; }
       .intro { grid-template-columns: 1fr; }
-      .workspace { grid-template-columns: 300px minmax(0, 1fr); }
+      .workspace { grid-template-columns: minmax(0, 1fr); }
       .menu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
@@ -849,7 +1259,6 @@
       .brand-name { font-size: 1.2rem; }
       main { padding-top: 18px; }
       .workspace { grid-template-columns: 1fr; }
-      .planner { position: static; }
       .planner-fields { grid-template-columns: 1fr 1fr; }
       .field-courses, .field-requests, .submit-button { grid-column: 1 / -1; }
       .results-heading { flex-direction: column; align-items: flex-start; }
@@ -861,11 +1270,19 @@
       .topbar { width: calc(100% - 18px); }
       .header-actions { gap: 8px; }
       .nav-cta { min-height: 38px; padding: 0 12px; font-size: 0.7rem; }
+      .profile-badge { min-height: 38px; padding: 0 9px; font-size: 0.66rem; }
+      .language-toggle { width: 54px; min-height: 38px; font-size: 1rem; }
+      .account-panel { top: 98px; right: 9px; }
+      .topbar { padding: 0 10px; }
+      .brand-mark { width: 42px; }
+      .brand-name { font-size: 1rem; }
+      .profile-badge { max-width: 108px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
       .hero-copy { max-width: 100%; }
       h1 { font-size: 2.7rem; }
       .hero-actions { flex-direction: column; align-items: stretch; }
       .primary-button { width: 100%; }
       .planner-fields { grid-template-columns: 1fr; }
+      .planner-open-button { left: 10px; bottom: 10px; min-height: 44px; padding: 0 13px; }
       .people-row { justify-content: flex-start; }
       .dish-grid { grid-template-columns: 1fr; }
     }
@@ -1002,7 +1419,7 @@
   </div>
   <div id="app-content" inert>
   <header class="topbar">
-    <div class="brand" aria-label="Table Pop home">
+    <a class="brand" href="/" aria-label="Table Pop home" title="Return to the main page">
       <svg class="brand-mark" viewBox="48 66 104 108" role="img" aria-label="Pizza and salad logo">
         <defs>
           <path id="header-pizza-edge" d="M100 74 A46 46 0 0 0 100 166 Z" />
@@ -1096,14 +1513,43 @@
         <circle cx="100" cy="120" r="46" fill="none" stroke="#292521" stroke-width="3.5" />
       </svg>
       <span class="brand-name"><span>Table</span> <span>Pop</span></span>
-    </div>
+    </a>
     <nav class="header-nav" aria-label="Main navigation">
       <a href="#menu-list">Menus</a>
     </nav>
     <div class="header-actions">
-      <a class="nav-cta" href="#planner-form">Plan a table</a>
+      <button id="profile-badge" class="profile-badge is-guest" type="button" aria-live="polite" aria-expanded="false" aria-controls="account-panel">
+        <span class="profile-avatar">G</span>
+        Guest Mode
+      </button>
+      <div id="language-picker" class="language-picker">
+        <button id="language-toggle" class="language-toggle" type="button" aria-label="Change language" aria-haspopup="true" aria-expanded="false" aria-controls="language-menu" title="Change language"><span class="language-flag" aria-hidden="true"><svg class="flag-gb" viewBox="0 0 60 40" role="img"><rect width="60" height="40" fill="#012169"/><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"/><path d="M0 0 60 40M60 0 0 40" stroke="#c8102e" stroke-width="3.5"/><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"/><path d="M30 0v40M0 20h60" stroke="#c8102e" stroke-width="7"/></svg><svg class="flag-gr" viewBox="0 0 60 40" role="img" hidden><rect width="60" height="40" fill="#fff"/><path d="M0 0h60v4.45H0zm0 8.9h60v4.45H0zm0 8.9h60v4.45H0zm0 8.9h60v4.45H0zm0 8.9h60V40H0z" fill="#0d5eaf"/><path d="M0 0h22.2v22.2H0z" fill="#0d5eaf"/><path d="M8.9 0h4.45v22.2H8.9zM0 8.9h22.2v4.45H0z" fill="#fff"/></svg></span><span class="language-chevron" aria-hidden="true">⌄</span></button>
+        <div id="language-menu" class="language-menu" role="group" aria-labelledby="language-menu-title" hidden>
+          <p id="language-menu-title" class="language-menu-title">CHANGE LANGUAGE</p>
+          <button class="language-choice" type="button" data-language-choice="el" aria-pressed="false">Ελληνικά</button>
+          <button class="language-choice" type="button" data-language-choice="en" aria-pressed="false">English</button>
+        </div>
+      </div>
     </div>
   </header>
+
+  <aside id="account-panel" class="account-panel" aria-hidden="true" aria-labelledby="account-panel-title">
+    <div class="account-panel-head">
+      <div>
+        <h2 id="account-panel-title">Your account</h2>
+        <p id="account-panel-user" class="account-panel-user"></p>
+      </div>
+      <div class="account-panel-actions">
+        <button id="logout-button" class="logout-button" type="button" hidden>Log out</button>
+        <button class="account-panel-close" type="button" aria-label="Close account panel">×</button>
+      </div>
+    </div>
+    <section aria-labelledby="favorites-title">
+      <div class="favorites-heading"><h3 id="favorites-title">Favorites</h3></div>
+      <div id="favorites-list" class="favorites-list" aria-live="polite"></div>
+    </section>
+  </aside>
+
   <main>
     <section class="intro" aria-labelledby="page-title">
       <div class="hero-copy">
@@ -1116,9 +1562,11 @@
       </div>
     </section>
 
+    <button id="planner-backdrop" class="planner-backdrop visible" type="button" aria-label="Close dinner settings" aria-hidden="false"></button>
+    <button id="planner-open-button" class="planner-open-button" type="button" aria-expanded="true" aria-controls="planner-form" hidden><span class="planner-open-icon" aria-hidden="true">☷</span><span>Edit Dinner Deets</span></button>
     <section class="workspace" aria-label="Menu planner">
-      <form class="planner" id="planner-form">
-        <div class="planner-head"><h2>The dinner deets</h2><span class="step-count">01 / 01</span></div>
+      <form class="planner is-open" id="planner-form">
+        <div class="planner-head"><h2>The dinner deets</h2><span class="step-count">01 / 01</span><button class="planner-close" id="planner-close-button" type="button" aria-label="Close dinner settings">×</button></div>
         <div class="planner-fields">
           <div class="field">
             <label for="budget">Your budget</label>
@@ -1173,6 +1621,30 @@
   </main>
   </div>
 
+  <section id="auth-screen" class="auth-screen" aria-live="polite">
+    <div class="auth-card">
+      <h2>Welcome to TablePop</h2>
+      <p>Pick how you want to get started. You can browse as a guest or create a profile to personalize your plans.</p>
+      <div class="auth-actions">
+        <button class="auth-action" type="button" id="guest-login">Join as a guest</button>
+        <button class="auth-action primary" type="button" id="account-login">Make an account</button>
+      </div>
+      <form class="auth-form" id="account-form" novalidate>
+        <div class="auth-form-grid">
+          <label class="field">
+            <span>Name</span>
+            <input id="account-name" name="name" type="text" autocomplete="given-name" placeholder="Your name" required>
+          </label>
+          <label class="field">
+            <span>Surname</span>
+            <input id="account-surname" name="surname" type="text" autocomplete="family-name" placeholder="Your surname" required>
+          </label>
+        </div>
+        <button class="auth-submit" type="submit">Create account</button>
+      </form>
+    </div>
+  </section>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="recipe-catalog.js"></script>
   <script src="planner-core.js"></script>
@@ -1180,14 +1652,237 @@
     const recipes = window.TablepopRecipes;
     const planner = window.TablepopPlanner;
     const form = document.querySelector("#planner-form");
+    const plannerBackdrop = document.querySelector("#planner-backdrop");
+    const plannerOpenButton = document.querySelector("#planner-open-button");
+    const plannerCloseButton = document.querySelector("#planner-close-button");
     const guestInput = document.querySelector("#guests");
     const courseButtons = [...document.querySelectorAll(".course-option")];
     const list = document.querySelector("#menu-list");
     const recommendationsView = document.querySelector("#recommendations-view");
     const detailView = document.querySelector("#detail-view");
+    const brandLink = document.querySelector(".brand");
+    const authScreen = document.querySelector("#auth-screen");
+    const accountForm = document.querySelector("#account-form");
+    const accountNameInput = document.querySelector("#account-name");
+    const accountSurnameInput = document.querySelector("#account-surname");
+    const guestLoginButton = document.querySelector("#guest-login");
+    const accountLoginButton = document.querySelector("#account-login");
+    const profileBadge = document.querySelector("#profile-badge");
+    const languagePicker = document.querySelector("#language-picker");
+    const languageToggle = document.querySelector("#language-toggle");
+    const languageMenu = document.querySelector("#language-menu");
+    const accountPanel = document.querySelector("#account-panel");
+    const favoritesList = document.querySelector("#favorites-list");
+    const accountPanelUser = document.querySelector("#account-panel-user");
+    const logoutButton = document.querySelector("#logout-button");
+    const appContent = document.querySelector("#app-content");
+    const profileStorageKey = "tablepop.currentUser";
+    const favoritesStorageKey = "tablepop.favorites";
+    const favorites = new Map(loadFavorites().map((favorite) => [favorite.key, favorite]));
+    const languageStorageKey = "tablepop.language";
+    const greekTranslations = {
+      "Menus": "Μενού",
+      "Guest Mode": "Λειτουργία επισκέπτη",
+      "Your account": "Ο λογαριασμός σου",
+      "Favorites": "Αγαπημένα",
+      "CHANGE LANGUAGE": "ΑΛΛΑΓΗ ΓΛΩΣΣΑΣ",
+      "Change language": "Αλλαγή γλώσσας",
+      "Log out": "Αποσύνδεση",
+      "Close account panel": "Κλείσιμο λογαριασμού",
+      "Your dinner party, sorted": "Το δείπνο σου, οργανωμένο",
+      "Make a meal of": "Φτιάξε ένα γεύμα",
+      "it.": "ξεχωριστό.",
+      "Curated menus for cozy nights in, lively gatherings, or special little celebrations — all built around your budget, your people, and your cravings.": "Επιλεγμένα μενού για χαλαρές βραδιές, ζωντανές συγκεντρώσεις και ξεχωριστές γιορτές, προσαρμοσμένα στο budget, την παρέα και τις επιθυμίες σου.",
+      "Discover menus": "Ανακάλυψε μενού",
+      "The dinner deets": "Οι λεπτομέρειες του δείπνου",
+      "Your budget": "Το budget σου",
+      "Hungry people": "Πόσοι θα φάτε",
+      "What's the occasion?": "Ποια είναι η περίσταση;",
+      "Cuisine": "Κουζίνα",
+      "Any cuisine": "Οποιαδήποτε κουζίνα",
+      "Greek": "Ελληνική",
+      "Italian": "Ιταλική",
+      "Asian": "Ασιατική",
+      "American": "Αμερικανική",
+      "European": "Ευρωπαϊκή",
+      "Mediterranean": "Μεσογειακή",
+      "Mexican": "Μεξικάνικη",
+      "Indian": "Ινδική",
+      "Street food": "Street food",
+      "How many courses?": "Πόσα πιάτα;",
+      "Any recipe requests?": "Κάποια προτίμηση για συνταγές;",
+      "e.g. family reunion, birthday, date night": "π.χ. οικογενειακή συγκέντρωση, γενέθλια, ραντεβού",
+      "e.g. dairy-free, no seafood, light summer dishes": "π.χ. χωρίς γαλακτοκομικά, χωρίς θαλασσινά, ελαφριά καλοκαιρινά πιάτα",
+      "Find my menus": "Βρες τα μενού μου",
+      "Planning your menu...": "Ετοιμάζουμε το μενού σου...",
+      "Ingredient costs are EUR estimates per guest, not live local prices.": "Το κόστος υλικών είναι εκτίμηση σε ευρώ ανά άτομο, όχι ζωντανές τοπικές τιμές.",
+      "On the menu": "Στο μενού",
+      "Menus are composed from the recipe catalog.": "Τα μενού δημιουργούνται από τον κατάλογο συνταγών.",
+      "Ingredient costs are catalog estimates per guest in EUR, not live local prices.": "Το κόστος υλικών είναι εκτίμηση καταλόγου ανά άτομο σε ευρώ, όχι ζωντανές τοπικές τιμές.",
+      "Recommended menus": "Προτεινόμενα μενού",
+      "Main navigation": "Κύρια πλοήγηση",
+      "Menu planner": "Σχεδιασμός μενού",
+      "Welcome to TablePop": "Καλώς ήρθες στο TablePop",
+      "Pick how you want to get started. You can browse as a guest or create a profile to personalize your plans.": "Επίλεξε πώς θέλεις να ξεκινήσεις. Μπορείς να συνεχίσεις ως επισκέπτης ή να δημιουργήσεις προφίλ για πιο προσωπικά πλάνα.",
+      "Join as a guest": "Συνέχεια ως επισκέπτης",
+      "Make an account": "Δημιουργία λογαριασμού",
+      "Name": "Όνομα",
+      "Surname": "Επώνυμο",
+      "Your name": "Το όνομά σου",
+      "Your surname": "Το επώνυμό σου",
+      "Create account": "Δημιουργία λογαριασμού",
+      "Create an account": "Δημιούργησε λογαριασμό",
+      "Back to Menus": "Πίσω στα μενού",
+      "Edit Dinner Deets": "Επεξεργασία στοιχείων δείπνου",
+      "Close dinner settings": "Κλείσιμο ρυθμίσεων δείπνου",
+      "View Menu": "Προβολή μενού",
+      "Estimated total": "Εκτιμώμενο σύνολο",
+      "Per guest": "Ανά άτομο",
+      "Budget left": "Υπόλοιπο budget",
+      "Starter": "Ορεκτικό",
+      "Main": "Κυρίως",
+      "Side": "Συνοδευτικό",
+      "Dessert": "Επιδόρπιο",
+      "Ingredients": "Υλικά",
+      "Step-by-step": "Εκτέλεση",
+      "Save checked missing ingredients from this dish": "Αποθήκευση των επιλεγμένων υλικών που λείπουν",
+      "Missing ingredients": "Υλικά που λείπουν",
+      "Order ingredients on efood Market": "Παράγγειλε υλικά στο efood Market",
+      "Please make an account so you can create a favorite list.": "Δημιούργησε λογαριασμό για να φτιάξεις λίστα αγαπημένων.",
+      "Your saved menus and dishes will appear here.": "Τα αποθηκευμένα μενού και πιάτα θα εμφανιστούν εδώ.",
+      "Menu": "Μενού",
+      "Dish": "Πιάτο",
+      "Remove favorite": "Αφαίρεση από τα αγαπημένα",
+      "Remove from favorites": "Αφαίρεση από τα αγαπημένα",
+      "Add to favorites": "Προσθήκη στα αγαπημένα",
+      "No complete menu meets every constraint.": "Κανένα πλήρες μενού δεν καλύπτει όλους τους περιορισμούς.",
+      "Try adjusting the budget, cuisine, course count, or dietary request.": "Δοκίμασε να αλλάξεις το budget, την κουζίνα, τα πιάτα ή τις διατροφικές προτιμήσεις.",
+      "Seasonal": "Εποχικό",
+      "Structured local recipe planner · no AI provider used.": "Τοπικός σχεδιασμός συνταγών · δεν χρησιμοποιείται πάροχος AI.",
+      "AI-assisted selection · recipes, dietary constraints, and costs validated against the catalog.": "Επιλογή με υποβοήθηση AI · συνταγές, διατροφικοί περιορισμοί και κόστος ελέγχθηκαν με βάση τον κατάλογο.",
+      "Checking the recipe catalog against your request...": "Ελέγχουμε τον κατάλογο συνταγών με βάση το αίτημά σου...",
+      "Select ingredients in this dish to mark them missing.": "Επίλεξε υλικά σε αυτό το πιάτο για να τα σημειώσεις ως ελλείποντα.",
+      "Select missing ingredients first": "Επίλεξε πρώτα τα υλικά που λείπουν",
+      "Check ingredients first to build your efood Market order.": "Επίλεξε πρώτα τα υλικά για να ετοιμάσεις την παραγγελία σου στο efood Market.",
+      "Recipe source ↗": "Πηγή συνταγής ↗",
+      "Close": "Κλείσιμο",
+      "One fewer guest": "Ένας λιγότερος καλεσμένος",
+      "One more guest": "Ένας επιπλέον καλεσμένος"
+    };
+    let currentLanguage = (() => {
+      try {
+        return localStorage.getItem(languageStorageKey) === "el" ? "el" : "en";
+      } catch {
+        return "en";
+      }
+    })();
     let selectedCourses = 4;
+    let currentView = "menus";
     let currentMenus = [];
     let currentMenu = null;
+
+    function openPlannerDrawer() {
+      form.classList.add("is-open");
+      form.removeAttribute("inert");
+      plannerBackdrop.classList.add("visible");
+      plannerBackdrop.setAttribute("aria-hidden", "false");
+      plannerOpenButton.hidden = true;
+      plannerOpenButton.setAttribute("aria-expanded", "true");
+    }
+
+    function closePlannerDrawer() {
+      form.classList.remove("is-open");
+      form.setAttribute("inert", "");
+      plannerBackdrop.classList.remove("visible");
+      plannerBackdrop.setAttribute("aria-hidden", "true");
+      plannerOpenButton.hidden = false;
+      plannerOpenButton.setAttribute("aria-expanded", "false");
+      plannerOpenButton.focus();
+    }
+
+    function translateText(source) {
+      if (currentLanguage !== "el") return source;
+      const leading = source.match(/^\s*/)?.[0] || "";
+      const trailing = source.match(/\s*$/)?.[0] || "";
+      const text = source.trim();
+      if (greekTranslations[text]) return `${leading}${greekTranslations[text]}${trailing}`;
+      const menuTitle = text.match(/^(?:(Greek|Italian|Asian|American|European|Mediterranean|Mexican|Indian|Street food|seasonal)\s+)?(a balanced|a more polished, candlelit|a relaxed, family-style|a celebratory|a leisurely brunch) menu (\d+)$/i);
+      if (menuTitle) {
+        const cuisine = ({ Greek: "Ελληνικό", Italian: "Ιταλικό", Asian: "Ασιατικό", American: "Αμερικανικό", European: "Ευρωπαϊκό", Mediterranean: "Μεσογειακό", Mexican: "Μεξικάνικο", Indian: "Ινδικό", "Street food": "Street food", seasonal: "Εποχικό" })[menuTitle[1]];
+        const occasion = ({ "a balanced": "Ισορροπημένο", "a more polished, candlelit": "Ρομαντικό", "a relaxed, family-style": "Οικογενειακό", "a celebratory": "Εορταστικό", "a leisurely brunch": "Brunch" })[menuTitle[2].toLowerCase()];
+        return `${leading}Μενού ${menuTitle[3]}${cuisine ? ` · ${cuisine}` : ""} · ${occasion}${trailing}`;
+      }
+      const menuRationale = text.match(/^(A balanced|A more polished, candlelit|A relaxed, family-style|A celebratory|A leisurely brunch) menu arranged from (.+), with estimated costs scaled for (\d+) guests\.$/);
+      if (menuRationale) {
+        const occasion = ({ "A balanced": "Ισορροπημένο", "A more polished, candlelit": "Ρομαντικό", "A relaxed, family-style": "Οικογενειακό", "A celebratory": "Εορταστικό", "A leisurely brunch": "Brunch" })[menuRationale[1]];
+        const roles = menuRationale[2].split(", ").map((role) => ({ starter: "ορεκτικό", main: "κυρίως", side: "συνοδευτικό", dessert: "επιδόρπιο" })[role] || role).join(", ");
+        return `${leading}${occasion} μενού με ${roles}, με εκτιμώμενο κόστος για ${menuRationale[3]} άτομα.${trailing}`;
+      }
+      const count = text.match(/^(\d+) (ideas|menus?|courses? for (\d+) guests?)(.*)$/);
+      if (count) {
+        if (count[2] === "ideas") return `${leading}${count[1]} ιδέες${trailing}`;
+        if (/^menus?$/.test(count[2])) return `${leading}${count[1]} μενού${trailing}`;
+        return `${leading}${count[1]} πιάτα για ${count[3]} ${count[3] === "1" ? "άτομο" : "άτομα"}${count[4].replace(" · ", " · Κουζίνα: ").replace(/\bGreek\b/g, "Ελληνική")}${trailing}`;
+      }
+      const translated = text
+        .replace(/\bEstimated total:/g, "Εκτιμώμενο σύνολο:")
+        .replace(/Structured local recipe planner · no AI provider used\./g, greekTranslations["Structured local recipe planner · no AI provider used."])
+        .replace(/AI-assisted selection · recipes, dietary constraints, and costs validated against the catalog\./g, greekTranslations["AI-assisted selection · recipes, dietary constraints, and costs validated against the catalog."])
+        .replace(/Ingredient costs are catalog estimates per guest in EUR, not live local prices\./g, greekTranslations["Ingredient costs are catalog estimates per guest in EUR, not live local prices."])
+        .replace(/\bfor (\d+) guests\b/g, "για $1 άτομα")
+        .replace(/\b(\d+) courses\b/g, "$1 πιάτα")
+        .replace(/\b(starter|main|side|dessert)\b/g, (role) => ({ starter: "ορεκτικό", main: "κυρίως", side: "συνοδευτικό", dessert: "επιδόρπιο" })[role])
+        .replace(/\b(\d+) min\b/g, "$1 λεπτά")
+        .replace(/\bGreek\b/g, "Ελληνική");
+      return `${leading}${translated}${trailing}`;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLanguage === "el" ? "el" : "en";
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        if (!node.nodeValue.trim() || node.parentElement.closest("script, style, #language-toggle")) continue;
+        if (node.__languageSource === undefined) node.__languageSource = node.nodeValue;
+        node.nodeValue = translateText(node.__languageSource);
+      }
+      document.querySelectorAll("[placeholder], [title], [aria-label]").forEach((element) => {
+        ["placeholder", "title", "aria-label"].forEach((attribute) => {
+          if (!element.hasAttribute(attribute)) return;
+          const sourceKey = `languageSource${attribute.replace(/(^|-)([a-z])/g, (_, _dash, letter) => letter.toUpperCase())}`;
+          if (element.dataset[sourceKey] === undefined) element.dataset[sourceKey] = element.getAttribute(attribute);
+          element.setAttribute(attribute, translateText(element.dataset[sourceKey]));
+        });
+      });
+      languageToggle.querySelector(".flag-gb").hidden = currentLanguage !== "en";
+      languageToggle.querySelector(".flag-gr").hidden = currentLanguage !== "el";
+      languageToggle.setAttribute("aria-label", translateText("Change language"));
+      languageToggle.title = translateText("Change language");
+      languageMenu.querySelectorAll("[data-language-choice]").forEach((choice) => {
+        choice.setAttribute("aria-pressed", String(choice.dataset.languageChoice === currentLanguage));
+      });
+    }
+
+    function goToMenus() {
+      currentView = "menus";
+      currentMenu = null;
+      detailView.style.display = "none";
+      recommendationsView.style.display = "block";
+      document.querySelector("#recommendations-view").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function goToDishDetail(menu) {
+      currentView = "dish-detail";
+      currentMenu = menu;
+      renderMenuDishes(menu);
+    }
+
+    if (brandLink) {
+      brandLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.assign("/");
+      });
+    }
     const ingredientStorageKey = "tablepop.checkedIngredients";
     const savedShoppingListsStorageKey = "tablepop.savedShoppingLists";
     const checkedIngredients = new Set(loadCheckedIngredients());
@@ -1273,6 +1968,172 @@
       return JSON.stringify([menu.id, recipeId, selectedCourses, guests, ingredientKey]);
     }
 
+    function setProfileBadge(user) {
+      if (!profileBadge) return;
+      if (!user) {
+        profileBadge.classList.add("is-guest");
+        profileBadge.innerHTML = '<span class="profile-avatar">G</span>Guest Mode';
+        renderFavorites();
+        return;
+      }
+      const initials = `${user.name || ""} ${user.surname || ""}`.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "U";
+      profileBadge.classList.remove("is-guest");
+      profileBadge.innerHTML = `<span class="profile-avatar">${initials}</span>${escapeHtml(user.name || "User")} ${escapeHtml(user.surname || "")}`.trim();
+      renderFavorites();
+    }
+
+    function getStoredUser() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(profileStorageKey) || "null");
+        return saved && typeof saved === "object" && typeof saved.name === "string" && typeof saved.surname === "string" ? saved : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveUser(user) {
+      try {
+        localStorage.setItem(profileStorageKey, JSON.stringify(user));
+      } catch {
+        return;
+      }
+    }
+
+    function loadFavorites() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(favoritesStorageKey) || "[]");
+        return Array.isArray(saved) ? saved.filter((favorite) => favorite && typeof favorite.key === "string" && typeof favorite.type === "string" && typeof favorite.id === "string" && typeof favorite.name === "string") : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveFavorites() {
+      try {
+        localStorage.setItem(favoritesStorageKey, JSON.stringify([...favorites.values()]));
+      } catch {
+        return;
+      }
+    }
+
+    function favoriteButtonMarkup(type, id, name) {
+      const key = `${type}:${id}`;
+      const isFavorite = favorites.has(key);
+      const action = isFavorite ? "Remove" : "Add";
+      return `<button class="favorite-toggle${isFavorite ? " is-favorite" : ""}" type="button" data-favorite-type="${escapeHtml(type)}" data-favorite-id="${escapeHtml(id)}" data-favorite-name="${escapeHtml(name)}" aria-label="${action} ${escapeHtml(name)} ${isFavorite ? "from" : "to"} favorites" aria-pressed="${isFavorite}" title="${action} to favorites">${isFavorite ? "♥" : "♡"}</button>`;
+    }
+
+    function renderFavorites() {
+      if (!favoritesList) return;
+      const user = getStoredUser();
+      if (accountPanelUser) accountPanelUser.textContent = user ? `${user.name} ${user.surname}`.trim() : "Guest mode";
+      if (logoutButton) logoutButton.hidden = !user;
+      if (!user) {
+        favoritesList.innerHTML = '<div class="guest-favorites-prompt"><p class="favorites-empty">Please make an account so you can create a favorite list.</p><button class="guest-account-cta" type="button" data-account-upgrade>Create an account</button></div>';
+        applyLanguage();
+        return;
+      }
+      if (!favorites.size) {
+        favoritesList.innerHTML = "<p class=\"favorites-empty\">Your saved menus and dishes will appear here.</p>";
+        applyLanguage();
+        return;
+      }
+      favoritesList.innerHTML = [...favorites.values()].map((favorite) => `<div class="favorite-row">
+        <div class="favorite-row-copy"><strong>${escapeHtml(favorite.name)}</strong><small>${favorite.type === "menu" ? "Menu" : "Dish"}</small></div>
+        <button class="favorite-remove" type="button" data-favorite-remove="${escapeHtml(favorite.key)}" aria-label="Remove ${escapeHtml(favorite.name)} from favorites" title="Remove favorite">♥</button>
+      </div>`).join("");
+      applyLanguage();
+    }
+
+    function refreshFavoriteButtons() {
+      document.querySelectorAll(".favorite-toggle").forEach((button) => {
+        const key = `${button.dataset.favoriteType}:${button.dataset.favoriteId}`;
+        const isFavorite = favorites.has(key);
+        button.classList.toggle("is-favorite", isFavorite);
+        button.setAttribute("aria-pressed", String(isFavorite));
+        button.textContent = isFavorite ? "♥" : "♡";
+        button.title = isFavorite ? "Remove from favorites" : "Add to favorites";
+        const name = button.dataset.favoriteName || "item";
+        button.setAttribute("aria-label", `${isFavorite ? "Remove" : "Add"} ${name} ${isFavorite ? "from" : "to"} favorites`);
+      });
+    }
+
+    function toggleFavorite(button) {
+      if (!getStoredUser()) {
+        window.alert(translateText("Please make an account so you can create a favorite list."));
+        return;
+      }
+      const { favoriteType: type, favoriteId: id } = button.dataset;
+      const key = `${type}:${id}`;
+      if (favorites.has(key)) {
+        favorites.delete(key);
+      } else {
+        let favorite;
+        if (type === "menu") {
+          const menu = currentMenus.find((item) => item.id === id);
+          if (!menu) return;
+          favorite = { key, type, id, name: menu.name };
+        } else {
+          const recipe = recipes[id];
+          if (!recipe) return;
+          favorite = { key, type, id, name: recipe.name };
+        }
+        favorites.set(key, favorite);
+      }
+      saveFavorites();
+      refreshFavoriteButtons();
+      renderFavorites();
+    }
+
+    function continueAsGuest() {
+      saveUser(null);
+      setProfileBadge(null);
+      if (authScreen) authScreen.classList.remove("visible");
+      if (accountForm) accountForm.classList.remove("visible");
+      if (appContent) appContent.removeAttribute("inert");
+    }
+
+    function logOut() {
+      try {
+        localStorage.removeItem(profileStorageKey);
+      } catch {
+        saveUser(null);
+      }
+      setProfileBadge(null);
+      accountPanel.classList.remove("visible");
+      accountPanel.setAttribute("aria-hidden", "true");
+      profileBadge.setAttribute("aria-expanded", "false");
+      accountForm?.reset();
+      accountForm?.classList.remove("visible");
+      appContent?.setAttribute("inert", "");
+      authScreen?.classList.add("visible");
+      guestLoginButton?.focus();
+    }
+
+    function showAccountForm() {
+      if (!accountForm) return;
+      authScreen?.classList.add("visible");
+      appContent?.setAttribute("inert", "");
+      accountForm.classList.add("visible");
+      accountNameInput?.focus();
+    }
+
+    function handleAccountSubmit(event) {
+      event.preventDefault();
+      const name = String(accountNameInput?.value || "").trim();
+      const surname = String(accountSurnameInput?.value || "").trim();
+      if (!name || !surname) {
+        accountForm.reportValidity?.();
+        return;
+      }
+      const user = { name, surname };
+      saveUser(user);
+      setProfileBadge(user);
+      if (authScreen) authScreen.classList.remove("visible");
+      accountForm.classList.remove("visible");
+      if (appContent) appContent.removeAttribute("inert");
+    }
+
     function renderMenus(plan = planner.composeMenus(recipes, collectPlannerInput(), { source: "local" })) {
       currentMenus = plan.menus || [];
       document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"} for ${guestInput.value} ${Number(guestInput.value) === 1 ? "guest" : "guests"}${document.querySelector("#cuisine").value ? ` · ${document.querySelector("#cuisine").value}` : ""}.`;
@@ -1285,43 +2146,47 @@
 
       if (!currentMenus.length) {
         list.innerHTML = `<div class="empty-state"><div class="empty-mark" aria-hidden="true">!</div><h3>No complete menu meets every constraint.</h3><p>${escapeHtml(plan.limitation || "Try adjusting the budget, cuisine, course count, or dietary request.")}</p></div>`;
+        applyLanguage();
         return;
       }
 
       list.innerHTML = currentMenus.map((menu, index) => {
         const main = menu.recipes.find((recipe) => recipe.role === "main") || menu.recipes[0];
-        const courses = menu.recipes.map((recipe, recipeIndex) => `<li class="menu-course">
-          <img src="${photoUrl(recipes[recipe.id].image, 180)}" alt="" loading="lazy">
-          <div class="menu-course-content">
-            <div class="menu-course-top"><div><span class="menu-course-role">${escapeHtml(recipe.role)}</span><h4>${escapeHtml(recipe.name)}</h4></div><span class="menu-course-cost">${formatMoney(recipe.estimatedCost)}</span></div>
-            <p class="menu-course-meta">${escapeHtml(recipe.description)} · est. ${recipe.prepMinutes} min · serves ${recipe.servings}${recipe.allergens.length ? ` · listed allergens: ${escapeHtml(recipe.allergens.join(", "))}` : ""}</p>
-            <details class="menu-course-ingredients"><summary>Ingredients (${recipe.ingredients.length})</summary><ul>${recipe.ingredients.map((ingredient) => `<li>${escapeHtml(ingredient)}</li>`).join("")}</ul></details>
-          </div>
-        </li>`).join("");
         return `<article class="menu-card">
-          <div class="menu-photo"><img src="${photoUrl(main ? recipes[main.id].image : "photo-1490645935967-10de6ba17061")}" alt="${escapeHtml(main?.name || menu.name)}" loading="lazy"><span class="menu-number">${String(index + 1).padStart(2, "0")}</span></div>
-          <div class="menu-info"><div class="menu-kicker"><span>${menu.courseCount} courses · ${escapeHtml(menu.recipes.map((recipe) => recipe.cuisines.includes(plan.intent?.cuisine) ? plan.intent.cuisine : "").find(Boolean) || plan.intent?.cuisine || "Seasonal")}</span></div>
-            <h3>${escapeHtml(menu.name)}</h3><p class="menu-rationale">${escapeHtml(menu.rationale)}</p>
-            <ol class="menu-course-list">${courses}</ol>
-            <div class="menu-budget"><div><strong>${formatMoney(menu.totalCost)}</strong><span>Estimated total</span></div><div><strong>${formatMoney(menu.costPerGuest)}</strong><span>Per guest</span></div><div><strong>${formatMoney(menu.budgetRemaining)}</strong><span>Budget left</span></div></div>
-            <div class="menu-bottom"><button class="detail-button" type="button" data-menu="${index}">Recipe methods & grocery list</button></div>
+          <div class="menu-photo"><img src="${photoUrl(main ? recipes[main.id].image : "photo-1490645935967-10de6ba17061")}" alt="${escapeHtml(main?.name || menu.name)}" loading="lazy"><span class="menu-number">${String(index + 1).padStart(2, "0")}</span>${favoriteButtonMarkup("menu", menu.id, menu.name)}</div>
+          <div class="menu-info">
+            <div class="menu-kicker"><span>${menu.courseCount} courses · ${escapeHtml(menu.recipes.map((recipe) => recipe.cuisines.includes(plan.intent?.cuisine) ? plan.intent.cuisine : "").find(Boolean) || plan.intent?.cuisine || "Seasonal")}</span></div>
+            <h3>${escapeHtml(menu.name)}</h3>
+            <p class="menu-rationale">${escapeHtml(menu.rationale)}</p>
+            <div class="menu-summary-stats">
+              <div><strong>${formatMoney(menu.totalCost)}</strong><span>Estimated total</span></div>
+              <div><strong>${formatMoney(menu.costPerGuest)}</strong><span>Per guest</span></div>
+              <div><strong>${formatMoney(menu.budgetRemaining)}</strong><span>Budget left</span></div>
+            </div>
+            <div class="menu-bottom"><button class="detail-button" type="button" data-menu="${index}">View Menu</button></div>
           </div>
         </article>`;
       }).join("");
+      applyLanguage();
     }
 
     function renderMenuDishes(menu) {
       currentMenu = menu;
-      detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>All menu ideas</button></div>
+      currentView = "dish-detail";
+      detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Back to Menus</button>${favoriteButtonMarkup("menu", menu.id, menu.name)}</div>
         <h2 class="detail-title">${escapeHtml(menu.name)}</h2><p class="menu-rationale">${escapeHtml(menu.rationale)} Estimated total: ${formatMoney(menu.totalCost)} for ${guestInput.value} guests.</p>
         <div class="dish-grid">${menu.recipes.map((item) => {
           const recipe = recipes[item.id];
-          return `<button class="dish-choice" type="button" data-recipe="${item.id}"><img src="${photoUrl(recipe.image, 480)}" alt="" loading="lazy"><span>${escapeHtml(recipe.name)}<small>${escapeHtml(item.role)} · ${item.prepMinutes} min · ${formatMoney(item.estimatedCost)}</small></span></button>`;
+          return `<article class="dish-choice"><div class="dish-photo"><img src="${photoUrl(recipe.image, 480)}" alt="" loading="lazy">${favoriteButtonMarkup("dish", item.id, recipe.name)}</div><button class="dish-open" type="button" data-recipe="${escapeHtml(item.id)}"><span>${escapeHtml(recipe.name)}<small>${escapeHtml(item.role)} · ${item.prepMinutes} min · ${formatMoney(item.estimatedCost)}</small></span></button></article>`;
         }).join("")}</div>`;
       recommendationsView.style.display = "none";
       detailView.style.display = "block";
-      detailView.querySelector(".back-button").addEventListener("click", showRecommendations);
-      detailView.querySelectorAll("[data-recipe]").forEach((button) => button.addEventListener("click", () => renderRecipe(button.dataset.recipe)));
+      detailView.querySelector(".back-button").addEventListener("click", goToMenus);
+      detailView.querySelectorAll("[data-recipe]").forEach((button) => button.addEventListener("click", () => {
+        currentView = "dish-detail";
+        renderRecipe(button.dataset.recipe);
+      }));
+      applyLanguage();
       window.scrollTo({ top: document.querySelector(".results").getBoundingClientRect().top + window.scrollY - 18, behavior: "smooth" });
     }
 
@@ -1347,62 +2212,27 @@
         saveSavedShoppingLists();
       }
       const saveChoice = detailView.querySelector("#save-recipe-list");
+      const orderButton = detailView.querySelector("#order-efood-market");
       const listIsSaved = savedShoppingLists.has(currentShoppingListKey);
       saveChoice.checked = listIsSaved;
       saveChoice.disabled = !selectedItems.length && !listIsSaved;
       detailView.querySelector("#recipe-list-status").textContent = listIsSaved
-        ? `${selectedItems.length} checked ${selectedItems.length === 1 ? "ingredient" : "ingredients"} saved for this dish.`
-        : "Select ingredients in this dish, then save them here.";
-      detailView.querySelector("#recipe-grocery-count").textContent = `${selectedItems.length} ${selectedItems.length === 1 ? "item" : "items"}`;
+        ? `${selectedItems.length} missing ${selectedItems.length === 1 ? "ingredient" : "ingredients"} saved for this dish.`
+        : "Select ingredients in this dish to mark them missing.";
+      detailView.querySelector("#recipe-grocery-count").textContent = `${selectedItems.length} ${selectedItems.length === 1 ? "missing item" : "missing items"}`;
       detailView.querySelector("#recipe-grocery-items").innerHTML = selectedItems.length
         ? selectedItems.map((item) => `<li><span>${item.name}</span><span>${item.amount}</span></li>`).join("")
-        : `<li class="shopping-list-empty">No ingredients selected.</li>`;
-      detailView.querySelector("#export-recipe-list").disabled = !listIsSaved || !selectedItems.length;
-    }
-
-    function exportShoppingList() {
-      const savedList = savedShoppingLists.get(currentShoppingListKey);
-      if (!savedList || !savedList.items.length) return;
-      const PdfDocument = window.jspdf?.jsPDF;
-      if (!PdfDocument) {
-        detailView.querySelector("#recipe-list-status").textContent = "PDF export is unavailable. Check your internet connection and try again.";
-        return;
-      }
-
-      const pdf = new PdfDocument();
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 16;
-      const cleanText = (value) => String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x20-\x7e]/g, "");
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(18);
-      pdf.text("Tablepop Shopping List", margin, 20);
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-      pdf.text(cleanText(savedList.recipeName), margin, 29);
-      pdf.setFontSize(10);
-      pdf.text(cleanText(`${savedList.menuName} | ${savedList.courses} courses | ${savedList.guests} people`), margin, 37);
-
-      let cursorY = 49;
-      savedList.items.forEach((item, index) => {
-        const lines = pdf.splitTextToSize(`${index + 1}. ${cleanText(item.name)} - ${cleanText(item.amount)}`, pageWidth - margin * 2);
-        const rowHeight = lines.length * 6;
-        if (cursorY + rowHeight > pageHeight - margin) {
-          pdf.addPage();
-          cursorY = margin;
-        }
-        pdf.text(lines, margin, cursorY);
-        cursorY += rowHeight + 4;
-      });
-
-      const filename = cleanText(savedList.recipeName).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "tablepop";
-      pdf.save(`${filename}-shopping-list.pdf`);
+        : `<li class="shopping-list-empty">No missing ingredients selected.</li>`;
+      orderButton.disabled = !selectedItems.length;
+      orderButton.title = selectedItems.length ? "Order missing ingredients on efood Market" : "Select missing ingredients first";
+      applyLanguage();
     }
 
     function renderRecipe(recipeId) {
       const recipe = recipes[recipeId];
       const guests = Number(guestInput.value);
       if (!currentMenu || !recipe) return;
+      currentView = "dish-detail";
       currentShoppingListKey = JSON.stringify([currentMenu.name, recipeId, selectedCourses, guests]);
       const ingredientItems = recipe.ingredients.map(([quantity, unit, name]) => ({
         name,
@@ -1410,15 +2240,15 @@
         amount: `${planner.scaleQuantity(quantity, guests, recipe.servings || 4)} ${unit}`.trim(),
         checkKey: ingredientCheckKey(currentMenu, recipeId, guests, name, unit)
       }));
-      detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Menu dishes</button></div>
+      detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Back to Menus</button>${favoriteButtonMarkup("dish", recipeId, recipe.name)}</div>
         <article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 720)}" alt="${escapeHtml(recipe.name)}" loading="lazy"><div class="recipe-title"><span class="course-label">${escapeHtml(planner.recipeFacts(recipe, recipeId).role)}</span><h3>${escapeHtml(recipe.name)}</h3><p>${formatMoney(recipe.cost * guests)} estimated total · ${formatMoney(recipe.cost)} per guest · ${guests} servings · est. ${planner.recipeFacts(recipe, recipeId).prepMinutes} min</p><p class="recipe-allergen-note">Listed allergens: ${escapeHtml((planner.recipeFacts(recipe, recipeId).allergens.join(", ") || "none identified in listed ingredients"))}. Product labels and cross-contact may differ.</p>${recipe.source ? `<a class="recipe-source" href="${recipe.source}" target="_blank" rel="noopener noreferrer">Recipe source ↗</a>` : ""}</div></div>
-          <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${ingredientItems.map((item, index) => `<li><label class="recipe-ingredient"><input type="checkbox" data-recipe-ingredient="${index}" aria-label="Select ${item.name} for ${recipe.name} grocery list" ${checkedIngredients.has(item.checkKey) ? "checked" : ""}><span>${item.name}</span><span>${item.amount}</span></label></li>`).join("")}</ul>
-            <div class="recipe-grocery-tools"><label class="save-list-choice"><input id="save-recipe-list" type="checkbox" ${savedShoppingLists.has(currentShoppingListKey) ? "checked" : ""}><span>Save checked ingredients from this dish</span></label><p class="saved-list-status" id="recipe-list-status" role="status"></p>
-              <div class="recipe-grocery-heading"><h5>Grocery list</h5><span class="shopping-list-count" id="recipe-grocery-count"></span></div><ul class="shopping-list-items" id="recipe-grocery-items" aria-live="polite"></ul><button class="export-list-button" id="export-recipe-list" type="button">Export list</button>
+          <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${ingredientItems.map((item, index) => `<li><label class="recipe-ingredient"><input type="checkbox" data-recipe-ingredient="${index}" aria-label="Mark ${item.name} as missing for ${recipe.name}" ${checkedIngredients.has(item.checkKey) ? "checked" : ""}><span>${item.name}</span><span>${item.amount}</span></label></li>`).join("")}</ul>
+            <div class="recipe-grocery-tools"><label class="save-list-choice"><input id="save-recipe-list" type="checkbox" ${savedShoppingLists.has(currentShoppingListKey) ? "checked" : ""}><span>Save checked missing ingredients from this dish</span></label><p class="saved-list-status" id="recipe-list-status" role="status"></p>
+              <div class="recipe-grocery-heading"><h5>Missing ingredients</h5><span class="shopping-list-count" id="recipe-grocery-count"></span></div><ul class="shopping-list-items" id="recipe-grocery-items" aria-live="polite"></ul><button class="efood-order-button" id="order-efood-market" type="button">Order ingredients on efood Market</button>
             </div>
           </section>
           <section><h4>Step-by-step</h4><ol class="method">${recipe.method.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section></div></article>`;
-      detailView.querySelector(".back-button").addEventListener("click", () => renderMenuDishes(currentMenu));
+      detailView.querySelector(".back-button").addEventListener("click", goToMenus);
       detailView.querySelectorAll("[data-recipe-ingredient]").forEach((checkbox) => checkbox.addEventListener("change", () => {
         const item = ingredientItems[Number(checkbox.dataset.recipeIngredient)];
         if (!item) return;
@@ -1437,15 +2267,29 @@
         saveSavedShoppingLists();
         updateRecipeShoppingList(recipeId, recipe, ingredientItems);
       });
-      detailView.querySelector("#export-recipe-list").addEventListener("click", exportShoppingList);
+      detailView.querySelector("#order-efood-market").addEventListener("click", () => {
+        const missingIngredients = ingredientItems
+          .filter((item) => checkedIngredients.has(item.checkKey))
+          .map((item) => item.name);
+
+        if (!missingIngredients.length) {
+          detailView.querySelector("#recipe-list-status").textContent = "Check ingredients first to build your efood Market order.";
+          return;
+        }
+
+        const checkoutUrl = planner.generateEfoodCheckoutUrl(missingIngredients);
+        window.open(checkoutUrl || "https://www.e-food.gr/", "_blank", "noopener,noreferrer");
+      });
       updateRecipeShoppingList(recipeId, recipe, ingredientItems);
+      applyLanguage();
       window.scrollTo({ top: document.querySelector(".results").getBoundingClientRect().top + window.scrollY - 18, behavior: "smooth" });
     }
 
     function showRecommendations() {
+      currentView = "menus";
+      currentMenu = null;
       detailView.style.display = "none";
       recommendationsView.style.display = "block";
-      currentMenu = null;
     }
 
     courseButtons.forEach((button) => button.addEventListener("click", () => {
@@ -1461,34 +2305,144 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (!form.reportValidity()) return;
+      closePlannerDrawer();
       showRecommendations();
       const submitButton = form.querySelector(".submit-button");
       submitButton.disabled = true;
       submitButton.querySelector("span:first-child").textContent = "Planning your menu...";
       document.querySelector("#planner-status").textContent = "Checking the recipe catalog against your request...";
+      applyLanguage();
       try {
         const plan = await requestPlan(collectPlannerInput());
         renderMenus(plan);
       } finally {
         submitButton.disabled = false;
         submitButton.querySelector("span:first-child").textContent = "Find my menus";
+        applyLanguage();
       }
       document.querySelector("#recommendations-view").scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
+    plannerOpenButton.addEventListener("click", () => {
+      openPlannerDrawer();
+      document.querySelector("#budget").focus({ preventScroll: true });
+    });
+    plannerCloseButton.addEventListener("click", closePlannerDrawer);
+    plannerBackdrop.addEventListener("click", closePlannerDrawer);
+
     list.addEventListener("click", (event) => {
+      const favoriteButton = event.target.closest(".favorite-toggle");
+      if (favoriteButton) {
+        toggleFavorite(favoriteButton);
+        return;
+      }
       const button = event.target.closest("[data-menu]");
-      if (button && currentMenus[Number(button.dataset.menu)]) renderMenuDishes(currentMenus[Number(button.dataset.menu)]);
+      if (button && currentMenus[Number(button.dataset.menu)]) {
+        currentView = "dish-detail";
+        renderMenuDishes(currentMenus[Number(button.dataset.menu)]);
+      }
     });
 
+    detailView.addEventListener("click", (event) => {
+      const favoriteButton = event.target.closest(".favorite-toggle");
+      if (favoriteButton) toggleFavorite(favoriteButton);
+    });
+
+    profileBadge.addEventListener("click", () => {
+      const isOpen = accountPanel.classList.toggle("visible");
+      accountPanel.setAttribute("aria-hidden", String(!isOpen));
+      profileBadge.setAttribute("aria-expanded", String(isOpen));
+      if (isOpen) renderFavorites();
+    });
+
+    languageToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const isOpening = languageMenu.hidden;
+      languageMenu.hidden = !isOpening;
+      languageToggle.setAttribute("aria-expanded", String(isOpening));
+    });
+
+    languageMenu.addEventListener("click", (event) => {
+      const choice = event.target.closest("[data-language-choice]");
+      if (!choice) return;
+      currentLanguage = choice.dataset.languageChoice;
+      try {
+        localStorage.setItem(languageStorageKey, currentLanguage);
+      } catch {
+        // Keep the language change for this page session if storage is unavailable.
+      }
+      applyLanguage();
+      languageMenu.hidden = true;
+      languageToggle.setAttribute("aria-expanded", "false");
+      languageToggle.focus();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (languagePicker.contains(event.target)) return;
+      languageMenu.hidden = true;
+      languageToggle.setAttribute("aria-expanded", "false");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || languageMenu.hidden) return;
+      languageMenu.hidden = true;
+      languageToggle.setAttribute("aria-expanded", "false");
+      languageToggle.focus();
+    });
+
+    accountPanel.querySelector(".account-panel-close").addEventListener("click", () => {
+      accountPanel.classList.remove("visible");
+      accountPanel.setAttribute("aria-hidden", "true");
+      profileBadge.setAttribute("aria-expanded", "false");
+    });
+    logoutButton.addEventListener("click", logOut);
+
+    favoritesList.addEventListener("click", (event) => {
+      const accountUpgradeButton = event.target.closest("[data-account-upgrade]");
+      if (accountUpgradeButton) {
+        accountPanel.classList.remove("visible");
+        accountPanel.setAttribute("aria-hidden", "true");
+        profileBadge.setAttribute("aria-expanded", "false");
+        accountForm.reset();
+        showAccountForm();
+        return;
+      }
+      const removeButton = event.target.closest("[data-favorite-remove]");
+      if (!removeButton) return;
+      favorites.delete(removeButton.dataset.favoriteRemove);
+      saveFavorites();
+      refreshFavoriteButtons();
+      renderFavorites();
+    });
+
+    if (guestLoginButton) {
+      guestLoginButton.addEventListener("click", continueAsGuest);
+    }
+    if (accountLoginButton) {
+      accountLoginButton.addEventListener("click", showAccountForm);
+    }
+    if (accountForm) accountForm.addEventListener("submit", handleAccountSubmit);
+
+    const storedUser = getStoredUser();
+    setProfileBadge(storedUser);
+    if (storedUser) {
+      if (authScreen) authScreen.classList.remove("visible");
+      if (appContent) appContent.removeAttribute("inert");
+    }
+
     renderMenus();
+    applyLanguage();
     const splashScreen = document.querySelector("#splash-screen");
-    const appContent = document.querySelector("#app-content");
     window.setTimeout(() => {
       splashScreen.classList.add("is-leaving");
       window.setTimeout(() => {
         splashScreen.remove();
-        appContent.removeAttribute("inert");
+        if (!storedUser) {
+          appContent.setAttribute("inert", "true");
+          if (authScreen) authScreen.classList.add("visible");
+        } else {
+          appContent.removeAttribute("inert");
+        }
       }, 250);
     }, 2750);
   </script>
