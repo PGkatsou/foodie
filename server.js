@@ -7,6 +7,8 @@ const planner = require("./planner-core.js");
 const root = __dirname;
 const port = Number(process.env.PORT) || 8000;
 const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const unsplashAccessKey = process.env.UNSPLASH_ACCESS_KEY || "";
+const unsplashSearchCache = new Map();
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -60,6 +62,127 @@ async function readJson(request) {
   return JSON.parse(body || "{}");
 }
 
+const imageStopWords = new Set(["and", "with", "the", "from", "roast", "roasted", "baked", "grilled", "creamy", "crispy", "classic", "fresh", "wild", "easy", "style", "home", "made", "served", "recipe", "dish"]);
+
+function normalizeImageText(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function imageTokenSet(value) {
+  const tokens = normalizeImageText(value).split(/\s+/).filter(Boolean);
+  for (const token of [...tokens]) {
+    if (token.endsWith("ies") && token.length > 4) tokens.push(`${token.slice(0, -3)}y`);
+    else if (token.endsWith("oes") && token.length > 4) tokens.push(token.slice(0, -2));
+    else if (token.endsWith("es") && token.length > 4) tokens.push(token.slice(0, -2));
+    else if (token.endsWith("s") && token.length > 3) tokens.push(token.slice(0, -1));
+  }
+  return new Set(tokens);
+}
+
+function unsplashSearchTerms(recipe) {
+  const text = normalizeImageText(`${recipe.name} ${recipe.ingredients.slice(0, 4).map((ingredient) => ingredient[2]).join(" ")}`);
+  return [...new Set(text.split(/\s+/).filter((word) => word.length > 3 && !imageStopWords.has(word)))];
+}
+
+async function searchUnsplashRecipe(recipe) {
+  if (!unsplashAccessKey) return [];
+  const cacheKey = recipe.name.toLowerCase();
+  if (unsplashSearchCache.has(cacheKey)) return unsplashSearchCache.get(cacheKey);
+  try {
+    const url = new URL("https://api.unsplash.com/search/photos");
+    url.search = new URLSearchParams({ query: recipe.name, per_page: "10", orientation: "landscape", content_filter: "high" }).toString();
+    const response = await fetch(url, {
+      headers: { authorization: `Client-ID ${unsplashAccessKey}`, "accept-version": "v1" },
+      signal: AbortSignal.timeout(4000)
+    });
+    if (!response.ok) throw new Error(`Unsplash returned HTTP ${response.status}.`);
+    const result = await response.json();
+    const terms = unsplashSearchTerms(recipe);
+    const photos = (Array.isArray(result.results) ? result.results : []).map((photo) => {
+      const url = photo.urls?.regular;
+      if (typeof photo.id !== "string" || typeof url !== "string") return null;
+      try {
+        if (new URL(url).hostname !== "images.unsplash.com" || new URL(url).protocol !== "https:") return null;
+      } catch {
+        return null;
+      }
+      const searchable = imageTokenSet(`${photo.alt_description || ""} ${photo.description || ""} ${(photo.tags || []).map((tag) => tag.title || "").join(" ")}`);
+      const matches = terms.filter((term) => searchable.has(term));
+      if (!matches.length) return null;
+      let pageUrl = "";
+      try {
+        const photoPage = new URL(photo.links?.html || "");
+        if (photoPage.protocol === "https:" && photoPage.hostname === "unsplash.com") {
+          photoPage.searchParams.set("utm_source", "tablepop");
+          photoPage.searchParams.set("utm_medium", "referral");
+          pageUrl = photoPage.toString();
+        }
+      } catch {}
+      return {
+        id: photo.id,
+        url,
+        alt: photo.alt_description || recipe.name,
+        photographer: photo.user?.name || "Unsplash contributor",
+        pageUrl,
+        downloadUrl: photo.links?.download_location || ""
+      };
+    }).filter(Boolean).sort((left, right) => {
+      const score = (photo) => terms.filter((term) => imageTokenSet(photo.alt).has(term)).length;
+      return score(right) - score(left);
+    });
+    unsplashSearchCache.set(cacheKey, photos);
+    if (unsplashSearchCache.size > 160) unsplashSearchCache.delete(unsplashSearchCache.keys().next().value);
+    return photos;
+  } catch (error) {
+    console.error("Unsplash recipe image search failed:", error.message);
+    return [];
+  }
+}
+
+async function attachRelevantImages(plan) {
+  if (!unsplashAccessKey || !Array.isArray(plan?.menus)) return plan;
+  const uniqueRecipes = [...new Set(plan.menus.flatMap((menu) => menu.recipes.map((recipe) => recipe.id)))];
+  const candidates = new Map();
+  for (let offset = 0; offset < uniqueRecipes.length; offset += 4) {
+    const batch = uniqueRecipes.slice(offset, offset + 4);
+    const batchResults = await Promise.all(batch.map(async (id) => [id, await searchUnsplashRecipe(recipes[id])]));
+    batchResults.forEach(([id, photos]) => candidates.set(id, photos));
+  }
+  const usedImageIds = new Set(plan.intent?.recentImageIds || []);
+  for (const menu of plan.menus) {
+    for (const item of menu.recipes) {
+      const photo = (candidates.get(item.id) || []).find((candidate) => !usedImageIds.has(`unsplash-${candidate.id}`));
+      if (photo) {
+        item.image = photo.url;
+        item.imageId = `unsplash-${photo.id}`;
+        item.imageAlt = photo.alt;
+        item.imageCredit = photo.photographer;
+        item.imageCreditUrl = photo.pageUrl;
+        usedImageIds.add(item.imageId);
+        if (photo.downloadUrl) {
+          try {
+            const downloadUrl = new URL(photo.downloadUrl);
+            if (downloadUrl.protocol === "https:" && downloadUrl.hostname === "api.unsplash.com") {
+              fetch(downloadUrl, { headers: { authorization: `Client-ID ${unsplashAccessKey}`, "accept-version": "v1" }, signal: AbortSignal.timeout(5000) }).catch(() => {});
+            }
+            } catch {}
+        }
+        continue;
+      }
+      const fallbackImage = recipes[item.id]?.image;
+      if (fallbackImage && !usedImageIds.has(fallbackImage)) {
+        item.image = fallbackImage;
+        item.imageId = fallbackImage;
+        usedImageIds.add(fallbackImage);
+      } else {
+        item.image = "";
+        item.imageId = "";
+      }
+    }
+  }
+  return plan;
+}
+
 function compactIntent(intent) {
   return {
     occasion: intent.occasion,
@@ -68,7 +191,10 @@ function compactIntent(intent) {
     cuisine: intent.cuisine,
     guests: intent.guests,
     budget: intent.budget,
-    courseCount: intent.courseCount
+    courseCount: intent.courseCount,
+    recentRecipeIds: intent.recentRecipeIds,
+    recentImageIds: intent.recentImageIds,
+    recentMenuTitles: intent.recentMenuTitles
   };
 }
 
@@ -86,7 +212,11 @@ function validateInput(input) {
     const allowed = ["Greek", "Italian", "Asian", "American", "European", "Mediterranean", "Mexican", "Indian", "Street food"];
     if (input.cuisine && !allowed.includes(input.cuisine)) throw new Error("Choose a supported cuisine or Any cuisine.");
   }
-  return { ...input, budget, guests, courseCount, cuisine: input.cuisine || "" };
+  const knownRecipeIds = new Set(Object.keys(recipes));
+  const recentRecipeIds = [...new Set((Array.isArray(input.recentRecipeIds) ? input.recentRecipeIds : []).filter((id) => typeof id === "string" && knownRecipeIds.has(id)))].slice(-120);
+    const recentImageIds = [...new Set((Array.isArray(input.recentImageIds) ? input.recentImageIds : []).filter((id) => typeof id === "string" && /^(?:photo-|unsplash-)[a-zA-Z0-9-]{4,80}$/.test(id)))].slice(-120);
+  const recentMenuTitles = [...new Set((Array.isArray(input.recentMenuTitles) ? input.recentMenuTitles : []).filter((title) => typeof title === "string" && title.trim()))].slice(-120);
+  return { ...input, budget, guests, courseCount, cuisine: input.cuisine || "", recentRecipeIds, recentImageIds, recentMenuTitles, recentDishProfiles: [] };
 }
 
 async function requestAiPlan(input, localIntent) {
@@ -100,7 +230,7 @@ async function requestAiPlan(input, localIntent) {
     },
     body: JSON.stringify({
       model,
-      instructions: "You are a menu planner. Interpret the occasion and free-text request semantically. Treat dietary constraints as hard exclusions. Do not invent recipes, ingredients, costs, or facts. Select only catalog IDs. Build complete menus in the required course order; the server will validate all constraints and calculate all costs. Use cuisine-specific recipes for mains; neutral-course recipes may be used for compatible supporting courses. Return only the required structured data.",
+      instructions: "You are a professional food editor and menu planner. Parse the request semantically and treat dietary exclusions, ingredient bans, cuisine, budget, guests, and course count as hard constraints. Prioritize them over novelty. Create varied, regionally grounded culinary experiences by balancing technique, texture, freshness, richness, and course progression; avoid relying on the same proteins or flavor profiles across menus. Use only recipe IDs from the catalog, never choose any previously generated ID, and avoid close ingredient-profile matches. Do not copy external recipe text or invent facts. If no valid new menu exists, do not repeat recipes. Return only the required structured data.",
       input: JSON.stringify({
         request: {
           budgetEur: localIntent.budget,
@@ -111,6 +241,8 @@ async function requestAiPlan(input, localIntent) {
           additionalRequest: input.recipeRequest
         },
         deterministicInterpretation: compactIntent(localIntent),
+        previouslyGeneratedRecipes: localIntent.recentRecipeIds.slice(-40).map((id) => planner.recipeIdentity(recipes[id], id)),
+        previouslyGeneratedMenuTitles: localIntent.recentMenuTitles,
         catalog
       }),
       text: {
@@ -127,18 +259,28 @@ async function requestAiPlan(input, localIntent) {
   const result = await response.json();
   const outputText = result.output_text || result.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text;
   if (!outputText) throw new Error("AI service returned no structured plan.");
-  return JSON.parse(outputText);
+  try {
+    return JSON.parse(outputText);
+  } catch {
+    const cleaned = outputText.replace(/^```json\s*/i, "").replace(/\s*```$/, "").trim();
+    if (!cleaned) throw new Error("AI response was empty.");
+    return JSON.parse(cleaned);
+  }
 }
 
 function createAiMenus(aiResult, input, localIntent) {
   const intent = planner.mergeAiIntent(localIntent, aiResult.intent);
   const menus = [];
+  const usedRecipeIds = new Set();
+  const usedImageIds = new Set(intent.recentImageIds);
+  const usedTitles = new Set(intent.recentMenuTitles.map((title) => title.trim().toLowerCase()));
   for (const candidate of aiResult.menus.slice(0, 3)) {
     const validation = planner.validateMenu(recipes, candidate.recipeIds, input, { intent });
     if (!validation.valid) continue;
-    const menu = planner.buildMenu(recipes, candidate.recipeIds, intent, 0, menus.length);
-    menu.rationale = String(candidate.rationale || menu.rationale).slice(0, 300);
+    if (candidate.recipeIds.some((id) => usedRecipeIds.has(id))) continue;
+    const menu = planner.buildMenu(recipes, candidate.recipeIds, intent, 0, menus.length, usedImageIds, usedTitles);
     menus.push(menu);
+    candidate.recipeIds.forEach((id) => usedRecipeIds.add(id));
   }
   if (!menus.length) throw new Error("AI returned no menu that passed recipe and budget validation.");
   return { menus, intent, source: "ai", limitation: "", estimateNote: "Ingredient costs are catalog estimates per guest in EUR, not live local prices." };
@@ -147,15 +289,15 @@ function createAiMenus(aiResult, input, localIntent) {
 async function planRequest(input) {
   input = validateInput(input);
   const localIntent = planner.parseRequest(input);
-  if (!process.env.OPENAI_API_KEY) return planner.composeMenus(recipes, input, { intent: localIntent, source: "local" });
+  if (!process.env.OPENAI_API_KEY) return attachRelevantImages(planner.composeMenus(recipes, input, { intent: localIntent, source: "local" }));
   try {
     const aiResult = await requestAiPlan(input, localIntent);
-    return createAiMenus(aiResult, input, localIntent);
+    return attachRelevantImages(createAiMenus(aiResult, input, localIntent));
   } catch (error) {
     const fallback = planner.composeMenus(recipes, input, { intent: localIntent, source: "local" });
     fallback.fallbackReason = "AI planning is unavailable or returned an invalid menu; these results use the local structured recipe catalog instead.";
     console.error("AI menu planner fallback:", error.message);
-    return fallback;
+    return attachRelevantImages(fallback);
   }
 }
 
@@ -182,7 +324,7 @@ function serveStatic(urlPath, response) {
 const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
   if (request.method === "GET" && url.pathname === "/api/health") {
-    sendJson(response, 200, { aiEnabled: Boolean(process.env.OPENAI_API_KEY), model: process.env.OPENAI_API_KEY ? model : null });
+    sendJson(response, 200, { aiEnabled: Boolean(process.env.OPENAI_API_KEY), model: process.env.OPENAI_API_KEY ? model : null, imageSearchEnabled: Boolean(unsplashAccessKey) });
     return;
   }
   if (request.method === "POST" && url.pathname === "/api/plan") {
@@ -206,4 +348,5 @@ const server = http.createServer(async (request, response) => {
 server.listen(port, "0.0.0.0", () => {
   console.log(`Tablepop planner listening on http://localhost:${port}`);
   console.log(`AI provider: ${process.env.OPENAI_API_KEY ? model : "not configured; local planner enabled"}`);
+  console.log(`Recipe image search: ${unsplashAccessKey ? "Unsplash API enabled" : "not configured; catalog images enabled"}`);
 });

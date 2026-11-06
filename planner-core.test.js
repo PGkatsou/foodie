@@ -80,6 +80,95 @@ test("reports contradictory cuisine requests instead of ignoring either", () => 
   assert.match(result.limitation, /conflicts/i);
 });
 
+test("treats mandatory ingredient exclusions as hard requirements", () => {
+  const request = input({
+    cuisine: "Italian",
+    recipeRequest: "No mushrooms, no onions and no spicy food",
+    budget: 200,
+    courseCount: 4
+  });
+  const intent = planner.parseRequest(request);
+  assert.ok(intent.excludedIngredients.includes("mushroom") || intent.excludedIngredients.includes("onion"));
+  const result = planner.composeMenus(recipes, request);
+  assert.ok(result.menus.length > 0, result.limitation);
+  assert.ok(result.menus.every((menu) => menu.recipes.every((recipe) => !recipe.ingredients.join(" ").toLowerCase().includes("mushroom") && !recipe.ingredients.join(" ").toLowerCase().includes("onion"))));
+});
+
+test("keeps a vegetarian high-protein request in the valid generation path", () => {
+  const intent = planner.parseRequest(input({ recipeRequest: "Vegetarian but high in protein" }));
+  assert.equal(intent.dietary.vegetarian, true);
+  assert.ok(intent.preferences.includes("highProtein"));
+  const result = planner.composeMenus(recipes, input({ courseCount: 1, recipeRequest: "Vegetarian but high in protein", budget: 150 }));
+  assert.ok(result.menus.length > 0, result.limitation);
+});
+
+test("keeps dishes unique across menus returned in the same generation", () => {
+  const result = planner.composeMenus(recipes, input({ cuisine: "Italian", budget: 300 }));
+  const generatedRecipes = result.menus.flatMap((menu) => menu.recipes);
+  const recipeIds = generatedRecipes.map((recipe) => recipe.id);
+  const imageIds = generatedRecipes.map((recipe) => recipe.image).filter(Boolean);
+  assert.equal(new Set(recipeIds).size, recipeIds.length);
+  assert.equal(new Set(result.menus.map((menu) => menu.name)).size, result.menus.length);
+  assert.equal(new Set(imageIds).size, imageIds.length);
+});
+
+test("creates dish-grounded titles and avoids recent menu titles", () => {
+  const request = input({ cuisine: "Italian", courseCount: 1, budget: 300 });
+  const first = planner.composeMenus(recipes, request);
+  assert.ok(first.menus.length > 1);
+  assert.ok(first.menus.every((menu) => menu.name.includes(menu.recipes[0].name)));
+  assert.ok(first.menus.every((menu) => !/\bmenu\b/i.test(menu.name)));
+  const previousTitles = first.menus.map((menu) => menu.name);
+  const next = planner.composeMenus(recipes, { ...request, recentMenuTitles: previousTitles });
+  assert.ok(next.menus.length > 0);
+  assert.ok(next.menus.every((menu) => !previousTitles.includes(menu.name)));
+});
+
+test("excludes previously generated dishes while preserving new valid results", () => {
+  const request = input({ cuisine: "Italian", budget: 300 });
+  const first = planner.composeMenus(recipes, request);
+  const previousRecipes = first.menus[0].recipes.map((recipe) => planner.recipeIdentity(recipes[recipe.id], recipe.id));
+  const next = planner.composeMenus(recipes, {
+    ...request,
+    recentRecipeIds: previousRecipes.map((recipe) => recipe.id),
+    recentDishProfiles: previousRecipes
+  });
+  assert.ok(next.menus.length > 0, next.limitation);
+  assert.ok(next.menus.every((menu) => menu.recipes.every((recipe) => !previousRecipes.some((previous) => previous.id === recipe.id))));
+});
+
+test("does not reuse recent image IDs when selecting new dishes", () => {
+  const request = input({ cuisine: "Italian", budget: 300 });
+  const first = planner.composeMenus(recipes, request);
+  const previousImages = first.menus.flatMap((menu) => menu.recipes.map((recipe) => recipe.image)).filter(Boolean);
+  const next = planner.composeMenus(recipes, { ...request, recentImageIds: previousImages });
+  const nextImages = next.menus.flatMap((menu) => menu.recipes.map((recipe) => recipe.image)).filter(Boolean);
+  assert.ok(nextImages.every((image) => !previousImages.includes(image)));
+});
+
+test("reports when history exhausts all new dishes for the requested course", () => {
+  const request = input({ courseCount: 1 });
+  const result = planner.composeMenus(recipes, { ...request, recentRecipeIds: Object.keys(recipes) });
+  assert.equal(result.menus.length, 0);
+  assert.match(result.limitation, /no new main recipes remain/i);
+});
+
+test("rejects near-identical dishes with a different catalog ID", () => {
+  const request = input({ courseCount: 1 });
+  const intent = planner.parseRequest({
+    ...request,
+    recentDishProfiles: [{
+      id: "otherRecipe",
+      name: "A slightly renamed dish",
+      role: "main",
+      ingredients: ["chicken thighs", "lemon", "garlic", "olive oil", "rosemary"]
+    }]
+  });
+  const validation = planner.validateMenu(recipes, ["lemonChicken"], request, { intent });
+  assert.equal(validation.valid, false);
+  assert.ok(validation.problems.some((problem) => /duplicates a recently generated dish/i.test(problem)));
+});
+
 test("rejects an AI menu that violates the user's hard dietary constraint", () => {
   const request = input({ courseCount: 1, recipeRequest: "No meat involved" });
   const ids = ["classicBurger"];
@@ -88,11 +177,18 @@ test("rejects an AI menu that violates the user's hard dietary constraint", () =
   assert.ok(validation.problems.some((problem) => /contains meat/i.test(problem)));
 });
 
+test("rejects an AI menu that violates an explicit ingredient exclusion", () => {
+  const request = input({ courseCount: 1, cuisine: "Italian", recipeRequest: "No mushrooms" });
+  const validation = planner.validateMenu(recipes, ["mushroomPasta"], request);
+  assert.equal(validation.valid, false);
+  assert.ok(validation.problems.some((problem) => /excluded mushroom/i.test(problem)));
+});
+
 test("builds a URL for ordered missing ingredients on efood Market", () => {
   const url = planner.generateEfoodCheckoutUrl(["sourdough", "ripe tomatoes", "ricotta"]);
-  assert.match(url, /^https:\/\/www\.efood\.com\//i);
+  assert.match(url, /^https:\/\/www\.e-food\.gr\//i);
   assert.match(url, /sourdough/i);
-  assert.match(url, /ripe\+tomatoes/i);
+  assert.match(url, /ripe%20tomatoes/i);
   assert.match(url, /ricotta/i);
-  assert.match(url, /q=|query=|search=/i);
+  assert.match(url, /\?s=/i);
 });

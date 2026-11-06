@@ -256,6 +256,70 @@
     }
     .logout-button:hover { background: rgba(242,103,69,0.14); }
     .logout-button[hidden] { display: none; }
+    .confirm-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      background: rgba(16, 24, 21, 0.32);
+      backdrop-filter: blur(8px);
+    }
+    .confirm-backdrop.visible { display: block; }
+    .confirm-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 81;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .confirm-modal.visible { display: flex; }
+    .confirm-dialog {
+      width: min(420px, 100%);
+      padding: 24px 20px 18px;
+      border: 1px solid rgba(28,36,31,0.08);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.96);
+      box-shadow: var(--shadow);
+    }
+    .confirm-dialog h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+      font-family: var(--serif);
+    }
+    .confirm-dialog p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .confirm-button {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .confirm-button.secondary {
+      border: 1px solid rgba(28,36,31,0.12);
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+    }
+    .confirm-button.danger {
+      border: 0;
+      background: linear-gradient(135deg, #d0584b, #b63d33);
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(182,61,51,0.2);
+    }
     .favorites-heading { margin: 18px 0 10px; }
     .favorites-list { display: grid; gap: 8px; }
     .favorite-row { padding: 10px 0; border-top: 1px solid var(--line); }
@@ -312,7 +376,7 @@
     .auth-card {
       position: relative;
       z-index: 51;
-      width: min(720px, 100%);
+      width: min(560px, 100%);
       padding: 28px 24px;
       background: rgba(255,255,255,0.82);
       border: 1px solid rgba(28,36,31,0.08);
@@ -321,8 +385,21 @@
       backdrop-filter: blur(10px);
       pointer-events: auto;
     }
+    .auth-header {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .auth-kicker {
+      margin: 0;
+      color: var(--coral-strong);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
     .auth-screen h2 {
-      margin: 0 0 8px;
+      margin: 0;
       font-size: clamp(2rem, 4vw, 3rem);
       line-height: 1.05;
       letter-spacing: -0.06em;
@@ -334,19 +411,19 @@
       color: var(--muted);
       line-height: 1.6;
     }
-    .auth-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .auth-panel {
+      display: none;
       gap: 14px;
       margin-top: 22px;
     }
+    .auth-panel.visible { display: grid; }
     .auth-action {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 54px;
+      min-height: 66px;
       border: 1px solid rgba(28,36,31,0.08);
-      border-radius: 16px;
+      border-radius: 18px;
       background: rgba(255,255,255,0.9);
       color: var(--ink);
       font-weight: 800;
@@ -359,6 +436,9 @@
       color: white;
       border-color: transparent;
       box-shadow: 0 12px 26px rgba(242,103,69,0.2);
+    }
+    .auth-action.secondary {
+      background: rgba(244,248,246,0.9);
     }
     .auth-action:hover {
       transform: translateY(-1px);
@@ -391,16 +471,74 @@
       background: rgba(255,255,255,0.9);
       color: var(--ink);
     }
-    .auth-submit {
-      margin-top: 18px;
-      min-height: 48px;
+    .field.full-width {
+      grid-column: 1 / -1;
+    }
+    .password-field {
+      position: relative;
+      display: grid;
+    }
+    .password-field input {
+      width: 100%;
+      padding-right: 72px;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
       border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .field-error,
+    .auth-form-message {
+      min-height: 18px;
+      color: #b7362d;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .auth-form-message.success {
+      color: #0e8b64;
+    }
+    .auth-form-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .auth-back,
+    .auth-submit {
+      flex: 1;
+      min-height: 48px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--teal), #1e9b8d);
-      color: white;
       font-weight: 800;
       cursor: pointer;
       pointer-events: auto;
+    }
+    .auth-back {
+      border: 1px solid rgba(28,36,31,0.12);
+      background: rgba(255,255,255,0.8);
+      color: var(--ink);
+    }
+    .auth-submit {
+      border: 0;
+      background: linear-gradient(135deg, var(--teal), #1e9b8d);
+      color: white;
+    }
+    @media (max-width: 640px) {
+      .auth-card {
+        padding: 22px 18px;
+      }
+      .auth-form-grid {
+        grid-template-columns: 1fr;
+      }
+      .auth-form-actions {
+        flex-direction: column;
+      }
     }
 
     .splash { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: linear-gradient(135deg, #f57a5f 0%, #ef5d41 100%); color: #fffaf1; opacity: 1; transition: opacity .25s ease; }
@@ -813,6 +951,39 @@
       object-fit: cover;
       display: block;
     }
+    .menu-photo > .photo-unavailable {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #eadfcf, #dfe9df);
+    }
+    .photo-unavailable {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 18px;
+      color: var(--ink);
+      text-align: center;
+    }
+    .photo-fallback-title { max-width: 32ch; font-family: var(--serif); font-size: 1.08rem; line-height: 1.2; }
+    .photo-fallback-note { color: var(--muted); font-size: 0.66rem; font-weight: 700; }
+    .photo-credit {
+      position: absolute;
+      right: 7px;
+      bottom: 7px;
+      z-index: 3;
+      max-width: calc(100% - 14px);
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.88);
+      color: var(--ink);
+      font-size: 0.58rem;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
     .menu-number {
       position: absolute;
       left: 14px;
@@ -1009,6 +1180,11 @@
       object-fit: cover;
       background: #e9e0d3;
     }
+    .dish-photo > .photo-unavailable {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #e9e0d3;
+    }
     .dish-open {
       display: block;
       width: 100%;
@@ -1035,6 +1211,7 @@
       box-shadow: var(--shadow-soft);
     }
     .recipe-head {
+      position: relative;
       display: grid;
       grid-template-columns: 180px minmax(0, 1fr);
       min-height: 155px;
@@ -1044,6 +1221,12 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    .recipe-head > .photo-unavailable {
+      width: 100%;
+      height: 100%;
+      min-height: 155px;
+      background: #e9e0d3;
     }
     .recipe-title {
       align-self: center;
@@ -1562,6 +1745,18 @@
       </div>
     </section>
 
+    <div id="logout-confirm-backdrop" class="confirm-backdrop" hidden></div>
+    <div id="logout-confirm-modal" class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-confirm-title" aria-describedby="logout-confirm-message" hidden>
+      <div class="confirm-dialog">
+        <h3 id="logout-confirm-title">Are you sure?</h3>
+        <p id="logout-confirm-message">Are you sure you want to log out of your account?</p>
+        <div class="confirm-actions">
+          <button id="logout-cancel" class="confirm-button secondary" type="button">Cancel</button>
+          <button id="logout-confirm" class="confirm-button danger" type="button">Log Out</button>
+        </div>
+      </div>
+    </div>
+
     <button id="planner-backdrop" class="planner-backdrop visible" type="button" aria-label="Close dinner settings" aria-hidden="false"></button>
     <button id="planner-open-button" class="planner-open-button" type="button" aria-expanded="true" aria-controls="planner-form" hidden><span class="planner-open-icon" aria-hidden="true">☷</span><span>Edit Dinner Deets</span></button>
     <section class="workspace" aria-label="Menu planner">
@@ -1623,24 +1818,75 @@
 
   <section id="auth-screen" class="auth-screen" aria-live="polite">
     <div class="auth-card">
-      <h2>Welcome to TablePop</h2>
-      <p>Pick how you want to get started. You can browse as a guest or create a profile to personalize your plans.</p>
-      <div class="auth-actions">
-        <button class="auth-action" type="button" id="guest-login">Join as a guest</button>
-        <button class="auth-action primary" type="button" id="account-login">Make an account</button>
+      <div class="auth-header">
+        <p class="auth-kicker">Welcome</p>
+        <h2>Welcome to TablePop</h2>
+        <p>Choose how you'd like to begin your next great meal plan.</p>
       </div>
+
+      <div id="welcome-panel" class="auth-panel visible">
+        <button class="auth-action secondary" type="button" id="guest-login">Continue as Guest</button>
+        <button class="auth-action primary" type="button" id="account-login">Create Account</button>
+        <button class="auth-action" type="button" id="login-login">Log In</button>
+      </div>
+
       <form class="auth-form" id="account-form" novalidate>
         <div class="auth-form-grid">
-          <label class="field">
-            <span>Name</span>
-            <input id="account-name" name="name" type="text" autocomplete="given-name" placeholder="Your name" required>
+          <label class="field full-width">
+            <span>Username</span>
+            <input id="account-username" name="username" type="text" autocomplete="username" placeholder="Choose a username" required>
+            <small class="field-error" data-error-for="account-username"></small>
+          </label>
+          <label class="field full-width">
+            <span>Email Address</span>
+            <input id="account-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <small class="field-error" data-error-for="account-email"></small>
           </label>
           <label class="field">
-            <span>Surname</span>
-            <input id="account-surname" name="surname" type="text" autocomplete="family-name" placeholder="Your surname" required>
+            <span>Password</span>
+            <div class="password-field">
+              <input id="account-password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" required>
+              <button class="password-toggle" type="button" data-target="account-password" aria-label="Show password">Show</button>
+            </div>
+            <small class="field-error" data-error-for="account-password"></small>
+          </label>
+          <label class="field">
+            <span>Confirm Password</span>
+            <div class="password-field">
+              <input id="account-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirm your password" required>
+              <button class="password-toggle" type="button" data-target="account-confirm-password" aria-label="Show confirmation password">Show</button>
+            </div>
+            <small class="field-error" data-error-for="account-confirm-password"></small>
           </label>
         </div>
-        <button class="auth-submit" type="submit">Create account</button>
+        <p class="auth-form-message" id="account-form-message" aria-live="polite"></p>
+        <div class="auth-form-actions">
+          <button class="auth-back" type="button" data-return="welcome">Back</button>
+          <button class="auth-submit" type="submit">Create Account</button>
+        </div>
+      </form>
+
+      <form class="auth-form" id="login-form" novalidate>
+        <div class="auth-form-grid">
+          <label class="field full-width">
+            <span>Username</span>
+            <input id="login-username" name="username" type="text" autocomplete="username" placeholder="Enter your username" required>
+            <small class="field-error" data-error-for="login-username"></small>
+          </label>
+          <label class="field full-width">
+            <span>Password</span>
+            <div class="password-field">
+              <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+              <button class="password-toggle" type="button" data-target="login-password" aria-label="Show password">Show</button>
+            </div>
+            <small class="field-error" data-error-for="login-password"></small>
+          </label>
+        </div>
+        <p class="auth-form-message" id="login-form-message" aria-live="polite"></p>
+        <div class="auth-form-actions">
+          <button class="auth-back" type="button" data-return="welcome">Back</button>
+          <button class="auth-submit" type="submit">Log In</button>
+        </div>
       </form>
     </div>
   </section>
@@ -1662,11 +1908,18 @@
     const detailView = document.querySelector("#detail-view");
     const brandLink = document.querySelector(".brand");
     const authScreen = document.querySelector("#auth-screen");
+    const welcomePanel = document.querySelector("#welcome-panel");
     const accountForm = document.querySelector("#account-form");
-    const accountNameInput = document.querySelector("#account-name");
-    const accountSurnameInput = document.querySelector("#account-surname");
+    const loginForm = document.querySelector("#login-form");
+    const accountUsernameInput = document.querySelector("#account-username");
+    const accountEmailInput = document.querySelector("#account-email");
+    const accountPasswordInput = document.querySelector("#account-password");
+    const accountConfirmPasswordInput = document.querySelector("#account-confirm-password");
+    const loginUsernameInput = document.querySelector("#login-username");
+    const loginPasswordInput = document.querySelector("#login-password");
     const guestLoginButton = document.querySelector("#guest-login");
     const accountLoginButton = document.querySelector("#account-login");
+    const loginLoginButton = document.querySelector("#login-login");
     const profileBadge = document.querySelector("#profile-badge");
     const languagePicker = document.querySelector("#language-picker");
     const languageToggle = document.querySelector("#language-toggle");
@@ -1675,8 +1928,15 @@
     const favoritesList = document.querySelector("#favorites-list");
     const accountPanelUser = document.querySelector("#account-panel-user");
     const logoutButton = document.querySelector("#logout-button");
+    const logoutConfirmBackdrop = document.querySelector("#logout-confirm-backdrop");
+    const logoutConfirmModal = document.querySelector("#logout-confirm-modal");
+    const logoutCancelButton = document.querySelector("#logout-cancel");
+    const logoutConfirmButton = document.querySelector("#logout-confirm");
     const appContent = document.querySelector("#app-content");
+    let latestGenerationToken = 0;
+    let activeGenerationController = null;
     const profileStorageKey = "tablepop.currentUser";
+    const usersStorageKey = "tablepop.users";
     const favoritesStorageKey = "tablepop.favorites";
     const favorites = new Map(loadFavorites().map((favorite) => [favorite.key, favorite]));
     const languageStorageKey = "tablepop.language";
@@ -1780,6 +2040,8 @@
     let currentView = "menus";
     let currentMenus = [];
     let currentMenu = null;
+    let currentPlanIntent = null;
+    const generationHistoryLimit = Object.keys(recipes).length;
 
     function openPlannerDrawer() {
       form.classList.add("is-open");
@@ -1923,8 +2185,122 @@
       }
     }
 
-    function photoUrl(id, width = 560) {
-      return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
+    function generationHistoryKey() {
+      const user = getStoredUser();
+      const owner = String(user?.username || "guest").trim().toLowerCase();
+      return `tablepop.generationHistory.${encodeURIComponent(owner)}`;
+    }
+
+    function loadGenerationHistory() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(generationHistoryKey()) || "[]");
+        const savedRecipes = Array.isArray(saved)
+          ? saved.flatMap((menu) => Array.isArray(menu?.recipes) ? menu.recipes : [])
+          : Array.isArray(saved?.recipes) ? saved.recipes : [];
+        const uniqueRecipes = new Map();
+        for (const recipe of savedRecipes) {
+          if (recipe && typeof recipe.id === "string" && recipes[recipe.id] && !uniqueRecipes.has(recipe.id)) uniqueRecipes.set(recipe.id, recipe);
+        }
+        return [...uniqueRecipes.values()].slice(0, generationHistoryLimit);
+      } catch {
+        return [];
+      }
+    }
+
+    function loadGenerationTitleHistory() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(generationHistoryKey()) || "[]");
+        const titles = Array.isArray(saved) ? saved.map((menu) => menu?.name) : saved?.titles;
+        return Array.isArray(titles) ? [...new Set(titles.filter((title) => typeof title === "string" && title.trim()))].slice(-generationHistoryLimit) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function generationHistoryContext() {
+      const history = loadGenerationHistory();
+      const recipeIds = new Set();
+      const imageIds = new Set();
+      for (const recipe of history) {
+        if (typeof recipe.id === "string") recipeIds.add(recipe.id);
+        if (typeof recipe.image === "string" && recipe.image) imageIds.add(recipe.image);
+      }
+      return { recentRecipeIds: [...recipeIds], recentImageIds: [...imageIds], recentMenuTitles: loadGenerationTitleHistory() };
+    }
+
+    function recordGenerationHistory(plan) {
+      if (!Array.isArray(plan?.menus) || !plan.menus.length) return;
+      const history = new Map(loadGenerationHistory().map((recipe) => [recipe.id, recipe]));
+      const titleHistory = loadGenerationTitleHistory();
+      const titleKeys = new Set(titleHistory.map((title) => title.trim().toLowerCase()));
+      for (const menu of plan.menus) {
+        if (typeof menu.name === "string" && !titleKeys.has(menu.name.trim().toLowerCase())) {
+          titleHistory.push(menu.name);
+          titleKeys.add(menu.name.trim().toLowerCase());
+        }
+        for (const item of menu.recipes) {
+          if (history.has(item.id)) continue;
+          const recipe = recipes[item.id];
+          if (recipe) history.set(item.id, {
+            id: item.id,
+            name: recipe.name,
+            role: item.role,
+            ingredients: recipe.ingredients.map((ingredient) => ingredient[2]),
+            description: item.description,
+            image: item.imageId || item.image || ""
+          });
+        }
+      }
+      try {
+        localStorage.setItem(generationHistoryKey(), JSON.stringify({
+          recipes: [...history.values()].slice(0, generationHistoryLimit),
+          titles: titleHistory.slice(-generationHistoryLimit)
+        }));
+      } catch {
+        return;
+      }
+    }
+
+    function photoUrl(source, width = 560) {
+      if (/^https:\/\/images\.unsplash\.com\//i.test(source)) {
+        const url = new URL(source);
+        url.searchParams.set("auto", "format");
+        url.searchParams.set("fit", "crop");
+        url.searchParams.set("w", String(width));
+        return url.toString();
+      }
+      return `https://images.unsplash.com/${source}?auto=format&fit=crop&w=${width}&q=82`;
+    }
+
+    function recipePhotoMarkup(recipeId, width, alt, usedImageIds, fallbackClass, imageOverride, imageIdOverride, imageCredit, imageCreditUrl) {
+      const imageSource = imageOverride === undefined ? recipes[recipeId]?.image : imageOverride;
+      const imageId = imageIdOverride || imageSource;
+      if (!imageSource || !imageId || usedImageIds.has(imageId)) return `<span class="photo-unavailable ${fallbackClass}" role="img" aria-label="Photo unavailable for ${escapeHtml(alt)}"><span class="photo-fallback-title">${escapeHtml(alt)}</span><span class="photo-fallback-note">Photo unavailable</span></span>`;
+      usedImageIds.add(imageId);
+      const credit = imageCredit ? ` title="Photo by ${escapeHtml(imageCredit)} on Unsplash"` : "";
+      const creditLink = imageCreditUrl ? `<a class="photo-credit" href="${escapeHtml(imageCreditUrl)}" target="_blank" rel="noopener noreferrer">Photo: ${escapeHtml(imageCredit || "Unsplash")}</a>` : "";
+      return `<img class="recipe-photo" data-photo-fallback="${fallbackClass}" src="${photoUrl(imageSource, width)}" alt="${escapeHtml(alt)}"${credit} loading="lazy">${creditLink}`;
+    }
+
+    function bindPhotoFallbacks(container) {
+      container.querySelectorAll("img.recipe-photo").forEach((image) => image.addEventListener("error", () => {
+        const fallback = document.createElement("span");
+        fallback.className = `photo-unavailable ${image.dataset.photoFallback || ""}`;
+        fallback.setAttribute("role", "img");
+        fallback.setAttribute("aria-label", `Photo unavailable for ${image.alt}`);
+        const title = document.createElement("span");
+        title.className = "photo-fallback-title";
+        title.textContent = image.alt;
+        const note = document.createElement("span");
+        note.className = "photo-fallback-note";
+        note.textContent = "Photo unavailable";
+        fallback.append(title, note);
+        image.parentElement?.querySelector(".photo-credit")?.remove();
+        image.replaceWith(fallback);
+      }, { once: true }));
+      container.querySelectorAll("img.recipe-photo").forEach((image) => {
+        if (image.complete && image.naturalWidth === 0) image.dispatchEvent(new Event("error"));
+      });
     }
 
     function formatMoney(value) {
@@ -1948,17 +2324,21 @@
       };
     }
 
-    async function requestPlan(input) {
+    async function requestPlan(input, generationToken, abortSignal) {
       try {
         const response = await fetch("/api/plan", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify(input),
-          signal: AbortSignal.timeout(28000)
+          signal: abortSignal || AbortSignal.timeout(28000)
         });
         if (!response.ok) throw new Error(`Planner endpoint returned ${response.status}`);
-        return await response.json();
+        const result = await response.json();
+        if (generationToken !== latestGenerationToken) return null;
+        if (!result || typeof result !== "object") throw new Error("Planner returned an invalid response.");
+        return result;
       } catch {
+        if (generationToken !== latestGenerationToken) return null;
         return planner.composeMenus(recipes, input, { source: "local" });
       }
     }
@@ -1976,16 +2356,49 @@
         renderFavorites();
         return;
       }
-      const initials = `${user.name || ""} ${user.surname || ""}`.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "U";
+      const displayName = [user.name, user.surname].filter(Boolean).join(" ") || user.username || "User";
+      const initials = String(displayName).trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "U";
       profileBadge.classList.remove("is-guest");
-      profileBadge.innerHTML = `<span class="profile-avatar">${initials}</span>${escapeHtml(user.name || "User")} ${escapeHtml(user.surname || "")}`.trim();
+      profileBadge.innerHTML = `<span class="profile-avatar">${initials}</span>${escapeHtml(displayName)}`;
       renderFavorites();
+    }
+
+    function loadUsers() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(usersStorageKey) || "[]");
+        return Array.isArray(saved) ? saved.filter((user) => user && typeof user.username === "string") : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveUsers(users) {
+      try {
+        localStorage.setItem(usersStorageKey, JSON.stringify(users));
+      } catch {
+        return;
+      }
+    }
+
+    async function hashPassword(password) {
+      const buffer = new TextEncoder().encode(password);
+      const hash = await crypto.subtle.digest("SHA-256", buffer);
+      return [...new Uint8Array(hash)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
     }
 
     function getStoredUser() {
       try {
         const saved = JSON.parse(localStorage.getItem(profileStorageKey) || "null");
-        return saved && typeof saved === "object" && typeof saved.name === "string" && typeof saved.surname === "string" ? saved : null;
+        if (!saved || typeof saved !== "object") return null;
+        if (typeof saved.username === "string" || typeof saved.name === "string" || typeof saved.surname === "string") {
+          return {
+            username: saved.username || saved.name || "",
+            name: saved.name || saved.username || "",
+            surname: saved.surname || "",
+            email: saved.email || ""
+          };
+        }
+        return null;
       } catch {
         return null;
       }
@@ -2085,12 +2498,89 @@
       renderFavorites();
     }
 
+    function setFieldError(fieldId, message) {
+      const target = document.querySelector(`[data-error-for="${fieldId}"]`);
+      if (target) target.textContent = message || "";
+    }
+
+    function setFormMessage(formId, message, isSuccess = false) {
+      const messageNode = document.getElementById(`${formId}-message`);
+      if (!messageNode) return;
+      messageNode.textContent = message || "";
+      messageNode.classList.toggle("success", Boolean(isSuccess));
+    }
+
+    function clearFormErrors(form) {
+      form?.querySelectorAll(".field-error").forEach((error) => {
+        error.textContent = "";
+      });
+      const formMessage = form?.querySelector(".auth-form-message");
+      if (formMessage) {
+        formMessage.textContent = "";
+        formMessage.classList.remove("success");
+      }
+    }
+
+    function showWelcomeScreen() {
+      if (!authScreen) return;
+      authScreen.classList.add("visible");
+      welcomePanel?.classList.add("visible");
+      accountForm?.classList.remove("visible");
+      loginForm?.classList.remove("visible");
+      clearFormErrors(accountForm);
+      clearFormErrors(loginForm);
+      appContent?.setAttribute("inert", "true");
+      guestLoginButton?.focus();
+    }
+
+    function showAccountForm() {
+      if (!accountForm) return;
+      authScreen?.classList.add("visible");
+      welcomePanel?.classList.remove("visible");
+      loginForm?.classList.remove("visible");
+      accountForm.classList.add("visible");
+      clearFormErrors(accountForm);
+      appContent?.setAttribute("inert", "true");
+      accountUsernameInput?.focus();
+    }
+
+    function showLoginForm() {
+      if (!loginForm) return;
+      authScreen?.classList.add("visible");
+      welcomePanel?.classList.remove("visible");
+      accountForm?.classList.remove("visible");
+      loginForm.classList.add("visible");
+      clearFormErrors(loginForm);
+      appContent?.setAttribute("inert", "true");
+      loginUsernameInput?.focus();
+    }
+
     function continueAsGuest() {
       saveUser(null);
       setProfileBadge(null);
       if (authScreen) authScreen.classList.remove("visible");
       if (accountForm) accountForm.classList.remove("visible");
+      if (loginForm) loginForm.classList.remove("visible");
+      if (welcomePanel) welcomePanel.classList.remove("visible");
       if (appContent) appContent.removeAttribute("inert");
+    }
+
+    function closeLogoutConfirm() {
+      logoutConfirmModal?.classList.remove("visible");
+      logoutConfirmBackdrop?.classList.remove("visible");
+      logoutConfirmModal?.setAttribute("hidden", "hidden");
+      logoutConfirmBackdrop?.setAttribute("hidden", "hidden");
+      logoutConfirmModal?.setAttribute("aria-hidden", "true");
+    }
+
+    function openLogoutConfirm() {
+      if (!logoutConfirmModal || !logoutConfirmBackdrop) return;
+      logoutConfirmModal.hidden = false;
+      logoutConfirmBackdrop.hidden = false;
+      logoutConfirmModal.classList.add("visible");
+      logoutConfirmBackdrop.classList.add("visible");
+      logoutConfirmModal.setAttribute("aria-hidden", "false");
+      logoutCancelButton?.focus();
     }
 
     function logOut() {
@@ -2104,38 +2594,112 @@
       accountPanel.setAttribute("aria-hidden", "true");
       profileBadge.setAttribute("aria-expanded", "false");
       accountForm?.reset();
+      loginForm?.reset();
       accountForm?.classList.remove("visible");
-      appContent?.setAttribute("inert", "");
-      authScreen?.classList.add("visible");
-      guestLoginButton?.focus();
+      loginForm?.classList.remove("visible");
+      appContent?.setAttribute("inert", "true");
+      closeLogoutConfirm();
+      showWelcomeScreen();
     }
 
-    function showAccountForm() {
-      if (!accountForm) return;
-      authScreen?.classList.add("visible");
-      appContent?.setAttribute("inert", "");
-      accountForm.classList.add("visible");
-      accountNameInput?.focus();
-    }
-
-    function handleAccountSubmit(event) {
+    async function handleAccountSubmit(event) {
       event.preventDefault();
-      const name = String(accountNameInput?.value || "").trim();
-      const surname = String(accountSurnameInput?.value || "").trim();
-      if (!name || !surname) {
-        accountForm.reportValidity?.();
+      clearFormErrors(accountForm);
+      const username = String(accountUsernameInput?.value || "").trim();
+      const email = String(accountEmailInput?.value || "").trim();
+      const password = String(accountPasswordInput?.value || "");
+      const confirmPassword = String(accountConfirmPasswordInput?.value || "");
+      let isValid = true;
+
+      if (!username || username.length < 3 || !/^[A-Za-z0-9_.-]+$/.test(username)) {
+        setFieldError("account-username", "Username must be at least 3 characters with no spaces.");
+        isValid = false;
+      }
+
+      const existingUsers = loadUsers();
+      if (existingUsers.some((user) => user.username.toLowerCase() === username.toLowerCase())) {
+        setFieldError("account-username", "That username is already in use.");
+        isValid = false;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError("account-email", "Please enter a valid email address.");
+        isValid = false;
+      }
+
+      if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password)) {
+        setFieldError("account-password", "Use at least 8 characters, including upper/lowercase letters and a number.");
+        isValid = false;
+      }
+
+      if (confirmPassword !== password) {
+        setFieldError("account-confirm-password", "Passwords do not match.");
+        isValid = false;
+      }
+
+      if (!isValid) {
+        setFormMessage("account", "Please fix the highlighted fields and try again.");
         return;
       }
-      const user = { name, surname };
-      saveUser(user);
-      setProfileBadge(user);
+
+      const passwordHash = await hashPassword(password);
+      const users = loadUsers();
+      users.push({
+        username,
+        email,
+        passwordHash,
+        name: username,
+        surname: "",
+        createdAt: new Date().toISOString()
+      });
+      saveUsers(users);
+
+      const currentUser = { username, email, name: username, surname: "" };
+      saveUser(currentUser);
+      setProfileBadge(currentUser);
+      accountForm.reset();
+      setFormMessage("account", "Account created successfully.", true);
       if (authScreen) authScreen.classList.remove("visible");
       accountForm.classList.remove("visible");
       if (appContent) appContent.removeAttribute("inert");
     }
 
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      clearFormErrors(loginForm);
+      const username = String(loginUsernameInput?.value || "").trim();
+      const password = String(loginPasswordInput?.value || "");
+      const users = loadUsers();
+      const matchedUser = users.find((user) => user.username.toLowerCase() === username.toLowerCase());
+
+      if (!matchedUser) {
+        setFieldError("login-username", "Invalid username or password.");
+        setFieldError("login-password", "Invalid username or password.");
+        setFormMessage("login", "Invalid username or password.");
+        return;
+      }
+
+      const passwordHash = await hashPassword(password);
+      if (matchedUser.passwordHash !== passwordHash) {
+        setFieldError("login-username", "Invalid username or password.");
+        setFieldError("login-password", "Invalid username or password.");
+        setFormMessage("login", "Invalid username or password.");
+        return;
+      }
+
+      const currentUser = { username: matchedUser.username, email: matchedUser.email || "", name: matchedUser.name || matchedUser.username, surname: matchedUser.surname || "" };
+      saveUser(currentUser);
+      setProfileBadge(currentUser);
+      loginForm.reset();
+      setFormMessage("login", "Logged in successfully.", true);
+      if (authScreen) authScreen.classList.remove("visible");
+      loginForm.classList.remove("visible");
+      if (appContent) appContent.removeAttribute("inert");
+    }
+
     function renderMenus(plan = planner.composeMenus(recipes, collectPlannerInput(), { source: "local" })) {
       currentMenus = plan.menus || [];
+      currentPlanIntent = plan.intent || null;
       document.querySelector("#results-subtitle").textContent = `${selectedCourses} ${selectedCourses === 1 ? "course" : "courses"} for ${guestInput.value} ${Number(guestInput.value) === 1 ? "guest" : "guests"}${document.querySelector("#cuisine").value ? ` · ${document.querySelector("#cuisine").value}` : ""}.`;
       document.querySelector("#match-count").textContent = `${currentMenus.length} ${currentMenus.length === 1 ? "menu" : "menus"}`;
       const estimateNote = plan.estimateNote || "Ingredient costs are existing catalog estimates, not live local prices.";
@@ -2150,10 +2714,11 @@
         return;
       }
 
+      const usedImageIds = new Set(plan.intent?.recentImageIds || []);
       list.innerHTML = currentMenus.map((menu, index) => {
         const main = menu.recipes.find((recipe) => recipe.role === "main") || menu.recipes[0];
         return `<article class="menu-card">
-          <div class="menu-photo"><img src="${photoUrl(main ? recipes[main.id].image : "photo-1490645935967-10de6ba17061")}" alt="${escapeHtml(main?.name || menu.name)}" loading="lazy"><span class="menu-number">${String(index + 1).padStart(2, "0")}</span>${favoriteButtonMarkup("menu", menu.id, menu.name)}</div>
+          <div class="menu-photo">${main ? recipePhotoMarkup(main.id, 560, main.name, usedImageIds, "menu-photo-fallback", main.image, main.imageId, main.imageCredit, main.imageCreditUrl) : ""}<span class="menu-number">${String(index + 1).padStart(2, "0")}</span>${favoriteButtonMarkup("menu", menu.id, menu.name)}</div>
           <div class="menu-info">
             <div class="menu-kicker"><span>${menu.courseCount} courses · ${escapeHtml(menu.recipes.map((recipe) => recipe.cuisines.includes(plan.intent?.cuisine) ? plan.intent.cuisine : "").find(Boolean) || plan.intent?.cuisine || "Seasonal")}</span></div>
             <h3>${escapeHtml(menu.name)}</h3>
@@ -2167,18 +2732,24 @@
           </div>
         </article>`;
       }).join("");
+      bindPhotoFallbacks(list);
       applyLanguage();
     }
 
     function renderMenuDishes(menu) {
       currentMenu = menu;
       currentView = "dish-detail";
+      const usedImageIds = new Set(currentPlanIntent?.recentImageIds || []);
+      const main = menu.recipes.find((recipe) => recipe.role === "main") || menu.recipes[0];
+      const mainImageId = main?.imageId || main?.image;
       detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Back to Menus</button>${favoriteButtonMarkup("menu", menu.id, menu.name)}</div>
         <h2 class="detail-title">${escapeHtml(menu.name)}</h2><p class="menu-rationale">${escapeHtml(menu.rationale)} Estimated total: ${formatMoney(menu.totalCost)} for ${guestInput.value} guests.</p>
         <div class="dish-grid">${menu.recipes.map((item) => {
           const recipe = recipes[item.id];
-          return `<article class="dish-choice"><div class="dish-photo"><img src="${photoUrl(recipe.image, 480)}" alt="" loading="lazy">${favoriteButtonMarkup("dish", item.id, recipe.name)}</div><button class="dish-open" type="button" data-recipe="${escapeHtml(item.id)}"><span>${escapeHtml(recipe.name)}<small>${escapeHtml(item.role)} · ${item.prepMinutes} min · ${formatMoney(item.estimatedCost)}</small></span></button></article>`;
+          if (item.id !== main?.id && (item.imageId || item.image) === mainImageId) usedImageIds.add(mainImageId);
+          return `<article class="dish-choice"><div class="dish-photo">${recipePhotoMarkup(item.id, 480, recipe.name, usedImageIds, "dish-photo-fallback", item.image, item.imageId, item.imageCredit, item.imageCreditUrl)}${favoriteButtonMarkup("dish", item.id, recipe.name)}</div><button class="dish-open" type="button" data-recipe="${escapeHtml(item.id)}"><span>${escapeHtml(recipe.name)}<small>${escapeHtml(item.role)} · ${item.prepMinutes} min · ${formatMoney(item.estimatedCost)}</small></span></button></article>`;
         }).join("")}</div>`;
+      bindPhotoFallbacks(detailView);
       recommendationsView.style.display = "none";
       detailView.style.display = "block";
       detailView.querySelector(".back-button").addEventListener("click", goToMenus);
@@ -2233,6 +2804,14 @@
       const guests = Number(guestInput.value);
       if (!currentMenu || !recipe) return;
       currentView = "dish-detail";
+      const usedImageIds = new Set(currentPlanIntent?.recentImageIds || []);
+      const main = currentMenu.recipes.find((item) => item.role === "main") || currentMenu.recipes[0];
+      if (main && recipeId !== main.id && (main.imageId || main.image)) usedImageIds.add(main.imageId || main.image);
+      const recipeIndex = currentMenu.recipes.findIndex((item) => item.id === recipeId);
+      currentMenu.recipes.slice(0, recipeIndex).forEach((item) => {
+        const previousImageId = item.imageId || item.image;
+        if (previousImageId) usedImageIds.add(previousImageId);
+      });
       currentShoppingListKey = JSON.stringify([currentMenu.name, recipeId, selectedCourses, guests]);
       const ingredientItems = recipe.ingredients.map(([quantity, unit, name]) => ({
         name,
@@ -2240,8 +2819,9 @@
         amount: `${planner.scaleQuantity(quantity, guests, recipe.servings || 4)} ${unit}`.trim(),
         checkKey: ingredientCheckKey(currentMenu, recipeId, guests, name, unit)
       }));
+      const currentRecipeItem = currentMenu.recipes.find((item) => item.id === recipeId);
       detailView.innerHTML = `<div class="detail-top"><button class="back-button" type="button"><span aria-hidden="true">←</span>Back to Menus</button>${favoriteButtonMarkup("dish", recipeId, recipe.name)}</div>
-        <article class="recipe"><div class="recipe-head"><img src="${photoUrl(recipe.image, 720)}" alt="${escapeHtml(recipe.name)}" loading="lazy"><div class="recipe-title"><span class="course-label">${escapeHtml(planner.recipeFacts(recipe, recipeId).role)}</span><h3>${escapeHtml(recipe.name)}</h3><p>${formatMoney(recipe.cost * guests)} estimated total · ${formatMoney(recipe.cost)} per guest · ${guests} servings · est. ${planner.recipeFacts(recipe, recipeId).prepMinutes} min</p><p class="recipe-allergen-note">Listed allergens: ${escapeHtml((planner.recipeFacts(recipe, recipeId).allergens.join(", ") || "none identified in listed ingredients"))}. Product labels and cross-contact may differ.</p>${recipe.source ? `<a class="recipe-source" href="${recipe.source}" target="_blank" rel="noopener noreferrer">Recipe source ↗</a>` : ""}</div></div>
+        <article class="recipe"><div class="recipe-head">${recipePhotoMarkup(recipeId, 720, recipe.name, usedImageIds, "recipe-photo-fallback", currentRecipeItem?.image, currentRecipeItem?.imageId, currentRecipeItem?.imageCredit, currentRecipeItem?.imageCreditUrl)}<div class="recipe-title"><span class="course-label">${escapeHtml(planner.recipeFacts(recipe, recipeId).role)}</span><h3>${escapeHtml(recipe.name)}</h3><p>${formatMoney(recipe.cost * guests)} estimated total · ${formatMoney(recipe.cost)} per guest · ${guests} servings · est. ${planner.recipeFacts(recipe, recipeId).prepMinutes} min</p><p class="recipe-allergen-note">Listed allergens: ${escapeHtml((planner.recipeFacts(recipe, recipeId).allergens.join(", ") || "none identified in listed ingredients"))}. Product labels and cross-contact may differ.</p>${recipe.source ? `<a class="recipe-source" href="${recipe.source}" target="_blank" rel="noopener noreferrer">Recipe source ↗</a>` : ""}</div></div>
           <div class="recipe-content"><section><h4>Ingredients</h4><ul class="ingredients">${ingredientItems.map((item, index) => `<li><label class="recipe-ingredient"><input type="checkbox" data-recipe-ingredient="${index}" aria-label="Mark ${item.name} as missing for ${recipe.name}" ${checkedIngredients.has(item.checkKey) ? "checked" : ""}><span>${item.name}</span><span>${item.amount}</span></label></li>`).join("")}</ul>
             <div class="recipe-grocery-tools"><label class="save-list-choice"><input id="save-recipe-list" type="checkbox" ${savedShoppingLists.has(currentShoppingListKey) ? "checked" : ""}><span>Save checked missing ingredients from this dish</span></label><p class="saved-list-status" id="recipe-list-status" role="status"></p>
               <div class="recipe-grocery-heading"><h5>Missing ingredients</h5><span class="shopping-list-count" id="recipe-grocery-count"></span></div><ul class="shopping-list-items" id="recipe-grocery-items" aria-live="polite"></ul><button class="efood-order-button" id="order-efood-market" type="button">Order ingredients on efood Market</button>
@@ -2249,6 +2829,7 @@
           </section>
           <section><h4>Step-by-step</h4><ol class="method">${recipe.method.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section></div></article>`;
       detailView.querySelector(".back-button").addEventListener("click", goToMenus);
+      bindPhotoFallbacks(detailView);
       detailView.querySelectorAll("[data-recipe-ingredient]").forEach((checkbox) => checkbox.addEventListener("change", () => {
         const item = ingredientItems[Number(checkbox.dataset.recipeIngredient)];
         if (!item) return;
@@ -2305,6 +2886,10 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (!form.reportValidity()) return;
+      const generationToken = ++latestGenerationToken;
+      const plannerInput = { ...collectPlannerInput(), ...generationHistoryContext() };
+      if (activeGenerationController) activeGenerationController.abort();
+      activeGenerationController = new AbortController();
       closePlannerDrawer();
       showRecommendations();
       const submitButton = form.querySelector(".submit-button");
@@ -2313,14 +2898,27 @@
       document.querySelector("#planner-status").textContent = "Checking the recipe catalog against your request...";
       applyLanguage();
       try {
-        const plan = await requestPlan(collectPlannerInput());
-        renderMenus(plan);
+        const plan = await requestPlan(plannerInput, generationToken, activeGenerationController.signal);
+        if (generationToken !== latestGenerationToken) return;
+        const finalPlan = plan || planner.composeMenus(recipes, plannerInput, { source: "local" });
+        recordGenerationHistory(finalPlan);
+        renderMenus(finalPlan);
+      } catch {
+        if (generationToken === latestGenerationToken) {
+          const fallbackPlan = planner.composeMenus(recipes, plannerInput, { source: "local" });
+          recordGenerationHistory(fallbackPlan);
+          renderMenus(fallbackPlan);
+        }
       } finally {
-        submitButton.disabled = false;
-        submitButton.querySelector("span:first-child").textContent = "Find my menus";
-        applyLanguage();
+        if (generationToken === latestGenerationToken) {
+          submitButton.disabled = false;
+          submitButton.querySelector("span:first-child").textContent = "Find my menus";
+          applyLanguage();
+        }
       }
-      document.querySelector("#recommendations-view").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (generationToken === latestGenerationToken) {
+        document.querySelector("#recommendations-view").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
 
     plannerOpenButton.addEventListener("click", () => {
@@ -2395,7 +2993,16 @@
       accountPanel.setAttribute("aria-hidden", "true");
       profileBadge.setAttribute("aria-expanded", "false");
     });
-    logoutButton.addEventListener("click", logOut);
+    logoutButton.addEventListener("click", openLogoutConfirm);
+    logoutCancelButton.addEventListener("click", closeLogoutConfirm);
+    logoutConfirmButton.addEventListener("click", logOut);
+    logoutConfirmBackdrop.addEventListener("click", closeLogoutConfirm);
+    document.addEventListener("keydown", (event) => {
+      if (!logoutConfirmModal || logoutConfirmModal.hidden) return;
+      if (event.key === "Escape") {
+        closeLogoutConfirm();
+      }
+    });
 
     favoritesList.addEventListener("click", (event) => {
       const accountUpgradeButton = event.target.closest("[data-account-upgrade]");
@@ -2421,7 +3028,29 @@
     if (accountLoginButton) {
       accountLoginButton.addEventListener("click", showAccountForm);
     }
+    if (loginLoginButton) {
+      loginLoginButton.addEventListener("click", showLoginForm);
+    }
     if (accountForm) accountForm.addEventListener("submit", handleAccountSubmit);
+    if (loginForm) loginForm.addEventListener("submit", handleLoginSubmit);
+    document.querySelectorAll(".auth-back").forEach((button) => {
+      button.addEventListener("click", () => {
+        accountForm?.reset();
+        loginForm?.reset();
+        clearFormErrors(accountForm);
+        clearFormErrors(loginForm);
+        showWelcomeScreen();
+      });
+    });
+    document.querySelectorAll(".password-toggle").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const input = document.getElementById(toggle.dataset.target);
+        if (!input) return;
+        const shouldShow = input.type === "password";
+        input.type = shouldShow ? "text" : "password";
+        toggle.textContent = shouldShow ? "Hide" : "Show";
+      });
+    });
 
     const storedUser = getStoredUser();
     setProfileBadge(storedUser);
@@ -2439,7 +3068,12 @@
         splashScreen.remove();
         if (!storedUser) {
           appContent.setAttribute("inert", "true");
-          if (authScreen) authScreen.classList.add("visible");
+          if (authScreen) {
+            authScreen.classList.add("visible");
+            welcomePanel?.classList.add("visible");
+            accountForm?.classList.remove("visible");
+            loginForm?.classList.remove("visible");
+          }
         } else {
           appContent.removeAttribute("inert");
         }

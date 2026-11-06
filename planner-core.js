@@ -66,6 +66,14 @@
   const nutTerms = ["almond", "cashew", "walnut", "hazelnut", "peanut", "pistachio", "pecan"];
   const honeyTerms = ["honey"];
   const ambiguousProducts = ["puff pastry", "pastry", "pizza base", "burger bun", "soft roll", "tortilla", "pita bread", "barbecue sauce", "coleslaw", "fajita seasoning", "curry powder", "dark chocolate", "shortbread", "stock"];
+  const excludedIngredientRules = {
+    mushroom: ["mushroom", "mushrooms", "champignon", "porcini", "shiitake"],
+    onion: ["onion", "onions", "shallot", "shallots", "spring onion", "spring onions", "scallion", "scallions"],
+    spice: ["chilli", "chili", "chile", "jalapeno", "jalapeño", "chilli flakes", "hot sauce", "curry powder", "spicy"],
+    shellfish: ["shrimp", "prawn", "prawns", "shellfish", "crab", "lobster"],
+    garlic: ["garlic"],
+    nut: ["peanut", "peanuts", "almond", "almonds", "hazelnut", "hazelnuts", "cashew", "cashews", "pistachio", "pistachios", "walnut", "walnuts"]
+  };
   const cuisineNames = Object.keys(cuisineGroups);
   const stopWords = new Set([
     "a", "an", "and", "are", "but", "can", "could", "dinner", "food", "for", "have", "i", "in", "is", "it", "me", "menu", "my", "of", "or", "please", "prefer", "preferably", "recipe", "recipes", "something", "that", "the", "there", "to", "want", "with", "would"
@@ -81,6 +89,21 @@
 
   function normalize(value) {
     return String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  function getExcludedIngredients(text) {
+    const matches = new Set();
+    for (const [label, terms] of Object.entries(excludedIngredientRules)) {
+      const normalized = terms.map(normalize);
+      if (normalized.some((term) => new RegExp(`(?:^|\\b)${escapeRegExp(term)}(?:$|\\b)`, "i").test(text))) {
+        matches.add(label);
+      }
+    }
+    if (/\b(no mushroom|no mushrooms|mushroom free|without mushrooms?|without mushroom)\b/.test(text)) matches.add("mushroom");
+    if (/\b(no onion|no onions|onion free|without onions?|without onion)\b/.test(text)) matches.add("onion");
+    if (/\b(no chili|no chillies|no spicy food|spicy food|without spice|spice free|no spice)\b/.test(text)) matches.add("spice");
+    if (/\b(no shellfish|shellfish free|without shellfish|no shrimp|no prawns?)\b/.test(text)) matches.add("shellfish");
+    return [...matches];
   }
 
   function parseRequest(input) {
@@ -101,7 +124,7 @@
       honeyFree: false
     };
     const fishAllowed = /\b(pescatarian|pescetarian)\b|\b(fish|seafood)\b.{0,24}\b(okay|fine|allowed|include)\b|\b(allow|include)\b.{0,18}\b(fish|seafood)\b/.test(combined);
-      const noMeat = /\b(no|without|avoid|exclude|free from)\b.{0,28}\b(meat|chicken|beef|pork|animal products?)\b|\b(meat free|meatless|vegetarian|pescatarian|pescetarian|plant based|vegan)\b/.test(combined);
+    const noMeat = /\b(no|without|avoid|exclude|free from)\b.{0,28}\b(meat|chicken|beef|pork|animal products?)\b|\b(meat free|meatless|vegetarian|pescatarian|pescetarian|plant based|vegan)\b/.test(combined);
     const noSeafood = /\b(no|without|avoid|exclude|free from|allergic to)\b.{0,28}\b(seafood|fish|salmon|shrimp|prawns?)\b|\b(seafood free|fish free)\b/.test(combined);
     dietary.vegan = /\b(vegan|plant based|no animal products?|free from animal products?)\b/.test(combined);
     dietary.vegetarian = dietary.vegan || /\b(vegetarian|meatless)\b/.test(combined) || (noMeat && !fishAllowed);
@@ -131,12 +154,13 @@
 
     const preferences = [];
     if (/\b(pasta|noodles|pasta based)\b/.test(requestText)) preferences.push("pasta");
-    if (/\b(high protein|protein rich|protein packed)\b/.test(combined)) preferences.push("highProtein");
+    if (/\b(high protein|protein rich|protein packed|high in protein|rich in protein|protein heavy)\b/.test(combined)) preferences.push("highProtein");
     if (/\b(light|lighter|refreshing|not too heavy)\b/.test(combined)) preferences.push("light");
-    if (/\b(budget|inexpensive|cheap|affordable|without spending too much|low cost)\b/.test(combined)) preferences.push("budgetFriendly");
+    if (/\b(budget|inexpensive|cheap|affordable|without spending too much|low cost|under \$?\d+|under €?\d+|under eur \d+)\b/.test(combined)) preferences.push("budgetFriendly");
     if (/\b(fancy|special|elegant|impressive|date night|romantic)\b/.test(combined)) preferences.push("polished");
     if (/\b(quick|easy|simple|weeknight)\b/.test(combined)) preferences.push("quick");
     if (/\b(traditional|classic|authentic)\b/.test(combined)) preferences.push("traditional");
+    const excludedIngredients = getExcludedIngredients(combined);
     const restrictedWords = new Set(["vegetarian", "vegan", "meatless", "pescatarian", "pescetarian", "dairy", "gluten", "seafood", "fish", "protein", "based"]);
     if (dietary.meatFree) ["meat", "chicken", "beef", "pork", "ham", "sausage"].forEach((word) => restrictedWords.add(word));
     if (dietary.seafoodFree) ["salmon", "shrimp", "prawn", "tuna"].forEach((word) => restrictedWords.add(word));
@@ -151,6 +175,11 @@
       cuisine,
       selectedCuisine,
       conflictingCuisines,
+      excludedIngredients,
+      recentRecipeIds: [...new Set((Array.isArray(input.recentRecipeIds) ? input.recentRecipeIds : []).filter((id) => typeof id === "string"))].slice(-120),
+      recentDishProfiles: (Array.isArray(input.recentDishProfiles) ? input.recentDishProfiles : []).filter((profile) => profile && typeof profile.name === "string" && typeof profile.role === "string" && Array.isArray(profile.ingredients)).slice(-120),
+      recentImageIds: [...new Set((Array.isArray(input.recentImageIds) ? input.recentImageIds : []).filter((id) => typeof id === "string"))].slice(-120),
+      recentMenuTitles: [...new Set((Array.isArray(input.recentMenuTitles) ? input.recentMenuTitles : []).filter((title) => typeof title === "string" && title.trim()))].slice(-120),
       freeTextTerms: [...new Set(freeTextTerms)],
       guests: Math.max(1, Number(input.guests) || 1),
       budget: Math.max(0, Number(input.budget) || 0),
@@ -233,6 +262,23 @@
     return recipeViolationsFromFacts(recipeFacts(recipe, id), intent);
   }
 
+  function recipeMatchesHardConstraints(recipe, id, intent) {
+    const facts = recipeFacts(recipe, id);
+    if (recipeViolationsFromFacts(facts, intent).length) return false;
+    if (isPreviouslyGenerated(recipe, id, intent)) return false;
+    return excludedIngredientViolations(recipe, id, intent).length === 0;
+  }
+
+  function excludedIngredientViolations(recipe, id, intent) {
+    if (!Array.isArray(intent.excludedIngredients) || !intent.excludedIngredients.length) return [];
+    const facts = recipeFacts(recipe, id);
+    const recipeText = `${recipe.name} ${facts.ingredients.join(" ")}`.toLowerCase();
+    return intent.excludedIngredients.filter((ingredient) => {
+      const terms = excludedIngredientRules[ingredient] || [ingredient];
+      return terms.some((term) => new RegExp(`(?:^|\\b)${escapeRegExp(normalize(term))}(?:$|\\b)`, "i").test(recipeText));
+    });
+  }
+
   function recipeViolationsFromFacts(facts, intent) {
     const restrictions = intent.dietary;
     const violations = [];
@@ -248,6 +294,43 @@
     if ((restrictions.dairyFree || restrictions.glutenFree || restrictions.eggFree || restrictions.vegan) && facts.dietary.ambiguous) violations.push("has an ingredient whose packaged formulation is not specified");
     if (intent.cuisine && !facts.cuisines.includes(intent.cuisine) && !(facts.tags.includes("neutralCourse") && facts.role !== "main")) violations.push(`not catalogued as ${intent.cuisine}`);
     return [...new Set(violations)];
+  }
+
+  function recipeIdentity(recipe, id) {
+    const facts = recipeFacts(recipe, id);
+    return { id, name: recipe.name, role: facts.role, ingredients: facts.ingredients };
+  }
+
+  function isPreviouslyGenerated(recipe, id, intent) {
+    if ((Array.isArray(intent.recentRecipeIds) ? intent.recentRecipeIds : []).includes(id)) return true;
+    const profile = recipeIdentity(recipe, id);
+    const ingredientSet = new Set(profile.ingredients.map(normalize).filter((name) => name && !/^(olive oil|water|salt|black pepper|pepper|lemon|garlic|onion|fresh herbs?)$/.test(name)));
+    for (const previous of Array.isArray(intent.recentDishProfiles) ? intent.recentDishProfiles : []) {
+      if (!previous || previous.role !== profile.role) continue;
+      if (normalize(previous.name) === normalize(profile.name)) return true;
+      const previousIngredients = new Set((Array.isArray(previous.ingredients) ? previous.ingredients : []).map(normalize).filter((name) => name && !/^(olive oil|water|salt|black pepper|pepper|lemon|garlic|onion|fresh herbs?)$/.test(name)));
+      let shared = 0;
+      for (const ingredient of ingredientSet) if (previousIngredients.has(ingredient)) shared += 1;
+      const union = new Set([...ingredientSet, ...previousIngredients]).size;
+      const minimumSharedIngredients = profile.role === "main" ? 2 : 3;
+      if (shared >= minimumSharedIngredients && union > 0 && shared / union >= 0.65) return true;
+    }
+    return false;
+  }
+
+  function enrichIntentWithHistory(recipes, intent) {
+    const recentRecipeIds = Array.isArray(intent.recentRecipeIds) ? intent.recentRecipeIds : [];
+    const recentDishProfiles = Array.isArray(intent.recentDishProfiles) ? intent.recentDishProfiles : [];
+    const catalogProfiles = recentRecipeIds
+      .filter((id) => recipes[id])
+      .map((id) => recipeIdentity(recipes[id], id));
+    return {
+      ...intent,
+      recentRecipeIds,
+      recentImageIds: Array.isArray(intent.recentImageIds) ? intent.recentImageIds : [],
+      recentMenuTitles: Array.isArray(intent.recentMenuTitles) ? intent.recentMenuTitles : [],
+      recentDishProfiles: [...recentDishProfiles, ...catalogProfiles]
+    };
   }
 
   function scaleQuantity(quantity, guests, servings = 4) {
@@ -306,22 +389,46 @@
     return penalty;
   }
 
+  function mainIngredientAnchor(recipe) {
+    const text = normalize(`${recipe.name} ${recipe.ingredients.map((ingredient) => ingredient[2]).join(" ")}`);
+    const anchors = [
+      ["seafood", /salmon|tuna|shrimp|prawn|fish|seafood/],
+      ["poultry", /chicken|turkey|duck/],
+      ["beef", /beef|steak/],
+      ["pork", /pork|sausage|ham|bacon/],
+      ["tofu", /tofu/],
+      ["legumes", /chickpea|lentil|black bean|kidney bean|white bean/],
+      ["paneer", /paneer/],
+      ["egg", /egg|shakshuka/],
+      ["mushroom", /mushroom/],
+      ["squash", /squash|pumpkin/],
+      ["tomato", /tomato/],
+      ["potato", /potato/],
+      ["pasta", /pasta|gnocchi|noodle|ramen/],
+      ["cheese", /mozzarella|ricotta|feta|cheese/]
+    ];
+    return anchors.find(([, pattern]) => pattern.test(text))?.[0] || text.split(" ").find((word) => word.length > 3) || "other";
+  }
+
   function composeMenus(recipes, input, options = {}) {
-    const intent = options.intent || parseRequest(input);
+    const intent = enrichIntentWithHistory(recipes, options.intent || parseRequest(input));
     const limit = Math.max(1, Math.min(6, Number(options.limit) || 3));
     if (intent.conflictingCuisines.length) {
       return { menus: [], intent, source: options.source || "local", limitation: `The selected cuisine (${intent.selectedCuisine}) conflicts with the cuisine request (${intent.conflictingCuisines.join(", ")}). Choose one cuisine to continue.` };
     }
     const roles = courseRoles[intent.courseCount] || courseRoles[4];
     const factsById = new Map(Object.entries(recipes).map(([id, recipe]) => [id, recipeFacts(recipe, id)]));
+    const recentMainAnchors = new Set(intent.recentDishProfiles.filter((profile) => profile.role === "main").map((profile) => mainIngredientAnchor({ name: profile.name, ingredients: profile.ingredients.map((name) => [0, "", name]) })));
     const pools = roles.map((role) => Object.entries(recipes).filter(([id, recipe]) => {
       const facts = factsById.get(id);
-      return facts.role === role && cuisineCompatible(facts, role, intent.cuisine) && recipeViolationsFromFacts(facts, intent).length === 0;
+      return facts.role === role && cuisineCompatible(facts, role, intent.cuisine) && recipeMatchesHardConstraints(recipe, id, intent);
     }).map(([id]) => id));
     const missingRoleIndex = pools.findIndex((pool) => pool.length === 0);
     if (missingRoleIndex !== -1) {
       const missingRole = roles[missingRoleIndex];
-      const reason = intent.cuisine ? `The catalog has no ${missingRole} recipes for ${intent.cuisine} that satisfy the dietary requirements.` : `The catalog has no ${missingRole} recipes that satisfy the dietary requirements.`;
+      const reason = intent.recentRecipeIds.length || intent.recentDishProfiles.length
+        ? `No new ${missingRole} recipes remain in the catalog for this request without repeating a recent dish.`
+        : intent.cuisine ? `The catalog has no ${missingRole} recipes for ${intent.cuisine} that satisfy the dietary requirements.` : `The catalog has no ${missingRole} recipes that satisfy the dietary requirements.`;
       return { menus: [], intent, source: options.source || "local", limitation: `${reason} Try fewer dietary restrictions, another cuisine, or a different number of courses.` };
     }
 
@@ -333,9 +440,12 @@
         if (total > intent.budget) return;
         let score = selection.reduce((sum, id) => sum + preferenceScore(factsById.get(id), recipes[id], intent), 0);
         score -= ingredientOverlapPenalty(selection, factsById);
+        const mainId = selection.find((id) => factsById.get(id).role === "main");
+        const mainAnchor = mainIngredientAnchor(recipes[mainId]);
+        if (recentMainAnchors.has(mainAnchor)) score -= 4;
         score -= Math.max(0, total / intent.budget - 0.78) * 4;
         if (intent.preferences.includes("budgetFriendly")) score -= total / Math.max(1, intent.budget) * 2;
-        candidates.push({ ids: [...selection], total, score });
+        candidates.push({ ids: [...selection], total, score, mainAnchor });
         return;
       }
       for (const id of pools[roleIndex]) {
@@ -357,16 +467,21 @@
     candidates.sort((left, right) => right.score - left.score || left.total - right.total);
     const chosen = [];
     const usedIds = new Set();
+    const usedMainAnchors = new Set();
     for (const candidate of candidates) {
       if (chosen.some((menu) => menu.ids.join("|") === candidate.ids.join("|"))) continue;
       const shared = candidate.ids.filter((id) => usedIds.has(id)).length;
-      if (chosen.length && shared >= Math.min(roles.length, 2)) continue;
+      if (shared > 0) continue;
+      if (usedMainAnchors.has(candidate.mainAnchor)) continue;
       chosen.push(candidate);
       candidate.ids.forEach((id) => usedIds.add(id));
+      usedMainAnchors.add(candidate.mainAnchor);
       if (chosen.length === limit) break;
     }
+    const usedImageIds = new Set(intent.recentImageIds);
+    const usedTitles = new Set(intent.recentMenuTitles.map(normalize));
     return {
-      menus: chosen.map((candidate, index) => buildMenu(recipes, candidate.ids, intent, candidate.score, index)),
+      menus: chosen.map((candidate, index) => buildMenu(recipes, candidate.ids, intent, candidate.score, index, usedImageIds, usedTitles)),
       intent,
       source: options.source || "local",
       limitation: "",
@@ -393,16 +508,55 @@
     return `https://www.e-food.gr/?s=${encodeURIComponent(query)}`;
   }
 
-  function buildMenu(recipes, ids, intent, score, index = 0) {
+  function createMenuTitle(selected, intent, index, usedTitles) {
+    const main = selected.find((recipe) => recipe.role === "main") || selected[0];
+    const starter = selected.find((recipe) => recipe.role === "starter");
+    const side = selected.find((recipe) => recipe.role === "side");
+    const dessert = selected.find((recipe) => recipe.role === "dessert");
+    const cuisine = intent.cuisine || main.cuisines[0] || "Seasonal";
+    const occasion = intent.occasion.includes("romantic") ? "Candlelit Supper"
+      : intent.occasion.includes("family") ? "Sunday Table"
+        : intent.occasion.includes("festive") ? "Celebration Table"
+          : intent.occasion.includes("social") ? "Dinner Party"
+            : intent.occasion.includes("brunch") ? "Late-Morning Table" : "Supper";
+    const candidates = [
+      `${cuisine} Table: ${starter ? `${starter.name} to ${dessert?.name || main.name}` : main.name}`,
+      `${occasion}: ${main.name}${side ? ` with ${side.name}` : ""}`,
+      `${main.name}${dessert ? `, followed by ${dessert.name}` : ""}`,
+      `${starter ? `${starter.name}, ` : ""}${main.name}${side ? ` & ${side.name}` : ""}${dessert ? `; ${dessert.name} to finish` : ""}`,
+      `A ${cuisine} Supper Built Around ${main.name}`,
+      `${cuisine} at Home: ${main.name}${dessert ? ` and ${dessert.name}` : ""}`,
+      `${starter ? `From ${starter.name} to ${dessert?.name || main.name}` : main.name}: A ${occasion}`
+    ];
+    const signature = selected.map((recipe) => recipe.id).join("|");
+    const hash = [...signature].reduce((value, character) => (value * 31 + character.charCodeAt(0)) >>> 0, 7);
+    const start = (hash + index) % candidates.length;
+    for (let offset = 0; offset < candidates.length; offset += 1) {
+      const title = candidates[(start + offset) % candidates.length];
+      const key = normalize(title);
+      if (!usedTitles.has(key)) {
+        usedTitles.add(key);
+        return title;
+      }
+    }
+    const fallback = `${main.name}: ${selected.filter((recipe) => recipe.id !== main.id).map((recipe) => recipe.name).join(" & ")}`;
+    usedTitles.add(normalize(fallback));
+    return fallback;
+  }
+
+  function buildMenu(recipes, ids, intent, score, index = 0, usedImageIds = new Set(intent.recentImageIds || []), usedTitles = new Set((intent.recentMenuTitles || []).map(normalize))) {
     const selected = ids.map((id) => {
       const recipe = recipes[id];
       const facts = recipeFacts(recipe, id);
+      const image = recipe.image && !usedImageIds.has(recipe.image) ? recipe.image : "";
+      if (image) usedImageIds.add(image);
       return {
         id,
         name: recipe.name,
         role: facts.role,
         course: recipe.course,
-        image: recipe.image,
+        image,
+        imageId: image,
         description: `${facts.role[0].toUpperCase()}${facts.role.slice(1)} featuring ${facts.ingredients.slice(0, 3).join(", ")}.`,
         prepMinutes: facts.prepMinutes,
         servings: intent.guests,
@@ -416,12 +570,13 @@
       };
     });
     const total = selected.reduce((sum, recipe) => sum + recipe.estimatedCost, 0);
-    const occasion = intent.occasion.includes("romantic") ? "A more polished, candlelit" : intent.occasion.includes("family") ? "A relaxed, family-style" : intent.occasion.includes("festive") ? "A celebratory" : intent.occasion.includes("brunch") ? "A leisurely brunch" : "A balanced";
-    const cuisine = intent.cuisine ? `${intent.cuisine} ` : "seasonal ";
+    const main = selected.find((recipe) => recipe.role === "main") || selected[0];
     return {
       id: ids.join("-"),
-      name: `${cuisine}${occasion.toLowerCase()} menu ${index + 1}`,
-      rationale: `${occasion} menu arranged from ${selected.map((item) => item.role).join(", ")}, with estimated costs scaled for ${intent.guests} guests.`,
+      name: createMenuTitle(selected, intent, index, usedTitles),
+      rationale: selected.length === 1
+        ? `${main.name} anchors this menu, selected for ${intent.guests} guests within the stated budget.`
+        : `A course progression from ${selected.map((item) => `${item.role}: ${item.name}`).join("; ")}, scaled for ${intent.guests} guests.`,
       courseCount: selected.length,
       totalCost: total,
       costPerGuest: total / intent.guests,
@@ -433,7 +588,7 @@
   }
 
   function validateMenu(recipes, ids, input, options = {}) {
-    const intent = options.intent || parseRequest(input);
+    const intent = enrichIntentWithHistory(recipes, options.intent || parseRequest(input));
     const problems = [];
     const roles = courseRoles[intent.courseCount] || courseRoles[4];
     if (!Array.isArray(ids) || ids.length !== intent.courseCount) problems.push(`Menu must contain exactly ${intent.courseCount} recipes.`);
@@ -448,6 +603,8 @@
         const facts = recipeFacts(recipe, id);
         if (facts.role !== roles[index]) problems.push(`${recipe.name} is not in the required ${roles[index]} course position.`);
         problems.push(...recipeViolations(recipe, id, intent).map((reason) => `${recipe.name} ${reason}.`));
+        problems.push(...excludedIngredientViolations(recipe, id, intent).map((ingredient) => `${recipe.name} contains the excluded ${ingredient} ingredient.`));
+        if (isPreviouslyGenerated(recipe, id, intent)) problems.push(`${recipe.name} duplicates a recently generated dish.`);
       });
     }
     const total = Array.isArray(ids) ? ids.reduce((sum, id) => sum + (recipes[id]?.cost || 0) * intent.guests, 0) : Infinity;
@@ -488,6 +645,7 @@
     courseRoles,
     parseRequest,
     recipeFacts,
+    recipeIdentity,
     recipeViolations,
     composeMenus,
     buildMenu,
